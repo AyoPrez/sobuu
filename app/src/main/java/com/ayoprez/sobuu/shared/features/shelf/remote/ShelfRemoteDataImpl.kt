@@ -16,52 +16,12 @@ class ShelfRemoteDataImpl @Inject constructor(
         return execute(sessionToken) {
             api.searchShelf(it, term)
         }
-        //TODO Commit and Push this before remove this code
-//        return try {
-//            if (sessionToken.isNullOrBlank()) return ShelfResult.Error(ShelfError.InvalidSessionTokenError)
-//            if (term.isBlank()) return ShelfResult.Error(ShelfError.EmptyTerm)
-//
-//            val result = api.searchShelf(sessionToken, term)
-//
-//            if (result.body() == null && result.errorBody() != null) return handleResponseError(
-//                result.errorBody()
-//            )
-//
-//            return ShelfResult.Success(data = result.body())
-//        } catch(e: HttpException) {
-//            when(e.code()) {
-//                401 -> ShelfResult.Error(ShelfError.UnauthorizedQueryError)
-//                209 -> ShelfResult.Error(ShelfError.InvalidSessionTokenError)
-//                else -> ShelfResult.Error(ShelfError.UnknownError)
-//            }
-//        } catch (e: Exception) {
-//            ShelfResult.Error(ShelfError.UnknownError)
-//        }
     }
 
     override suspend fun getAllUserShelves(sessionToken: String?): ShelfResult<List<Shelf>> {
         return execute(sessionToken) {
             api.getAllUserShelves(it)
         }
-//        return try {
-//            if (sessionToken.isNullOrBlank()) return ShelfResult.Error(ShelfError.InvalidSessionTokenError)
-//
-//            val result = api.getAllUserShelves(sessionToken)
-//
-//            if (result.body() == null && result.errorBody() != null) return handleResponseError(
-//                result.errorBody()
-//            )
-//
-//            return ShelfResult.Success(data = result.body())
-//        } catch(e: HttpException) {
-//            when(e.code()) {
-//                401 -> ShelfResult.Error(ShelfError.UnauthorizedQueryError)
-//                209 -> ShelfResult.Error(ShelfError.InvalidSessionTokenError)
-//                else -> ShelfResult.Error(ShelfError.UnknownError)
-//            }
-//        } catch (e: Exception) {
-//            ShelfResult.Error(ShelfError.UnknownError)
-//        }
     }
 
     private suspend fun execute(sessionToken: String?, func: suspend (sessionToken: String) -> Response<List<Shelf>>): ShelfResult<List<Shelf>> {
