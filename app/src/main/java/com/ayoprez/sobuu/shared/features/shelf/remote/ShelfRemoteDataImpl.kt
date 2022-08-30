@@ -24,7 +24,88 @@ class ShelfRemoteDataImpl @Inject constructor(
         }
     }
 
-    private suspend fun execute(sessionToken: String?, func: suspend (sessionToken: String) -> Response<List<Shelf>>): ShelfResult<List<Shelf>> {
+    override suspend fun createShelf(
+        sessionToken: String?,
+        name: String,
+        description: String,
+        isPublic: Boolean
+    ): ShelfResult<Shelf> {
+        if (name.isBlank()) return ShelfResult.Error(ShelfError.EmptyName)
+        if (description.isBlank()) return ShelfResult.Error(ShelfError.EmptyDescription)
+        return execute(sessionToken) {
+            api.createShelf(
+                sessionToken = it,
+                name = name,
+                description = description,
+                isPublic = isPublic,
+            )
+        }
+    }
+
+    override suspend fun changeShelfName(
+        sessionToken: String?,
+        shelfId: String,
+        newName: String
+    ): ShelfResult<Shelf> {
+        if (shelfId.isBlank()) return ShelfResult.Error(ShelfError.EmptyShelfId)
+        if (newName.isBlank()) return ShelfResult.Error(ShelfError.EmptyName)
+        return execute(sessionToken) {
+            api.changeShelfName(
+                sessionToken = it,
+                shelfId = shelfId,
+                newName = newName
+            )
+        }
+    }
+
+    override suspend fun changeShelfDescription(
+        sessionToken: String?,
+        shelfId: String,
+        newDescription: String
+    ): ShelfResult<Shelf> {
+        if (shelfId.isBlank()) return ShelfResult.Error(ShelfError.EmptyShelfId)
+        if (newDescription.isBlank()) return ShelfResult.Error(ShelfError.EmptyDescription)
+        return execute(sessionToken) {
+            api.changeShelfDescription(
+                sessionToken = it,
+                shelfId = shelfId,
+                newDescription = newDescription,
+            )
+        }
+    }
+
+    override suspend fun changeShelfPrivacy(
+        sessionToken: String?,
+        shelfId: String,
+        isPublic: Boolean
+    ): ShelfResult<Shelf> {
+        if (shelfId.isBlank()) return ShelfResult.Error(ShelfError.EmptyShelfId)
+        return execute(sessionToken) {
+            api.changeShelfPrivacy(
+                sessionToken = it,
+                shelfId = shelfId,
+                isPublic = isPublic,
+            )
+        }
+    }
+
+    override suspend fun addBookToShelf(
+        sessionToken: String?,
+        shelfId: String,
+        bookId: String
+    ): ShelfResult<Shelf> {
+        if (shelfId.isBlank()) return ShelfResult.Error(ShelfError.EmptyShelfId)
+        if (bookId.isBlank()) return ShelfResult.Error(ShelfError.EmptyBookId)
+        return execute(sessionToken) {
+            api.addBookToShelf(
+                sessionToken = it,
+                shelfId = shelfId,
+                bookId = bookId
+            )
+        }
+    }
+
+    private suspend fun <T>execute(sessionToken: String?, func: suspend (sessionToken: String) -> Response<T>): ShelfResult<T> {
         return try {
             if (sessionToken.isNullOrBlank()) return ShelfResult.Error(ShelfError.InvalidSessionTokenError)
 
