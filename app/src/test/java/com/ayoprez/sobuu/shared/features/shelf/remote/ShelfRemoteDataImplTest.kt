@@ -583,7 +583,7 @@ internal class ShelfRemoteDataImplTest {
     }
 
     @Test
-    fun `Add Book - If book Id is empty, should return empty shelf id error`() {
+    fun `Add Book - If book Id is empty, should return empty book id error`() {
         coEvery { shelfApi.addBookToShelf(any(), any(), any()) } returns Response.success(Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Fantasy for everybody", isPublic = true))
 
         val result = runBlocking {
@@ -628,10 +628,171 @@ internal class ShelfRemoteDataImplTest {
     //endregion
 
     //region Remove book
+    @Test
+    fun `Remove Book - Not null`() {
+        coEvery { shelfApi.removeBookFromShelf(any(), any(), any()) } returns Response.success(Shelf(id="s98hwe", name="Fantasy", books = listOf(book), description = "Fantasy for everybody", isPublic = true))
 
+        val result = runBlocking {
+            shelfRemote.removeBookFromShelf("9hosnd9", "aw98hiw98", "w98hidn")
+        }
+
+        assertEquals(result.data?.books?.size, 1)
+    }
+
+    @Test
+    fun `Remove Book - If session token is empty, should return invalid session token error`() {
+        coEvery { shelfApi.removeBookFromShelf(any(), any(), any()) } returns Response.success(Shelf(id="s98hwe", name="Fantasy", books = listOf(book), description = "Fantasy for everybody", isPublic = true))
+
+        val result = runBlocking {
+            shelfRemote.removeBookFromShelf("", "aw98hiw98", "w98hidn")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.InvalidSessionTokenError::class.java))
+    }
+
+    @Test
+    fun `Remove Book - If session token is null, should return invalid session token error`() {
+        coEvery { shelfApi.removeBookFromShelf(any(), any(), any()) } returns Response.success(Shelf(id="s98hwe", name="Fantasy", books = listOf(book), description = "Fantasy for everybody", isPublic = true))
+
+        val result = runBlocking {
+            shelfRemote.removeBookFromShelf(null, "aw98hiw98", "w98hidn")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.InvalidSessionTokenError::class.java))
+    }
+
+    @Test
+    fun `Remove Book - If shelf Id is empty, should return empty shelf id error`() {
+        coEvery { shelfApi.removeBookFromShelf(any(), any(), any()) } returns Response.success(Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Fantasy for everybody", isPublic = true))
+
+        val result = runBlocking {
+            shelfRemote.removeBookFromShelf("9hosnd9", "", "w98hidn")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.EmptyShelfId::class.java))
+    }
+
+    @Test
+    fun `Remove Book - If book Id is empty, should return empty book id error`() {
+        coEvery { shelfApi.removeBookFromShelf(any(), any(), any()) } returns Response.success(Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Fantasy for everybody", isPublic = true))
+
+        val result = runBlocking {
+            shelfRemote.removeBookFromShelf("9hosnd9", "w09jdsli", "")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.EmptyBookId::class.java))
+    }
+
+    @Test
+    fun `Remove Book - If request return 141 error, should return processing query error`() {
+        coEvery { shelfApi.removeBookFromShelf(any(), any(), any())  } returns Response.error(404, "{\"code\":141,\"error\":\"The value being searched for must be a string.\"}".toResponseBody())
+
+        val result = runBlocking {
+            shelfRemote.removeBookFromShelf("9hosnd9", "aw98hiw98", "w98hidn")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.ProcessingQueryError::class.java))
+    }
+
+    @Test
+    fun `Remove Book - If request return 124 error, should return time out error`() {
+        coEvery { shelfApi.removeBookFromShelf(any(), any(), any())  } returns Response.error(404, "{\"code\":124,\"error\":\"Timeout.\"}".toResponseBody())
+
+        val result = runBlocking {
+            shelfRemote.removeBookFromShelf("9hosnd9", "aw98hiw98", "w98hidn")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.TimeOutError::class.java))
+    }
+
+    @Test
+    fun `Remove Book - If request return 101 error, should return unauthorized query error`() {
+        coEvery { shelfApi.removeBookFromShelf(any(), any(), any()) } returns Response.error(404, "{\"code\":101,\"error\":\"Object not found.\"}".toResponseBody())
+
+        val result = runBlocking {
+            shelfRemote.removeBookFromShelf("9hosnd9", "aw98hiw98", "w98hidn")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.UnauthorizedQueryError::class.java))
+    }
     //endregion
 
     //region Remove shelf
+    @Test
+    fun `Remove Shelf - Not null`() {
+        coEvery { shelfApi.removeShelf(any(), any()) } returns Response.success(Unit)
 
+        val result = runBlocking {
+            shelfRemote.removeShelf("9hosnd9", "aw98hiw98")
+        }
+
+        assertEquals(result.data, Unit)
+    }
+
+    @Test
+    fun `Remove Shelf - If session token is empty, should return invalid session token error`() {
+        coEvery { shelfApi.removeShelf(any(), any()) } returns Response.success(Unit)
+
+        val result = runBlocking {
+            shelfRemote.removeShelf("", "aw98hiw98")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.InvalidSessionTokenError::class.java))
+    }
+
+    @Test
+    fun `Remove Shelf - If session token is null, should return invalid session token error`() {
+        coEvery { shelfApi.removeShelf(any(), any()) } returns Response.success(Unit)
+
+        val result = runBlocking {
+            shelfRemote.removeShelf(null, "aw98hiw98")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.InvalidSessionTokenError::class.java))
+    }
+
+    @Test
+    fun `Remove Shelf - If shelf Id is empty, should return empty shelf id error`() {
+        coEvery { shelfApi.removeShelf(any(), any()) } returns Response.success(Unit)
+
+        val result = runBlocking {
+            shelfRemote.removeShelf("9hosnd9", "")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.EmptyShelfId::class.java))
+    }
+
+    @Test
+    fun `Remove Shelf - If request return 141 error, should return processing query error`() {
+        coEvery { shelfApi.removeShelf(any(), any())  } returns Response.error(404, "{\"code\":141,\"error\":\"The value being searched for must be a string.\"}".toResponseBody())
+
+        val result = runBlocking {
+            shelfRemote.removeShelf("9hosnd9", "aw98hiw98")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.ProcessingQueryError::class.java))
+    }
+
+    @Test
+    fun `Remove Shelf - If request return 124 error, should return time out error`() {
+        coEvery { shelfApi.removeShelf(any(), any())  } returns Response.error(404, "{\"code\":124,\"error\":\"Timeout.\"}".toResponseBody())
+
+        val result = runBlocking {
+            shelfRemote.removeShelf("9hosnd9", "aw98hiw98")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.TimeOutError::class.java))
+    }
+
+    @Test
+    fun `Remove Shelf - If request return 101 error, should return unauthorized query error`() {
+        coEvery { shelfApi.removeShelf(any(), any()) } returns Response.error(404, "{\"code\":101,\"error\":\"Object not found.\"}".toResponseBody())
+
+        val result = runBlocking {
+            shelfRemote.removeShelf("9hosnd9", "aw98hiw98")
+        }
+
+        assertThat(result.error, instanceOf(ShelfError.UnauthorizedQueryError::class.java))
+    }
     //endregion
 }

@@ -16,4 +16,8 @@ interface IShelfRemoteData {
     suspend fun changeShelfPrivacy(sessionToken: String?, shelfId: String, isPublic: Boolean): ShelfResult<Shelf>
 
     suspend fun addBookToShelf(sessionToken: String?, shelfId: String, bookId: String): ShelfResult<Shelf>
+
+    suspend fun removeBookFromShelf(sessionToken: String?, shelfId: String, bookId: String): ShelfResult<Shelf>
+
+    suspend fun removeShelf(sessionToken: String?, shelfId: String): ShelfResult<Unit>
 }

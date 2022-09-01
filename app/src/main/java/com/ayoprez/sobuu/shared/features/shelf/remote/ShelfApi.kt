@@ -16,7 +16,7 @@ interface ShelfApi {
     ): Response<List<Shelf>>
 
     @FormUrlEncoded
-    @POST("functions/searchShelf")
+    @POST("functions/getAllShelfsFromUser")
     suspend fun getAllUserShelves(
         @Field("sessionToken") sessionToken: String
     ): Response<List<Shelf>>
@@ -61,4 +61,19 @@ interface ShelfApi {
         @Field("shelfId") shelfId: String,
         @Field("bookId") bookId: String,
     ): Response<Shelf>
+
+    @FormUrlEncoded
+    @POST("functions/removeBookFromShelf")
+    suspend fun removeBookFromShelf(
+        @Field("sessionToken") sessionToken: String,
+        @Field("shelfId") shelfId: String,
+        @Field("bookId") bookId: String,
+    ): Response<Shelf>
+    
+    @FormUrlEncoded
+    @POST("functions/removeShelf")
+    suspend fun removeShelf(
+        @Field("sessionToken") sessionToken: String,
+        @Field("shelfId") shelfId: String,
+    ): Response<Unit>
 }

@@ -105,6 +105,35 @@ class ShelfRemoteDataImpl @Inject constructor(
         }
     }
 
+    override suspend fun removeBookFromShelf(
+        sessionToken: String?,
+        shelfId: String,
+        bookId: String
+    ): ShelfResult<Shelf> {
+        if (shelfId.isBlank()) return ShelfResult.Error(ShelfError.EmptyShelfId)
+        if (bookId.isBlank()) return ShelfResult.Error(ShelfError.EmptyBookId)
+        return execute(sessionToken) {
+            api.removeBookFromShelf(
+                sessionToken = it,
+                shelfId = shelfId,
+                bookId = bookId
+            )
+        }
+    }
+
+    override suspend fun removeShelf(
+        sessionToken: String?,
+        shelfId: String
+    ): ShelfResult<Unit> {
+        if (shelfId.isBlank()) return ShelfResult.Error(ShelfError.EmptyShelfId)
+        return execute(sessionToken) {
+            api.removeShelf(
+                sessionToken = it,
+                shelfId = shelfId
+            )
+        }
+    }
+
     private suspend fun <T>execute(sessionToken: String?, func: suspend (sessionToken: String) -> Response<T>): ShelfResult<T> {
         return try {
             if (sessionToken.isNullOrBlank()) return ShelfResult.Error(ShelfError.InvalidSessionTokenError)
