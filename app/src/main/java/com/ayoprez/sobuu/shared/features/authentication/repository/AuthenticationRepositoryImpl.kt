@@ -30,6 +30,9 @@ class AuthenticationRepositoryImpl @Inject constructor(
             is AuthenticationResult.Registered -> {
                 AuthenticationResult.Registered()
             }
+            is AuthenticationResult.ResetPassword -> {
+                AuthenticationResult.ResetPassword()
+            }
         }
     }
 
@@ -61,6 +64,10 @@ class AuthenticationRepositoryImpl @Inject constructor(
         } else {
             result
         }
+    }
+
+    override suspend fun resetPassword(email: String?): AuthenticationResult<Unit> {
+        return authRemoteData.resetPassword(email)
     }
 
     override suspend fun getSessionToken(username: String, password: String): String? {

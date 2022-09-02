@@ -12,6 +12,8 @@ interface IAuthenticationRepository {
 
     suspend fun authenticate(): AuthenticationResult<Unit>
 
+    suspend fun resetPassword(email: String?): AuthenticationResult<Unit>
+
     suspend fun getSessionToken(username: String, password: String): String?
 
     suspend fun setSessionToken(token: String?)

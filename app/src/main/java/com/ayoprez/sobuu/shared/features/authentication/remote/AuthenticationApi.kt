@@ -28,8 +28,14 @@ interface AuthenticationApi {
     ): Response<SessionTokenApi>
 
     @FormUrlEncoded
-    @POST("functions/logout") //TODO To be implemented in backend
+    @POST("functions/logout")
     suspend fun logout(
         @Field("sessionToken") sessionToken: String,
+    ): Response<Void>
+
+    @FormUrlEncoded
+    @POST("functions/resetPassword")
+    suspend fun resetPassword(
+        @Field("email") email: String,
     ): Response<Void>
 }

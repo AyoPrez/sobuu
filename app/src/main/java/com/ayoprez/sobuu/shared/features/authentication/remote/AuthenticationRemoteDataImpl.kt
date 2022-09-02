@@ -109,6 +109,36 @@ class AuthenticationRemoteDataImpl @Inject constructor(
         }
     }
 
+    override suspend fun resetPassword(email: String?): AuthenticationResult<Unit> {
+        return try {
+            if (email.isNullOrBlank()) {
+                return AuthenticationResult.Error(AuthenticationError.EmptyCredentialsError)
+            }
+
+            val response = authApi.resetPassword(email)
+
+            if(response.body() == null && response.errorBody() != null) {
+                errorBodyHandle(response.errorBody()!!)
+            } else {
+                AuthenticationResult.ResetPassword()
+            }
+        } catch(e: HttpException) {
+            when(e.code()) {
+                401 -> {
+                    AuthenticationResult.Unauthorized()
+                }
+                209 -> {
+                    AuthenticationResult.Error(AuthenticationError.InvalidSessionToken)
+                }
+                else -> {
+                    AuthenticationResult.Error(AuthenticationError.UnknownError)
+                }
+            }
+        } catch (e: Exception) {
+            AuthenticationResult.Error(AuthenticationError.UnknownError)
+        }
+    }
+
     private fun <T>errorBodyHandle(errorBody: ResponseBody): AuthenticationResult<T> {
         val response = errorBody.string()
 

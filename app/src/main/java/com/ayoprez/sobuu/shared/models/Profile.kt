@@ -4,5 +4,6 @@ data class Profile(val id: String,
                    val giveUp: List<Book>,
                    val alreadyRead: List<Book>,
                    val firstName: String,
+                   val lastName: String,
                    val following: List<Profile>,
                    val userShelves: List<Shelf>)
