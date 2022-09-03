@@ -1,8 +1,13 @@
 package com.ayoprez.sobuu.di
 
+import android.content.SharedPreferences
+import com.ayoprez.sobuu.shared.features.profile.database.IProfileLocalData
+import com.ayoprez.sobuu.shared.features.profile.database.ProfileLocalDataImpl
 import com.ayoprez.sobuu.shared.features.profile.remote.IProfileRemoteData
 import com.ayoprez.sobuu.shared.features.profile.remote.ProfileApi
 import com.ayoprez.sobuu.shared.features.profile.remote.ProfileRemoteDataImpl
+import com.ayoprez.sobuu.shared.features.profile.repository.IProfileRepository
+import com.ayoprez.sobuu.shared.features.profile.repository.ProfileRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,14 +26,14 @@ object ProfileModule {
     @Provides
     fun provideProfileRemoteData(profileApi: ProfileApi): IProfileRemoteData = ProfileRemoteDataImpl(profileApi)
 
-    //@Provides
-    //fun provideProfileLocalData(prefs: SharedPreferences): IProfileLocalData = ShelfLocalDataImpl(prefs)
+    @Provides
+    fun provideProfileLocalData(prefs: SharedPreferences): IProfileLocalData = ProfileLocalDataImpl(prefs)
 
-    /*@Provides
+    @Provides
     fun provideProfileRepository(
         profileRemoteData: IProfileRemoteData,
         profileLocalData: IProfileLocalData
-    ): IShelfRepository = ShelfRepositoryImpl(
+    ): IProfileRepository = ProfileRepositoryImpl(
         profileRemoteData = profileRemoteData,
-        profileLocalData = profileLocalData)*/
+        profileLocalData = profileLocalData)
 }
