@@ -53,6 +53,7 @@ fun LoginScreen(
                     }
                 }
                 is AuthenticationResult.Registered -> TODO()
+                is AuthenticationResult.ResetPassword -> TODO()
             }
         }
     }

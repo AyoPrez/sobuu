@@ -14,4 +14,30 @@ interface ProfileApi {
         @Field("sessionToken") sessionToken: String,
     ): Response<Profile>
 
+    @FormUrlEncoded
+    @POST("functions/getProfileFromId")
+    suspend fun getProfileFromId(
+        @Field("sessionToken") sessionToken: String,
+        @Field("profileId") profileId: String,
+    ): Response<Profile>
+
+    @FormUrlEncoded
+    @POST("functions/followProfile")
+    suspend fun followProfile(
+        @Field("sessionToken") sessionToken: String,
+        @Field("profileId") profileId: String,
+    ): Response<Profile>
+
+    @FormUrlEncoded
+    @POST("functions/unfollowProfile")
+    suspend fun unfollowProfile(
+        @Field("sessionToken") sessionToken: String,
+        @Field("profileId") profileId: String,
+    ): Response<Profile>
+
+    @FormUrlEncoded
+    @POST("functions/getFollowingProfiles")
+    suspend fun getFollowingProfiles(
+        @Field("sessionToken") sessionToken: String,
+    ): Response<List<Profile>>
 }

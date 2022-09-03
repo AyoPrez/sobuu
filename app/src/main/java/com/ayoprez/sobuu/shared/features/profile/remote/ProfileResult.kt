@@ -8,6 +8,7 @@ sealed class ProfileResult<T>(val data: T? = null, val error: ProfileError? = nu
 sealed class ProfileError {
     object UnauthorizedQueryError : ProfileError()
     object InvalidSessionTokenError : ProfileError()
+    object InvalidProfileIdError : ProfileError()
     object ProcessingQueryError : ProfileError()
     object TimeOutError : ProfileError()
     object UnknownError : ProfileError()

@@ -21,25 +21,34 @@ class ProfileRemoteDataImpl @Inject constructor(
         sessionToken: String?,
         profileId: String
     ): ProfileResult<Profile> {
-        TODO("Not yet implemented")
+        if (profileId.isBlank()) return ProfileResult.Error(ProfileError.InvalidProfileIdError)
+        return execute(sessionToken) {
+            api.getProfileFromId(it, profileId)
+        }
     }
 
     override suspend fun followProfile(
         sessionToken: String?,
         profileId: String
     ): ProfileResult<Profile> {
-        TODO("Not yet implemented")
+        if (profileId.isBlank()) return ProfileResult.Error(ProfileError.InvalidProfileIdError)
+        return execute(sessionToken) {
+            api.followProfile(it, profileId)
+        }
     }
 
     override suspend fun unfollowProfile(
         sessionToken: String?,
         profileId: String
     ): ProfileResult<Profile> {
-        TODO("Not yet implemented")
+        if (profileId.isBlank()) return ProfileResult.Error(ProfileError.InvalidProfileIdError)
+        return execute(sessionToken) {
+            api.unfollowProfile(it, profileId)
+        }
     }
 
-    override suspend fun getFollowingProfiles(sessionToken: String?): ProfileResult<List<Profile>> {
-        TODO("Not yet implemented")
+    override suspend fun getFollowingProfiles(sessionToken: String?): ProfileResult<List<Profile>> = execute(sessionToken) {
+        api.getFollowingProfiles(sessionToken = it)
     }
 
     private suspend fun <T>execute(sessionToken: String?, func: suspend (sessionToken: String) -> Response<T>): ProfileResult<T> {
