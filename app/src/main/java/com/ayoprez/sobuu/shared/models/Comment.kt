@@ -8,6 +8,6 @@ data class Comment(val id: String,
                    val text: String,
                    val hasSpoilers: Boolean,
                    val votesCounter: Long,
-                   val percentage: Byte,
-                   val pageNumber: Int,
-                   val parentCommentId: String)
+                   val percentage: Byte?,
+                   val pageNumber: Int?,
+                   val parentCommentId: String?)

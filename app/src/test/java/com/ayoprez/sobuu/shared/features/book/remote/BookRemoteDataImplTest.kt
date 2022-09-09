@@ -1,9 +1,6 @@
 package com.ayoprez.sobuu.shared.features.book.remote
 
-import com.ayoprez.sobuu.shared.models.Book
-import com.ayoprez.sobuu.shared.models.BookProgress
-import com.ayoprez.sobuu.shared.models.Profile
-import com.ayoprez.sobuu.shared.models.UserBookRating
+import com.ayoprez.sobuu.shared.features.Utils
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -21,46 +18,10 @@ import kotlin.test.assertNotNull
 internal class BookRemoteDataImplTest {
 
     private lateinit var bookRemote: IBookRemoteData
-    private val book = Book(
-        authors = listOf("Comodoer"),
-        title = "Laying Down Above",
-        description = "",
-        bookComments = listOf(),
-        bookRating = listOf(),
-        credits = listOf(),
-        id = "w98hidn",
-        isbn = listOf("", ""),
-        picture = "",
-        publishedDate = "",
-        publisher = "",
-        totalPages = 544
-    )
 
-    private val bookProgress = BookProgress(
-        id = "ewois98",
-        percentage = null,
-        page = 33,
-        finished = false,
-        giveUp = false
-    )
-
-    private val profile = Profile(
-        id = "kj98bsd",
-        giveUp = listOf(),
-        alreadyRead = listOf(),
-        firstName = "Oliver",
-        lastName = "Aceituna",
-        following = listOf(),
-        userShelves = listOf(),
-    )
-
-    private val ratingBook = UserBookRating(
-        id = "dkjbe98h",
-        book = book,
-        user = profile,
-        rating = 5.5,
-        review = "",
-    )
+    private val book = Utils.book
+    private val bookProgress = Utils.bookProgress
+    private val ratingBook = Utils.ratingBook
 
     @MockK
     lateinit var bookApi: BookApi
