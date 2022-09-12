@@ -1,8 +1,13 @@
 package com.ayoprez.sobuu.di
 
 import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import androidx.security.crypto.MasterKey.DEFAULT_AES_GCM_MASTER_KEY_SIZE
+import com.ayoprez.sobuu.BuildConfig
 import com.ayoprez.sobuu.shared.features.authentication.database.AuthenticationLocalDataImpl
 import com.ayoprez.sobuu.shared.features.authentication.database.IAuthenticationLocalData
 import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationApi
@@ -15,6 +20,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -44,7 +50,26 @@ object AuthenticationModule {
     }
 
     @Provides
-    fun provideSharePreferences(app: Application): SharedPreferences {
-        return app.getSharedPreferences("com.ayoprez.sobuu.prefs", Context.MODE_PRIVATE)
+    fun provideEncryptedSharePreferences(app: Application): SharedPreferences {
+        val spec = KeyGenParameterSpec.Builder(
+            BuildConfig.MASTER_KEY_ALIAS,
+            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+        )
+            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+            .setKeySize(DEFAULT_AES_GCM_MASTER_KEY_SIZE)
+            .build()
+
+        val masterKey = MasterKey.Builder(app)
+            .setKeyGenParameterSpec(spec)
+            .build()
+
+        return EncryptedSharedPreferences.create(
+            app.baseContext,
+            "com.ayoprez.sobuu.prefs",
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
     }
 }
