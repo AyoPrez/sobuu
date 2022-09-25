@@ -1,5 +1,8 @@
 package com.ayoprez.sobuu.shared.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
  * Reason to report:
  * -(0)Polemic comment
@@ -22,9 +25,10 @@ enum class ReportReason(reason: Byte) {
     Others(7),
 }
 
+@Parcelize
 data class Report(
     val id: String,
     val comment: Comment,
     val reason: ReportReason,
     val user: Profile,
-)
+) : Parcelable

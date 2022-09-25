@@ -1,20 +1,33 @@
 package com.ayoprez.sobuu.shared.features.profile.remote
 
+import com.ayoprez.sobuu.shared.models.BookProgress
 import com.ayoprez.sobuu.shared.models.Profile
+import com.ayoprez.sobuu.shared.models.Shelf
+import com.ayoprez.sobuu.shared.models.api_models.GetUserProfile
+import com.ayoprez.sobuu.shared.models.api_models.UserShelf
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.HttpException
 import retrofit2.Response
 import javax.inject.Inject
+import com.ayoprez.sobuu.shared.models.api_models.BookProgress as bpApiModel
 
 class ProfileRemoteDataImpl @Inject constructor(
     private val api: ProfileApi
 ): IProfileRemoteData {
 
-    override suspend fun getUserProfile(sessionToken: String?): ProfileResult<Profile> = execute(sessionToken) {
-        api.getUserProfile(
-            sessionToken = it,
-        )
+    override suspend fun getUserProfile(sessionToken: String?): ProfileResult<Profile> {
+        val result = execute(sessionToken) {
+            api.getUserProfile(
+                sessionToken = it,
+            )
+        }
+
+        return if(result.data != null) {
+            ProfileResult.Success(data = result.data.toProfile())
+        } else {
+            ProfileResult.Error(error = result.error)
+        }
     }
 
     override suspend fun getProfileFromId(
@@ -69,6 +82,7 @@ class ProfileRemoteDataImpl @Inject constructor(
                 else -> ProfileResult.Error(ProfileError.UnknownError)
             }
         } catch (e: Exception) {
+            println("---------Exception: $e")
             ProfileResult.Error(ProfileError.UnknownError)
         }
     }
@@ -88,5 +102,56 @@ class ProfileRemoteDataImpl @Inject constructor(
                     else -> ProfileResult.Error(ProfileError.UnknownError)
                 }
             }
+    }
+
+    fun GetUserProfile.toProfile(): Profile {
+        return Profile(
+            id = this.result.id,
+            firstName = this.result.firstName,
+            lastName = this.result.lastName,
+            following = emptyList(),
+            userShelves = this.result.userShelves.toShelfList(),
+            bookProgress = this.result.bookProgress.toBookProgressList(),
+            giveUp = emptyList(),
+            alreadyRead = emptyList()
+        )
+    }
+
+    fun List<GetUserProfile>.toProfileList(): List<Profile> {
+        return this.map {
+            it.toProfile()
+        }
+    }
+
+    fun UserShelf.toShelf(): Shelf {
+        return Shelf(
+            id = this.id,
+            books = emptyList(),
+            name = this.name,
+            description = this.description ?: "",
+            isPublic = this.isPublic,
+        )
+    }
+
+    fun List<UserShelf>.toShelfList(): List<Shelf> {
+        return this.map {
+            it.toShelf()
+        }
+    }
+
+    fun bpApiModel.toBookProgress(): BookProgress {
+        return BookProgress(
+            id = this.id,
+            percentage = this.percentage,
+            page = this.page,
+            finished = this.finished,
+            giveUp = this.giveUp,
+        )
+    }
+
+    fun List<bpApiModel>.toBookProgressList(): List<BookProgress> {
+        return this.map {
+            it.toBookProgress()
+        }
     }
 }

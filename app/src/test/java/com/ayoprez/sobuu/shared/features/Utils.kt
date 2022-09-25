@@ -21,6 +21,7 @@ object Utils {
         lastName = "Aceituna",
         following = listOf(),
         userShelves = listOf(),
+        bookProgress = listOf(),
     )
 
     val comment = Comment(

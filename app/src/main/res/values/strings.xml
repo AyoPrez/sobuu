@@ -1,3 +1,38 @@
 <resources>
-    <string name="app_name">sobuu</string>
+    <string name="app_name">Sobuu</string>
+    <string name="terms">Terms and Conditions</string>
+    <string name="privacy">Privacy policy</string>
+
+
+    <!-- Authorization -->
+    <string name="auth_login">Login</string>
+    <string name="auth_username">Username</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_forgot_password">Forgot password?</string>
+    <string name="auth_reset_password">Reset password</string>
+    <string name="auth_create_account">Create new account</string>
+    <string name="auth_logout">Logout</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Profile</string>
+    <string name="profile_name">Name: %s</string>
+
+    <!-- Shelf Errors -->
+    <string name="error_empty_description"></string>
+    <string name="error_empty_name"></string>
+    <string name="error_empty_term"></string>
+
+    <!-- General Errors -->
+    <string name="unknown_error">Unknown error.</string>
+    <string name="invalid_session_token_error">Invalid session. Login again.</string>
+    <string name="processing_query_error">Something went wrong while processing the order.</string>
+    <string name="time_out_error">Something went wrong. Try again.</string>
+    <string name="Unauthorized_query_error">you are not able to do that.</string>
+
+
+    ProfileError.InvalidSessionTokenError -> TODO()
+    ProfileError.ProcessingQueryError -> TODO()
+    ProfileError.TimeOutError -> TODO()
+    ProfileError.UnauthorizedQueryError -> TODO()
 </resources>

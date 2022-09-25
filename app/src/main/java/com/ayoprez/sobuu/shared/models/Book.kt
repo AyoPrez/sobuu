@@ -1,5 +1,11 @@
 package com.ayoprez.sobuu.shared.models
 
+import android.os.Parcelable
+import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
+
+@JsonClass(generateAdapter = true)
+@Parcelize
 data class Book(val id: String,
                 val title: String,
                 val authors: List<String>,
@@ -11,4 +17,4 @@ data class Book(val id: String,
                 val isbn: List<String>,
                 val publishedDate: String,
                 val bookComments: List<Comment>,
-                val bookRating:List<UserBookRating>)
+                val bookRating:List<UserBookRating>) : Parcelable

@@ -1,4 +1,4 @@
-package com.ayoprez.sobuu
+package com.ayoprez.sobuu.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,12 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ayoprez.sobuu.presentation.shelf.ShelfViewModel
+import com.ayoprez.sobuu.presentation.profile.ProfileViewModel
 import com.ayoprez.sobuu.ui.theme.SobuuTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,30 +18,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SobuuTheme {
-                val viewModel = hiltViewModel<ShelfViewModel>()
-
-
+                val viewModel = hiltViewModel<ProfileViewModel>()
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    SobuuTheme {
-        Greeting("Android")
     }
 }

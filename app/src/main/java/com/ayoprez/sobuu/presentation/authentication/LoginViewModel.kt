@@ -40,15 +40,14 @@ class LoginViewModel @Inject constructor(private val auth: AuthenticationReposit
             is AuthenticationUIEvent.RegistrationUsernameChanged -> {
                 state = state.copy(registrationUsername = event.value)
             }
-            AuthenticationUIEvent.loginUser -> {
-                login()
-            }
-            AuthenticationUIEvent.registerUser -> {
-                registration()
-            }
-            AuthenticationUIEvent.logoutUser -> {
-                logout()
-            }
+            AuthenticationUIEvent.loginUser -> login()
+            AuthenticationUIEvent.registerUser -> registration()
+            AuthenticationUIEvent.logoutUser -> logout()
+            AuthenticationUIEvent.createNewAccount -> openCreateNewAccountScreen()
+            AuthenticationUIEvent.forgotPassword -> openForgotPasswordScreen()
+            AuthenticationUIEvent.openPrivacyPolicy -> openPrivacyPolicy()
+            AuthenticationUIEvent.openTermsAndConditions -> openTermsAndConditions()
+            AuthenticationUIEvent.resetPassword -> resetPassword()
         }
     }
 
@@ -116,5 +115,23 @@ class LoginViewModel @Inject constructor(private val auth: AuthenticationReposit
             resultChannel.send(result)
             state = state.copy(isLoading = false)
         }
+    }
+
+    private fun openCreateNewAccountScreen() {
+
+    }
+
+    private fun openForgotPasswordScreen() {
+
+    }
+
+    private fun openPrivacyPolicy() {
+
+    }
+
+    private fun openTermsAndConditions() {}
+
+    private fun resetPassword() {
+
     }
 }

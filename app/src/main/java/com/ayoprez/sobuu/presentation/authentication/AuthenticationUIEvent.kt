@@ -10,4 +10,9 @@ sealed class AuthenticationUIEvent {
     object loginUser: AuthenticationUIEvent()
     object logoutUser: AuthenticationUIEvent()
 
+    object createNewAccount: AuthenticationUIEvent()
+    object forgotPassword: AuthenticationUIEvent()
+    object openTermsAndConditions: AuthenticationUIEvent()
+    object openPrivacyPolicy: AuthenticationUIEvent()
+    object resetPassword: AuthenticationUIEvent()
 }

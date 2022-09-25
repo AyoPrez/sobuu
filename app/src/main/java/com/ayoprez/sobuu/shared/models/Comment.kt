@@ -1,7 +1,12 @@
 package com.ayoprez.sobuu.shared.models
 
+import android.os.Parcelable
+import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 
+@JsonClass(generateAdapter = true)
+@Parcelize
 data class Comment(val id: String,
                    val user: Profile,
                    val publishedDate: LocalDateTime,
@@ -10,4 +15,4 @@ data class Comment(val id: String,
                    val votesCounter: Long,
                    val percentage: Byte?,
                    val pageNumber: Int?,
-                   val parentCommentId: String?)
+                   val parentCommentId: String?) : Parcelable

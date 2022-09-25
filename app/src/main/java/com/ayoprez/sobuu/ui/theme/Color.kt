@@ -2,10 +2,15 @@ package com.ayoprez.sobuu.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val DarkLava = Color(0xFF483C32)
+val GreenSheen = Color(0xFF79AEA3)
+val Vermilion = Color(0xFFCD4631)
+val SpanishGray = Color(0xFF969A97)
+val WhiteBlue = Color(0xFFF6FBFF)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+
+val LightLava = Color(0xFFC2A287)
+val DarkGreenSheen = Color(0xFF273835)
+val DarkVermilion = Color(0xFF4E1B13)
+val SpanishDarkGray = Color(0xFF4A4D4A)
+val BlackBlue = Color(0xFF13161A)
