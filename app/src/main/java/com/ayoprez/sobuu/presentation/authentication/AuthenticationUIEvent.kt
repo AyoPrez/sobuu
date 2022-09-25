@@ -5,14 +5,5 @@ sealed class AuthenticationUIEvent {
     data class RegistrationPasswordChanged(val value: String): AuthenticationUIEvent()
     object registerUser: AuthenticationUIEvent()
 
-    data class LoginUsernameChanged(val value: String): AuthenticationUIEvent()
-    data class LoginPasswordChanged(val value: String): AuthenticationUIEvent()
-    object loginUser: AuthenticationUIEvent()
     object logoutUser: AuthenticationUIEvent()
-
-    object createNewAccount: AuthenticationUIEvent()
-    object forgotPassword: AuthenticationUIEvent()
-    object openTermsAndConditions: AuthenticationUIEvent()
-    object openPrivacyPolicy: AuthenticationUIEvent()
-    object resetPassword: AuthenticationUIEvent()
 }

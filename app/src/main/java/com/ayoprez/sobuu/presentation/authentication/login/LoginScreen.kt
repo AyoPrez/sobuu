@@ -1,4 +1,4 @@
-package com.ayoprez.sobuu.presentation.authentication
+package com.ayoprez.sobuu.presentation.authentication.login
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ayoprez.sobuu.R
 import com.ayoprez.sobuu.presentation.destinations.LoginScreenDestination
+import com.ayoprez.sobuu.presentation.destinations.ResetPasswordScreenDestination
 import com.ayoprez.sobuu.presentation.destinations.WelcomeScreenDestination
 import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationResult
 import com.ayoprez.sobuu.ui.theme.*
@@ -90,7 +91,7 @@ fun LoginScreen(
             nameFieldValue = state.loginUsername,
             onNameValueChange = {
                 viewModel.onEvent(
-                    AuthenticationUIEvent.LoginUsernameChanged(
+                    LoginUIEvent.LoginUsernameChanged(
                         it
                     )
                 )
@@ -98,24 +99,32 @@ fun LoginScreen(
             passwordFieldValue = state.loginPassword,
             onPasswordValueChange = {
                 viewModel.onEvent(
-                    AuthenticationUIEvent.LoginPasswordChanged(
+                    LoginUIEvent.LoginPasswordChanged(
                         it
                     )
                 )
             },
-            onLoginButtonClick = { viewModel.onEvent(AuthenticationUIEvent.loginUser) }
+            onLoginButtonClick = { viewModel.onEvent(LoginUIEvent.loginUser) }
         )
 
         Spacer(modifier = Modifier.height(45.dp))
 
         OptionsButtons(
-            onForgotPasswordButtonClick = { viewModel.onEvent(AuthenticationUIEvent.forgotPassword) },
-            onCreateNewAccountButtonClick = { viewModel.onEvent(AuthenticationUIEvent.createNewAccount) },
+            onForgotPasswordButtonClick = {
+                nav?.navigate(ResetPasswordScreenDestination)
+            },
+            onCreateNewAccountButtonClick = {
+                //viewModel.onEvent(AuthenticationUIEvent.createNewAccount)
+            },
         )
 
         LegalButtons(
-            onTermsAndConditionsButtonClick = { viewModel.onEvent(AuthenticationUIEvent.openTermsAndConditions) },
-            onPrivacyPolicyButtonClick = { viewModel.onEvent(AuthenticationUIEvent.openPrivacyPolicy) },
+            onTermsAndConditionsButtonClick = {
+                //viewModel.onEvent(AuthenticationUIEvent.openTermsAndConditions)
+            },
+            onPrivacyPolicyButtonClick = {
+                //viewModel.onEvent(AuthenticationUIEvent.openPrivacyPolicy)
+            },
         )
     }
 

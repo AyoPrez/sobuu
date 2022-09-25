@@ -15,8 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ayoprez.sobuu.R
-import com.ayoprez.sobuu.presentation.authentication.AuthenticationUIEvent
-import com.ayoprez.sobuu.presentation.authentication.LoginViewModel
+import com.ayoprez.sobuu.presentation.authentication.login.LoginViewModel
 import com.ayoprez.sobuu.presentation.destinations.LoginScreenDestination
 import com.ayoprez.sobuu.presentation.destinations.ProfileScreenDestination
 import com.ayoprez.sobuu.presentation.destinations.WelcomeScreenDestination
@@ -55,7 +54,7 @@ fun WelcomeScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = {
-            loginViewModel.onEvent(AuthenticationUIEvent.logoutUser)
+            //loginViewModel.onEvent(AuthenticationUIEvent.logoutUser)
         }) {
             Text(stringResource(id = R.string.auth_logout))
         }

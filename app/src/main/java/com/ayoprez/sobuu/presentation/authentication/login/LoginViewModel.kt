@@ -1,4 +1,4 @@
-package com.ayoprez.sobuu.presentation.authentication
+package com.ayoprez.sobuu.presentation.authentication.login
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val auth: AuthenticationRepositoryImpl): ViewModel() {
 
-    var state by mutableStateOf(AuthenticationState())
+    var state by mutableStateOf(LoginState())
 
     private val resultChannel = Channel<AuthenticationResult<Unit>>()
     val authResult = resultChannel.receiveAsFlow()
@@ -26,28 +26,15 @@ class LoginViewModel @Inject constructor(private val auth: AuthenticationReposit
         authentication()
     }
 
-    fun onEvent(event: AuthenticationUIEvent) {
+    fun onEvent(event: LoginUIEvent) {
         when(event) {
-            is AuthenticationUIEvent.LoginPasswordChanged -> {
+            is LoginUIEvent.LoginPasswordChanged -> {
                 state = state.copy(loginPassword = event.value)
             }
-            is AuthenticationUIEvent.LoginUsernameChanged -> {
+            is LoginUIEvent.LoginUsernameChanged -> {
                 state = state.copy(loginUsername = event.value)
             }
-            is AuthenticationUIEvent.RegistrationPasswordChanged -> {
-                state = state.copy(registrationPassword = event.value)
-            }
-            is AuthenticationUIEvent.RegistrationUsernameChanged -> {
-                state = state.copy(registrationUsername = event.value)
-            }
-            AuthenticationUIEvent.loginUser -> login()
-            AuthenticationUIEvent.registerUser -> registration()
-            AuthenticationUIEvent.logoutUser -> logout()
-            AuthenticationUIEvent.createNewAccount -> openCreateNewAccountScreen()
-            AuthenticationUIEvent.forgotPassword -> openForgotPasswordScreen()
-            AuthenticationUIEvent.openPrivacyPolicy -> openPrivacyPolicy()
-            AuthenticationUIEvent.openTermsAndConditions -> openTermsAndConditions()
-            AuthenticationUIEvent.resetPassword -> resetPassword()
+            LoginUIEvent.loginUser -> login()
         }
     }
 
@@ -91,6 +78,7 @@ class LoginViewModel @Inject constructor(private val auth: AuthenticationReposit
         }
     }
 
+    /*
     private fun registration() {
         viewModelScope.launch {
             state = state.copy(isLoading = true)
@@ -106,7 +94,7 @@ class LoginViewModel @Inject constructor(private val auth: AuthenticationReposit
 
             state = state.copy(isLoading = false)
         }
-    }
+    }*/
 
     private fun authentication() {
         viewModelScope.launch {
@@ -115,23 +103,5 @@ class LoginViewModel @Inject constructor(private val auth: AuthenticationReposit
             resultChannel.send(result)
             state = state.copy(isLoading = false)
         }
-    }
-
-    private fun openCreateNewAccountScreen() {
-
-    }
-
-    private fun openForgotPasswordScreen() {
-
-    }
-
-    private fun openPrivacyPolicy() {
-
-    }
-
-    private fun openTermsAndConditions() {}
-
-    private fun resetPassword() {
-
     }
 }

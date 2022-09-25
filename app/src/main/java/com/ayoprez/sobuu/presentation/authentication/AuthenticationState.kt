@@ -7,6 +7,4 @@ data class AuthenticationState(
     val registrationPassword: String = "",
     val registrationFirstname: String = "",
     val registrationLastname: String = "",
-    val loginUsername: String = "",
-    val loginPassword: String = "",
 )
