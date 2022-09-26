@@ -78,24 +78,6 @@ class LoginViewModel @Inject constructor(private val auth: AuthenticationReposit
         }
     }
 
-    /*
-    private fun registration() {
-        viewModelScope.launch {
-            state = state.copy(isLoading = true)
-            val result = auth.registerUser(
-                username = state.registrationUsername,
-                email = state.registrationEmail,
-                password = state.registrationPassword,
-                firstname = state.registrationFirstname,
-                lastname = state.registrationLastname,
-            )
-
-            resultChannel.send(result)
-
-            state = state.copy(isLoading = false)
-        }
-    }*/
-
     private fun authentication() {
         viewModelScope.launch {
             state = state.copy(isLoading = true)

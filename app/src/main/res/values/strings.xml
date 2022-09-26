@@ -9,10 +9,17 @@
     <string name="auth_username">Username</string>
     <string name="auth_email">Email</string>
     <string name="auth_password">Password</string>
+    <string name="auth_confirm_password">Confirm password</string>
     <string name="auth_forgot_password">Forgot password?</string>
     <string name="auth_reset_password">Reset password</string>
-    <string name="auth_create_account">Create new account</string>
+    <string name="auth_create_new_account">Create new account</string>
+    <string name="auth_create_account">Create account</string>
+    <string name="auth_first_name_account">First name</string>
+    <string name="auth_last_name_account">Last name</string>
+    <string name="auth_privacy_confirmation">I have read the privacy policy and terms of the app</string>
     <string name="auth_logout">Logout</string>
+    <string name="auth_reset_password_email">We have sent you an email with a link that you can use to reset your password.</string>
+    <string name="auth_verification_email">We have sent you a verification email with a link. Click the link to finish the creation of the account.</string>
 
     <!-- Profile -->
     <string name="profile_title">Profile</string>
@@ -29,10 +36,4 @@
     <string name="processing_query_error">Something went wrong while processing the order.</string>
     <string name="time_out_error">Something went wrong. Try again.</string>
     <string name="Unauthorized_query_error">you are not able to do that.</string>
-
-
-    ProfileError.InvalidSessionTokenError -> TODO()
-    ProfileError.ProcessingQueryError -> TODO()
-    ProfileError.TimeOutError -> TODO()
-    ProfileError.UnauthorizedQueryError -> TODO()
 </resources>

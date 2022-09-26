@@ -99,6 +99,8 @@ dependencies {
     implementation 'io.github.raamcosta.compose-destinations:animations-core:1.6.20-beta'
     ksp 'io.github.raamcosta.compose-destinations:ksp:1.6.20-beta'
 
+    //Lottie
+    implementation 'com.airbnb.android:lottie-compose:5.2.0'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'

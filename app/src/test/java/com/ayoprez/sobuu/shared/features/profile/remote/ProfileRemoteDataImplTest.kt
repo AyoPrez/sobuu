@@ -1,6 +1,8 @@
 package com.ayoprez.sobuu.shared.features.profile.remote
 
 import com.ayoprez.sobuu.shared.models.Profile
+import com.ayoprez.sobuu.shared.models.api_models.GetUserProfile
+import com.ayoprez.sobuu.shared.models.api_models.Result
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -16,6 +18,16 @@ import kotlin.test.assertEquals
 internal class ProfileRemoteDataImplTest {
 
     private lateinit var profileRemote: IProfileRemoteData
+
+    private val getUserProfile = GetUserProfile(
+        result = Result(
+            id = "ds90ohw",
+            bookProgress = listOf(),
+            firstName = "Glock",
+            lastName = "Stephen",
+            userShelves = listOf(),
+        )
+    )
     private val profile: Profile = Profile(
         id = "ds90ohw",
         firstName = "Glock",
@@ -24,6 +36,7 @@ internal class ProfileRemoteDataImplTest {
         alreadyRead = listOf(),
         userShelves = listOf(),
         following = listOf(),
+        bookProgress = listOf(),
     )
 
     @MockK
@@ -38,7 +51,7 @@ internal class ProfileRemoteDataImplTest {
     //region Get User Profile
     @Test
     fun `Get User Profile - Everything good`() {
-        coEvery { profileApi.getUserProfile(any()) } returns Response.success(profile)
+        coEvery { profileApi.getUserProfile(any()) } returns Response.success(getUserProfile)
 
         val result = runBlocking {
             profileRemote.getUserProfile("9hosnd9")
@@ -49,7 +62,7 @@ internal class ProfileRemoteDataImplTest {
 
     @Test
     fun `Get User Profile - If session token is empty, should return invalid session token error`() {
-        coEvery { profileApi.getUserProfile(any()) } returns Response.success(profile)
+        coEvery { profileApi.getUserProfile(any()) } returns Response.success(getUserProfile)
 
         val result = runBlocking {
             profileRemote.getUserProfile("")
@@ -63,7 +76,7 @@ internal class ProfileRemoteDataImplTest {
 
     @Test
     fun `Get User Profile - If session token is null, should return invalid session token error`() {
-        coEvery { profileApi.getUserProfile(any()) } returns Response.success(profile)
+        coEvery { profileApi.getUserProfile(any()) } returns Response.success(getUserProfile)
 
         val result = runBlocking {
             profileRemote.getUserProfile(null)

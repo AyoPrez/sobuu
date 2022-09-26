@@ -2,30 +2,27 @@ package com.ayoprez.sobuu.presentation.authentication.reset_pass
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ayoprez.sobuu.R
-import com.ayoprez.sobuu.ui.theme.*
+import com.ayoprez.sobuu.presentation.authentication.EmailType
+import com.ayoprez.sobuu.presentation.custom_widgets.CompleteRoundedOutlineTextField
+import com.ayoprez.sobuu.presentation.custom_widgets.CustomTopAppBar
+import com.ayoprez.sobuu.presentation.custom_widgets.RoundedFillButton
+import com.ayoprez.sobuu.presentation.destinations.SentEmailScreenDestination
+import com.ayoprez.sobuu.ui.theme.GreenSheen
+import com.ayoprez.sobuu.ui.theme.WhiteBlue
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,111 +36,64 @@ fun ResetPasswordScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        stringResource(id = R.string.auth_reset_password),
-                        style = TextStyle(
-                            color = WhiteBlue,
-                            fontSize = 24.sp,
-                            fontFamily = SourceSans
-                        )
-                    )
-                },
-                colors = TopAppBarDefaults.largeTopAppBarColors(GreenSheen),
-                modifier = Modifier.fillMaxWidth(),
-                navigationIcon = {
-                    IconButton(onClick = {
-                        nav?.navigateUp()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "",
-                            tint = WhiteBlue,
-                        )
-                    }
-                })
+            CustomTopAppBar(
+                nav = nav,
+                text = stringResource(id = R.string.auth_reset_password),
+                backgroundColor = GreenSheen,
+                iconColor = WhiteBlue,
+                titleColor = WhiteBlue,
+            )
         },
         content = {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(GreenSheen),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                OutlinedTextField(
-                    value = state.forgotEmail,
-                    onValueChange = {
-                        viewModel.onEvent(ResetPassUIEvent.ForgotPasswordEmailChanged(it))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(32.dp)
-                        .background(
-                            shape = RoundedCornerShape(10.dp),
-                            color = WhiteBlue
-                        ),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = DarkLava,
-                        unfocusedBorderColor = DarkLava,
-                    ),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
-                    keyboardActions = KeyboardActions(
-                        onNext = {
-                            viewModel.onEvent(ResetPassUIEvent.resetPassword)
-                        }
-                    ),
-                    placeholder = {
-                        Text(
-                            text = stringResource(id = R.string.auth_email),
-                            style = TextStyle(
-                                color = SpanishGray,
-                                fontFamily = SourceSans,
-                                fontSize = 20.sp,
-                            )
-                        )
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    singleLine = true,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Email,
-                            contentDescription = "",
-                            tint = SpanishGray,
-                        )
-                    }
-                )
-
-                FilledTonalButton(
-                    onClick = {
-                        viewModel.onEvent(ResetPassUIEvent.resetPassword)
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Vermilion,
-                        contentColor = WhiteBlue,
-                        disabledContainerColor = SpanishGray,
-                        disabledContentColor = WhiteBlue,
-                    )
-                ) {
-                    Text(
-                        stringResource(id = R.string.auth_reset_password),
-                        style = TextStyle(
-                            fontSize = 22.sp,
-                            color = WhiteBlue,
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = SourceSans
-                        ),
-                        textAlign = TextAlign.Center,
-                    )
+            ResetPasswordForm(
+                emailFieldValue = state.forgotEmail,
+                onEmailValueChange = {
+                    viewModel.onEvent(ResetPassUIEvent.ForgotPasswordEmailChanged(it))
+                },
+                onResetPasswordButtonClick = {
+                    //viewModel.onEvent(ResetPassUIEvent.resetPassword)
+                    nav?.navigate(SentEmailScreenDestination(emailType = EmailType.RESET_PASSWORD))
                 }
-            }
+            )
         },
     )
+}
+
+@Composable
+private fun ResetPasswordForm(
+    emailFieldValue: String,
+    onEmailValueChange: (String) -> Unit,
+    onResetPasswordButtonClick: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(GreenSheen),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(150.dp))
+        CompleteRoundedOutlineTextField(
+            fieldValue = emailFieldValue,
+            onFieldValueChange = onEmailValueChange,
+            placeholderText = stringResource(id = R.string.auth_email),
+            icon = Icons.Filled.Email,
+            onKeyboardActionClicked = onResetPasswordButtonClick,
+        )
+
+        RoundedFillButton(
+            onClick = { onResetPasswordButtonClick() },
+            text = stringResource(id = R.string.auth_reset_password),
+        )
+    }
 }
 
 @Preview(showSystemUi = true, showBackground = true, group = "Done")
 @Composable
 fun ComposableResetPasswordPreview() {
-    ResetPasswordScreen(null)
+    ResetPasswordForm(
+        emailFieldValue = "",
+        onEmailValueChange = {},
+        onResetPasswordButtonClick = {}
+    )
 }

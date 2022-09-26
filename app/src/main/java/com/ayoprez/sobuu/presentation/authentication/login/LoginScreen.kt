@@ -4,9 +4,6 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Lock
@@ -16,22 +13,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ayoprez.sobuu.R
+import com.ayoprez.sobuu.presentation.custom_widgets.*
 import com.ayoprez.sobuu.presentation.destinations.LoginScreenDestination
+import com.ayoprez.sobuu.presentation.destinations.RegistrationScreenDestination
 import com.ayoprez.sobuu.presentation.destinations.ResetPasswordScreenDestination
 import com.ayoprez.sobuu.presentation.destinations.WelcomeScreenDestination
 import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationResult
@@ -114,7 +109,7 @@ fun LoginScreen(
                 nav?.navigate(ResetPasswordScreenDestination)
             },
             onCreateNewAccountButtonClick = {
-                //viewModel.onEvent(AuthenticationUIEvent.createNewAccount)
+                nav?.navigate(RegistrationScreenDestination)
             },
         )
 
@@ -162,7 +157,6 @@ fun LoginAppTitle() {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginForm(
     nameFieldValue: String,
@@ -171,7 +165,6 @@ fun LoginForm(
     onPasswordValueChange: (String) -> Unit,
     onLoginButtonClick: () -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -180,98 +173,23 @@ fun LoginForm(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        OutlinedTextField(
-            value = nameFieldValue,
-            onValueChange = onNameValueChange,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    shape = RoundedCornerShape(
-                        topStart = 10.dp,
-                        topEnd = 10.dp
-                    ),
-                    color = WhiteBlue
-                ),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = DarkLava,
-                unfocusedBorderColor = DarkLava,
-            ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    focusManager.moveFocus(FocusDirection.Down)
-                }
-            ),
-            placeholder = {
-                Text(
-                    text = stringResource(id = R.string.auth_username),
-                    style = TextStyle(
-                        color = SpanishGray,
-                        fontFamily = SourceSans,
-                        fontSize = 20.sp,
-                    )
-                )
-            },
-            shape = RoundedCornerShape(
-                topStart = 10.dp,
-                topEnd = 10.dp
-            ),
-            singleLine = true,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Person,
-                    contentDescription = "",
-                    tint = SpanishGray,
-                )
-            }
+        TopRoundedOutlinedTextField(
+            fieldValue = nameFieldValue,
+            onFieldValueChange = onNameValueChange,
+            placeholderText = stringResource(id = R.string.auth_username),
+            icon = Icons.Filled.Person,
         )
 
-        OutlinedTextField(
-            value = passwordFieldValue,
-            onValueChange = onPasswordValueChange,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    shape = RoundedCornerShape(
-                        bottomStart = 10.dp,
-                        bottomEnd = 10.dp,
-                    ),
-                    color = WhiteBlue
-                ),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = DarkLava,
-                unfocusedBorderColor = DarkLava
-            ),
-            placeholder = {
-                Text(
-                    stringResource(id = R.string.auth_password),
-                    style = TextStyle(
-                        color = SpanishGray,
-                        fontFamily = SourceSans,
-                        fontSize = 20.sp,
-                    )
-                )
-            },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
-            keyboardActions = KeyboardActions(
-                onSend = {
-                    onLoginButtonClick()
-                }
-            ),
-            shape = RoundedCornerShape(
-                bottomStart = 10.dp,
-                bottomEnd = 10.dp,
-            ),
-            singleLine = true,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Lock,
-                    contentDescription = "",
-                    tint = SpanishGray
-                )
-            }
+        BottomRoundedOutlinedTextField(
+            fieldValue = passwordFieldValue,
+            onFieldValueChange = onPasswordValueChange,
+            placeholderText = stringResource(id = R.string.auth_password),
+            icon = Icons.Filled.Lock,
+            onKeyboardActionClicked =  onLoginButtonClick,
         )
+
         Spacer(modifier = Modifier.height(25.dp))
+
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -322,43 +240,19 @@ fun OptionsButtons(
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TextButton(
+        CustomUnderlineTextButton(
             onClick = onForgotPasswordButtonClick,
-        ) {
-            Text(
-                stringResource(id = R.string.auth_forgot_password),
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    color = DarkLava,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = SourceSans
-                ),
-                textDecoration = TextDecoration.Underline,
-                textAlign = TextAlign.Center,
-            )
+            color = DarkLava,
+            text = stringResource(id = R.string.auth_forgot_password),
+            fontSize = 16.sp
+        )
 
-        }
         Spacer(modifier = Modifier.height(25.dp))
-        FilledTonalButton(
+        RoundedFillButton(
             onClick = onCreateNewAccountButtonClick,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = DarkLava,
-                contentColor = WhiteBlue,
-                disabledContainerColor = SpanishGray,
-                disabledContentColor = WhiteBlue,
-            )
-        ) {
-            Text(
-                stringResource(id = R.string.auth_create_account),
-                style = TextStyle(
-                    fontSize = 22.sp,
-                    color = WhiteBlue,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = SourceSans
-                ),
-                textAlign = TextAlign.Center,
-            )
-        }
+            color = DarkLava,
+            text = stringResource(id = R.string.auth_create_new_account),
+        )
     }
 }
 
@@ -375,31 +269,15 @@ fun LegalButtons(
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.Bottom,
     ) {
-        TextButton(
-            onClick = onTermsAndConditionsButtonClick
-        ) {
-            Text(
-                stringResource(id = R.string.terms),
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    fontFamily = SourceSans,
-                    color = WhiteBlue
-                ),
-            )
-        }
+        CustomTextButton(
+            onClick = onTermsAndConditionsButtonClick,
+            text = stringResource(id = R.string.terms),
+        )
 
-        TextButton(
-            onClick = onPrivacyPolicyButtonClick
-        ) {
-            Text(
-                stringResource(id = R.string.privacy),
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    fontFamily = SourceSans,
-                    color = WhiteBlue
-                ),
-            )
-        }
+        CustomTextButton(
+            onClick = onPrivacyPolicyButtonClick,
+            text = stringResource(id = R.string.privacy),
+        )
     }
 }
 
