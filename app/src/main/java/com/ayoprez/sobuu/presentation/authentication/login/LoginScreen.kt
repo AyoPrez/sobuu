@@ -24,11 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ayoprez.sobuu.R
+import com.ayoprez.sobuu.presentation.authentication.TextType
 import com.ayoprez.sobuu.presentation.custom_widgets.*
-import com.ayoprez.sobuu.presentation.destinations.LoginScreenDestination
-import com.ayoprez.sobuu.presentation.destinations.RegistrationScreenDestination
-import com.ayoprez.sobuu.presentation.destinations.ResetPasswordScreenDestination
-import com.ayoprez.sobuu.presentation.destinations.WelcomeScreenDestination
+import com.ayoprez.sobuu.presentation.destinations.*
 import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationResult
 import com.ayoprez.sobuu.ui.theme.*
 import com.ramcosta.composedestinations.annotation.Destination
@@ -115,10 +113,10 @@ fun LoginScreen(
 
         LegalButtons(
             onTermsAndConditionsButtonClick = {
-                //viewModel.onEvent(AuthenticationUIEvent.openTermsAndConditions)
+                nav?.navigate(LongTextScreenDestination(textType = TextType.TERMS_AND_CONDITIONS))
             },
             onPrivacyPolicyButtonClick = {
-                //viewModel.onEvent(AuthenticationUIEvent.openPrivacyPolicy)
+                nav?.navigate(LongTextScreenDestination(textType = TextType.PRIVACY_POLICY))
             },
         )
     }

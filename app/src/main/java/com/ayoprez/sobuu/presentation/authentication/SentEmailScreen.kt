@@ -47,9 +47,8 @@ fun SentEmailScreen(
     ) {
         IconButton(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
-                .align(Alignment.End),
+                .align(Alignment.End)
+                .padding(12.dp),
             onClick = {
             nav?.navigate(LoginScreenDestination) {
                 popUpTo(LoginScreenDestination.route) {
@@ -60,11 +59,16 @@ fun SentEmailScreen(
             Icon(
                 imageVector = Icons.Filled.Close,
                 contentDescription = "",
-                tint = WhiteBlue
+                tint = WhiteBlue,
+                modifier = Modifier.size(24.dp)
             )
         }
 
+        Spacer(Modifier.height(50.dp))
+
         EmailAnimation()
+
+        Spacer(Modifier.height(50.dp))
 
         Text(
             text = if(emailType == EmailType.VERIFICATION)
@@ -90,8 +94,8 @@ fun EmailAnimation() {
 
     LottieAnimation(
         modifier = Modifier
-            .width(120.dp)
-            .height(120.dp),
+            .width(150.dp)
+            .height(150.dp),
         composition = composition,
         progress = { progress },
     )
