@@ -2,6 +2,7 @@ package com.ayoprez.sobuu.presentation.authentication.register
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -17,15 +18,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ayoprez.sobuu.R
 import com.ayoprez.sobuu.presentation.authentication.EmailType
+import com.ayoprez.sobuu.presentation.authentication.TextType
 import com.ayoprez.sobuu.presentation.custom_widgets.*
+import com.ayoprez.sobuu.presentation.destinations.LongTextScreenDestination
 import com.ayoprez.sobuu.presentation.destinations.SentEmailScreenDestination
 import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationError
 import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationResult
@@ -70,7 +76,7 @@ fun RegistrationScreen(
                     .fillMaxSize()
                     .background(GreenSheen),
 
-            ) {
+                ) {
                 if (state.error != null) {
                     Spacer(modifier = Modifier.height(60.dp))
 
@@ -146,6 +152,7 @@ fun RegistrationScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun RegistrationForm(
+    nav: DestinationsNavigator? = null,
     usernameFieldValue: String,
     onUsernameValueChange: (String) -> Unit,
     emailFieldValue: String,
@@ -210,7 +217,7 @@ private fun RegistrationForm(
             onFieldValueChange = onPasswordConfirmationValueChange,
             placeholderText = stringResource(id = R.string.auth_confirm_password),
             icon = Icons.Filled.Lock,
-            onKeyboardActionClicked = {focusManager.moveFocus(FocusDirection.Down)},
+            onKeyboardActionClicked = { focusManager.moveFocus(FocusDirection.Down) },
             passwordField = true,
             isError = confirmationPasswordError,
         )
@@ -230,15 +237,16 @@ private fun RegistrationForm(
             onFieldValueChange = onLastNameValueChange,
             placeholderText = stringResource(id = R.string.auth_last_name_account),
             icon = Icons.Filled.Person,
-            onKeyboardActionClicked = {keyboardController?.hide()},
+            onKeyboardActionClicked = { keyboardController?.hide() },
             isError = lastNameError,
         )
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp, end = 32.dp),
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 32.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Switch(
@@ -256,14 +264,7 @@ private fun RegistrationForm(
                 onCheckedChange = onPrivacyPolicyConfirmationSwitchValueChange
             )
             Spacer(Modifier.width(18.dp))
-            Text(
-                text = stringResource(id = R.string.auth_privacy_confirmation),
-                style = TextStyle(
-                    color = WhiteBlue,
-                    fontFamily = SourceSans,
-                    fontSize = 16.sp,
-                ),
-            )
+            AcceptanceLineWithLinks(nav = nav)
         }
 
         Spacer(modifier = Modifier.height(25.dp))
@@ -273,6 +274,62 @@ private fun RegistrationForm(
             text = stringResource(id = R.string.auth_create_account),
         )
     }
+}
+
+@Composable
+fun AcceptanceLineWithLinks(
+    nav: DestinationsNavigator?
+) {
+    val annotatedString = buildAnnotatedString {
+        append("${stringResource(id = R.string.auth_privacy_confirmation_1)} ")
+
+        pushStringAnnotation(
+            tag = "terms",
+            annotation = "terms and conditions"
+        )
+        withStyle(style = SpanStyle(color = Vermilion)) {
+            append(stringResource(id = R.string.terms))
+        }
+        pop()
+
+        append(" ${stringResource(id = R.string.auth_privacy_confirmation_2)} ")
+
+        pushStringAnnotation(
+            tag = "privacy",
+            annotation = "privacy policy"
+        )
+
+        withStyle(style = SpanStyle(color = Vermilion)) {
+            append(stringResource(id = R.string.privacy))
+        }
+
+        pop()
+
+        append(" ${stringResource(id = R.string.auth_privacy_confirmation_3)}")
+    }
+
+    ClickableText(
+        text = annotatedString,
+        modifier = Modifier.padding(top = 10.dp),
+        style = TextStyle(color = WhiteBlue),
+        onClick = { offset ->
+
+            annotatedString.getStringAnnotations(
+                tag = "terms",
+                start = offset,
+                end = offset
+            ).firstOrNull()?.let {
+                nav?.navigate(LongTextScreenDestination(textType = TextType.TERMS_AND_CONDITIONS))
+            }
+
+            annotatedString.getStringAnnotations(
+                tag = "privacy",
+                start = offset,
+                end = offset
+            ).firstOrNull()?.let {
+                nav?.navigate(LongTextScreenDestination(textType = TextType.PRIVACY_POLICY))
+            }
+        })
 }
 
 @Composable
@@ -294,6 +351,12 @@ fun getStringFromError(error: AuthenticationError?): String {
             stringResource(id = R.string.error_unknown)
         }
     }
+}
+
+@Preview(showSystemUi = true, showBackground = true, group = "Done")
+@Composable
+fun ComposableTextLineWithLinksPreview() {
+    AcceptanceLineWithLinks(null)
 }
 
 @Preview(showSystemUi = true, showBackground = true, group = "Done")
