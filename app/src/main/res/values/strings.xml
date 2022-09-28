@@ -21,6 +21,18 @@
     <string name="auth_reset_password_email">We have sent you an email with a link that you can use to reset your password.</string>
     <string name="auth_verification_email">We have sent you a verification email with a link. Click the link to finish the creation of the account.</string>
 
+    <!-- Authorization Errors -->
+    <string name="error_empty_credentials">Credentials were empty. Should introduce credentials to login</string>
+    <string name="error_empty_registration_fields">One or more fields were empty. All fields should be filled to be able to create an account</string>
+    <string name="error_wrong_email_format">The email introduced has a incorrect format. Please, introduce a valid email</string>
+    <string name="error_unknown">There was an unknown error. Please, try again</string>
+    <string name="error_timeout">It was taking too long to connect. Check your internet connection</string>
+    <string name="error_invalid_credentials">Invalid credentials. You should introduce a valid email and password</string>
+    <string name="error_invalid_registration_fields">Invalid text in the fields. You should introduce a valid email, username and password</string>
+    <string name="error_invalid_session_token">Invalid session. Login again</string>
+
+
+
     <!-- Profile -->
     <string name="profile_title">Profile</string>
     <string name="profile_name">Name: %s</string>

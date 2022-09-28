@@ -21,21 +21,22 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ayoprez.sobuu.ui.theme.DarkLava
-import com.ayoprez.sobuu.ui.theme.SourceSans
-import com.ayoprez.sobuu.ui.theme.SpanishGray
-import com.ayoprez.sobuu.ui.theme.WhiteBlue
+import com.ayoprez.sobuu.ui.theme.*
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopRoundedOutlinedTextField (
+fun TopRoundedOutlinedTextField(
     fieldValue: String,
     onFieldValueChange: (String) -> Unit,
     placeholderText: String,
     icon: ImageVector,
+    isError: Boolean = false,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -55,6 +56,7 @@ fun TopRoundedOutlinedTextField (
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = DarkLava,
                 unfocusedBorderColor = DarkLava,
+                errorBorderColor = Vermilion,
             ),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(
@@ -62,6 +64,7 @@ fun TopRoundedOutlinedTextField (
                     focusManager.moveFocus(FocusDirection.Down)
                 }
             ),
+            isError = isError,
             placeholder = {
                 Text(
                     text = placeholderText,
@@ -90,14 +93,15 @@ fun TopRoundedOutlinedTextField (
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun BottomRoundedOutlinedTextField (
+fun BottomRoundedOutlinedTextField(
     fieldValue: String,
     onFieldValueChange: (String) -> Unit,
     placeholderText: String,
     icon: ImageVector,
     onKeyboardActionClicked: () -> Unit,
+    passwordField: Boolean = false,
+    isError: Boolean = false,
 ) {
-
     val keyboardController = LocalSoftwareKeyboardController.current
 
     ProvideTextStyle(value = TextStyle(color = DarkLava)) {
@@ -111,12 +115,14 @@ fun BottomRoundedOutlinedTextField (
                         bottomStart = 10.dp,
                         bottomEnd = 10.dp,
                     ),
-                    color = WhiteBlue
+                    color = WhiteBlue,
                 ),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = DarkLava,
-                unfocusedBorderColor = DarkLava
+                unfocusedBorderColor = DarkLava,
+                errorBorderColor = Vermilion,
             ),
+            isError = isError,
             placeholder = {
                 Text(
                     placeholderText,
@@ -127,7 +133,11 @@ fun BottomRoundedOutlinedTextField (
                     )
                 )
             },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
+            visualTransformation = if (passwordField) PasswordVisualTransformation() else VisualTransformation.None,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Go,
+                keyboardType = if (passwordField) KeyboardType.Password else KeyboardType.Text
+            ),
             keyboardActions = KeyboardActions(
                 onSend = {
                     onKeyboardActionClicked()
@@ -158,6 +168,7 @@ fun CompleteRoundedOutlineTextField(
     placeholderText: String,
     icon: ImageVector,
     onKeyboardActionClicked: () -> Unit,
+    isError: Boolean = false,
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -176,6 +187,7 @@ fun CompleteRoundedOutlineTextField(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = DarkLava,
                 unfocusedBorderColor = DarkLava,
+                errorBorderColor = Vermilion,
             ),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
             keyboardActions = KeyboardActions(
@@ -184,6 +196,7 @@ fun CompleteRoundedOutlineTextField(
                     keyboardController?.hide()
                 }
             ),
+            isError = isError,
             placeholder = {
                 Text(
                     text = placeholderText,
@@ -207,7 +220,8 @@ fun CompleteRoundedOutlineTextField(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class,
+@OptIn(
+    ExperimentalMaterial3Api::class,
     ExperimentalFoundationApi::class
 )
 @Composable
@@ -216,8 +230,9 @@ fun NotRoundedOutlineTextField(
     onFieldValueChange: (String) -> Unit,
     placeholderText: String,
     icon: ImageVector,
+    passwordField: Boolean = false,
+    isError: Boolean,
 ) {
-
     val focusManager = LocalFocusManager.current
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -242,13 +257,19 @@ fun NotRoundedOutlineTextField(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = DarkLava,
                 unfocusedBorderColor = DarkLava,
+                errorBorderColor = Vermilion,
             ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            visualTransformation = if (passwordField) PasswordVisualTransformation() else VisualTransformation.None,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = if (passwordField) KeyboardType.Password else KeyboardType.Text
+            ),
             keyboardActions = KeyboardActions(
                 onNext = {
                     focusManager.moveFocus(FocusDirection.Down)
                 }
             ),
+            isError = isError,
             placeholder = {
                 Text(
                     text = placeholderText,

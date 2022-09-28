@@ -22,10 +22,6 @@ class LoginViewModel @Inject constructor(private val auth: AuthenticationReposit
     private val resultChannel = Channel<AuthenticationResult<Unit>>()
     val authResult = resultChannel.receiveAsFlow()
 
-    init {
-        authentication()
-    }
-
     fun onEvent(event: LoginUIEvent) {
         when(event) {
             is LoginUIEvent.LoginPasswordChanged -> {
@@ -34,23 +30,13 @@ class LoginViewModel @Inject constructor(private val auth: AuthenticationReposit
             is LoginUIEvent.LoginUsernameChanged -> {
                 state = state.copy(loginUsername = event.value)
             }
-            LoginUIEvent.loginUser -> login()
+            is LoginUIEvent.loginUser -> login()
+            is LoginUIEvent.removeErrorState -> removeErrorState()
         }
     }
 
     fun handleError(error: AuthenticationError?) {
-        //TODO Add the rest of the errors
-        //TODO Check what to do here with the errors. I don't have the context, so I should to get the strings here
-        when(error){
-            is AuthenticationError.InvalidCredentials -> {
-            }
-            is AuthenticationError.EmptyCredentialsError -> {
-
-            }
-            else -> {
-
-            }
-        }
+        state = state.copy(error = error)
     }
 
     private fun login() {
@@ -67,6 +53,12 @@ class LoginViewModel @Inject constructor(private val auth: AuthenticationReposit
         }
     }
 
+    private fun removeErrorState() {
+        viewModelScope.launch {
+            state = state.copy(error = null)
+        }
+    }
+
     private fun logout() {
         viewModelScope.launch {
             state = state.copy(isLoading = true)
@@ -74,15 +66,6 @@ class LoginViewModel @Inject constructor(private val auth: AuthenticationReposit
 
             resultChannel.send(result)
 
-            state = state.copy(isLoading = false)
-        }
-    }
-
-    private fun authentication() {
-        viewModelScope.launch {
-            state = state.copy(isLoading = true)
-            val result = auth.authenticate()
-            resultChannel.send(result)
             state = state.copy(isLoading = false)
         }
     }

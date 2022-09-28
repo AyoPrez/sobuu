@@ -1,4 +1,4 @@
-package com.ayoprez.sobuu.presentation.authentication.reset_pass
+package com.ayoprez.sobuu.presentation.authentication.splash
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,38 +14,27 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
-class ResetPassViewModel @Inject constructor(private val auth: AuthenticationRepositoryImpl): ViewModel() {
+class SplashViewModel @Inject constructor(private val auth: AuthenticationRepositoryImpl): ViewModel() {
 
-    var state by mutableStateOf(ResetPassState())
+    var state by mutableStateOf(SplashState())
 
     private val resultChannel = Channel<AuthenticationResult<Unit>>()
     val authResult = resultChannel.receiveAsFlow()
 
-
-    fun onEvent(event: ResetPassUIEvent) {
-        when(event) {
-            is ResetPassUIEvent.ForgotPasswordEmailChanged -> {
-                state = state.copy(forgotEmail = event.value)
-            }
-            ResetPassUIEvent.resetPassword -> resetPassword()
-        }
+    init {
+        authentication()
     }
 
     fun handleError(error: AuthenticationError?) {
         state = state.copy(error = error)
     }
 
-    private fun resetPassword() {
+    private fun authentication() {
         viewModelScope.launch {
             state = state.copy(isLoading = true)
-            val result = auth.resetPassword(
-                email = state.forgotEmail
-            )
-
+            val result = auth.authenticate()
             resultChannel.send(result)
-
             state = state.copy(isLoading = false)
         }
     }

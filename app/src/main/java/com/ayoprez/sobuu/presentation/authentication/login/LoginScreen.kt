@@ -1,6 +1,5 @@
 package com.ayoprez.sobuu.presentation.authentication.login
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -27,14 +26,13 @@ import com.ayoprez.sobuu.R
 import com.ayoprez.sobuu.presentation.authentication.TextType
 import com.ayoprez.sobuu.presentation.custom_widgets.*
 import com.ayoprez.sobuu.presentation.destinations.*
+import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationError
 import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationResult
 import com.ayoprez.sobuu.ui.theme.*
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
-@RootNavGraph(start = true)
 @Destination
 fun LoginScreen(
     nav: DestinationsNavigator?,
@@ -42,31 +40,17 @@ fun LoginScreen(
 ) {
     val state = viewModel.state
     val context = LocalContext.current
+
     LaunchedEffect(viewModel, context) {
         viewModel.authResult.collect { result ->
-            when (result) {
-                is AuthenticationResult.Authorized -> {
-                    nav?.navigate(WelcomeScreenDestination) {
-                        popUpTo(LoginScreenDestination.route) {
-                            inclusive = true
-                        }
+            if (result is AuthenticationResult.Authorized) {
+                nav?.navigate(HomeScreenDestination) {
+                    popUpTo(LoginScreenDestination.route) {
+                        inclusive = true
                     }
                 }
-                is AuthenticationResult.Unauthorized -> {
-                    Toast.makeText(context, "Not authorized", Toast.LENGTH_LONG).show()
-                }
-                is AuthenticationResult.Error -> {
-                    viewModel.handleError(result.error)
-                }
-                is AuthenticationResult.LoggedOut -> {
-                    nav?.navigate(LoginScreenDestination) {
-                        popUpTo(WelcomeScreenDestination.route) {
-                            inclusive = true
-                        }
-                    }
-                }
-                is AuthenticationResult.Registered -> TODO()
-                is AuthenticationResult.ResetPassword -> TODO()
+            } else {
+                viewModel.handleError(result.error)
             }
         }
     }
@@ -97,10 +81,32 @@ fun LoginScreen(
                     )
                 )
             },
-            onLoginButtonClick = { viewModel.onEvent(LoginUIEvent.loginUser) }
+            onLoginButtonClick = {
+                viewModel.onEvent(LoginUIEvent.loginUser)
+            },
+            nameIsError = state.error != null,
+            passwordIsError = state.error != null,
         )
 
-        Spacer(modifier = Modifier.height(45.dp))
+        if (state.error != null) {
+            Spacer(modifier = Modifier.height(5.dp))
+
+            Text(
+                getStringFromError(error = state.error),
+                modifier = Modifier
+                    .padding(start = 32.dp, end = 32.dp),
+                style = TextStyle(
+                    color = Vermilion,
+                    fontFamily = SourceSans,
+                    fontSize = 20.sp
+                ),
+                textAlign = TextAlign.Center,
+            )
+
+            Spacer(modifier = Modifier.height(5.dp))
+        } else {
+            Spacer(modifier = Modifier.height(45.dp))
+        }
 
         OptionsButtons(
             onForgotPasswordButtonClick = {
@@ -162,6 +168,8 @@ fun LoginForm(
     passwordFieldValue: String,
     onPasswordValueChange: (String) -> Unit,
     onLoginButtonClick: () -> Unit,
+    nameIsError: Boolean,
+    passwordIsError: Boolean,
 ) {
     Column(
         modifier = Modifier
@@ -176,6 +184,7 @@ fun LoginForm(
             onFieldValueChange = onNameValueChange,
             placeholderText = stringResource(id = R.string.auth_username),
             icon = Icons.Filled.Person,
+            isError = nameIsError,
         )
 
         BottomRoundedOutlinedTextField(
@@ -183,7 +192,9 @@ fun LoginForm(
             onFieldValueChange = onPasswordValueChange,
             placeholderText = stringResource(id = R.string.auth_password),
             icon = Icons.Filled.Lock,
-            onKeyboardActionClicked =  onLoginButtonClick,
+            onKeyboardActionClicked = onLoginButtonClick,
+            passwordField = true,
+            isError = passwordIsError,
         )
 
         Spacer(modifier = Modifier.height(25.dp))
@@ -279,6 +290,30 @@ fun LegalButtons(
     }
 }
 
+@Composable
+fun getStringFromError(error: AuthenticationError?): String {
+    return when (error) {
+        is AuthenticationError.InvalidCredentials -> {
+            stringResource(id = R.string.error_invalid_credentials)
+        }
+        is AuthenticationError.EmptyCredentialsError -> {
+            stringResource(id = R.string.error_empty_credentials)
+        }
+        is AuthenticationError.InvalidSessionToken -> {
+            stringResource(id = R.string.error_invalid_session_token)
+        }
+        is AuthenticationError.TimeOutError -> {
+            stringResource(id = R.string.error_timeout)
+        }
+        is AuthenticationError.WrongEmailFormatError -> {
+            stringResource(id = R.string.error_wrong_email_format)
+        }
+        else -> {
+            stringResource(id = R.string.error_unknown)
+        }
+    }
+}
+
 @Preview(showSystemUi = true, showBackground = true, group = "Done")
 @Composable
 fun ComposableLoginTitlePreview() {
@@ -293,7 +328,9 @@ fun ComposableLoginFormPreview() {
         onNameValueChange = {},
         passwordFieldValue = "",
         onPasswordValueChange = {},
-        onLoginButtonClick = {}
+        onLoginButtonClick = {},
+        nameIsError = false,
+        passwordIsError = false,
     )
 }
 

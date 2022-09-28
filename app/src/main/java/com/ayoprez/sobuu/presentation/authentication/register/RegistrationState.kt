@@ -1,5 +1,7 @@
 package com.ayoprez.sobuu.presentation.authentication.register
 
+import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationError
+
 data class RegistrationState (
     val isLoading: Boolean = false,
     val registrationUsername: String = "",
@@ -9,4 +11,5 @@ data class RegistrationState (
     val registrationFirstname: String = "",
     val registrationLastname: String = "",
     val privacyPolicyConfirmationSwitch: Boolean = false,
+    val error: AuthenticationError? = null,
 )

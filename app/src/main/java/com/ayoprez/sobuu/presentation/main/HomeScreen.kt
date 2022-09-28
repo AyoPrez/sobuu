@@ -16,16 +16,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ayoprez.sobuu.R
 import com.ayoprez.sobuu.presentation.authentication.login.LoginViewModel
+import com.ayoprez.sobuu.presentation.destinations.HomeScreenDestination
 import com.ayoprez.sobuu.presentation.destinations.LoginScreenDestination
 import com.ayoprez.sobuu.presentation.destinations.ProfileScreenDestination
-import com.ayoprez.sobuu.presentation.destinations.WelcomeScreenDestination
 import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationResult
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination
-fun WelcomeScreen(
+fun HomeScreen(
     nav: DestinationsNavigator,
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
@@ -34,7 +34,7 @@ fun WelcomeScreen(
         loginViewModel.authResult.collect { result ->
             if (result == AuthenticationResult.LoggedOut<Unit>()) {
                 nav.navigate(LoginScreenDestination) {
-                    popUpTo(WelcomeScreenDestination.route) {
+                    popUpTo(HomeScreenDestination.route) {
                         inclusive = true
                     }
                 }

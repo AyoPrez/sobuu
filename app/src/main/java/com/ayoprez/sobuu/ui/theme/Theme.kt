@@ -74,7 +74,6 @@ fun SobuuAuthTheme(
     )
 }
 
-
 @Composable
 fun SobuuTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -101,6 +100,7 @@ fun SobuuTheme(
         }
     }
 
+    systemUiController.isStatusBarVisible = true
     systemUiController.setSystemBarsColor(
         color = colorScheme.background
     )

@@ -52,18 +52,7 @@ class RegistrationViewModel @Inject constructor(private val auth: Authentication
     }
 
     fun handleError(error: AuthenticationError?) {
-        //TODO Add the rest of the errors
-        //TODO Check what to do here with the errors. I don't have the context, so I should to get the strings here
-        when(error){
-            is AuthenticationError.InvalidCredentials -> {
-            }
-            is AuthenticationError.EmptyCredentialsError -> {
-
-            }
-            else -> {
-
-            }
-        }
+        state = state.copy(error = error)
     }
 
     private fun registration() {
