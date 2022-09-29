@@ -95,14 +95,15 @@ fun SobuuTheme(
     }
     if (!view.isInEditMode) {
         SideEffect {
-            window.statusBarColor = GreenSheen.toArgb()
-            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
+            window.statusBarColor = WhiteBlue.toArgb()
+            //ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
         }
     }
 
     systemUiController.isStatusBarVisible = true
+    systemUiController.setStatusBarColor( color = WhiteBlue)
     systemUiController.setSystemBarsColor(
-        color = colorScheme.background
+        color = WhiteBlue
     )
 
     MaterialTheme(

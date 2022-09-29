@@ -11,9 +11,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +34,7 @@ import com.ayoprez.sobuu.ui.theme.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 @Destination
 fun LoginScreen(
@@ -40,6 +43,7 @@ fun LoginScreen(
 ) {
     val state = viewModel.state
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(viewModel, context) {
         viewModel.authResult.collect { result ->
@@ -83,6 +87,7 @@ fun LoginScreen(
             },
             onLoginButtonClick = {
                 viewModel.onEvent(LoginUIEvent.loginUser)
+                keyboardController?.hide()
             },
             nameIsError = state.error != null,
             passwordIsError = state.error != null,

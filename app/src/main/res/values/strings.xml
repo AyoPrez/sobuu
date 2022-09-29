@@ -34,6 +34,8 @@
     <string name="error_invalid_session_token">Invalid session. Login again</string>
     <string name="error_not_read_terms_and_privacy">You must indicate that you have read the Terms &amp; Conditions and the Privacy Policy of the app to create a new account</string>
 
+    <!-- Home -->
+    <string name="search_book">Search a book</string>
 
 
     <!-- Profile -->
