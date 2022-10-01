@@ -4,6 +4,7 @@ import com.ayoprez.sobuu.shared.models.Book
 import com.ayoprez.sobuu.shared.models.BookProgress
 import com.ayoprez.sobuu.shared.models.Comment
 import com.ayoprez.sobuu.shared.models.UserBookRating
+import com.ayoprez.sobuu.shared.models.api_models.Books
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.HttpException
@@ -22,11 +23,19 @@ class BookRemoteDataImpl @Inject constructor(
 
     override suspend fun searchBook(sessionToken: String?, term: String): BookResult<List<Book>> {
         if (term.isBlank()) return BookResult.Error(BookError.EmptySearchTermError)
-        return execute(sessionToken) {
+
+
+        val result = execute(sessionToken) {
             api.searchBook(
                 sessionToken = it,
                 term = term,
             )
+        }
+
+        return if(result.data != null) {
+            BookResult.Success(data = result.data.toBookList())
+        } else {
+            BookResult.Error(error = result.error)
         }
     }
 
@@ -212,6 +221,7 @@ class BookRemoteDataImpl @Inject constructor(
                 else -> BookResult.Error(BookError.UnknownError)
             }
         } catch (e: Exception) {
+            println("-------Exception: $e")
             BookResult.Error(BookError.UnknownError)
         }
     }
@@ -231,5 +241,25 @@ class BookRemoteDataImpl @Inject constructor(
                     else -> BookResult.Error(BookError.UnknownError)
                 }
             }
+    }
+
+
+    private fun Books.toBookList(): List<Book> {
+        return this.result.map {
+            Book(
+                id = "",
+                title = it.title,
+                authors = it.authors,
+                description = it.description,
+                totalPages = it.totalPages,
+                publishedDate = it.publishedDate,
+                publisher = it.publisher,
+                picture = it.picture,
+                isbn = it.isbn,
+                credits = it.credits,
+                bookRating = emptyList(),
+                bookComments = emptyList(),
+            )
+        }
     }
 }

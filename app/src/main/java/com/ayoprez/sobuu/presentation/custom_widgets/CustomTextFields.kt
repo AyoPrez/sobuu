@@ -3,22 +3,30 @@ package com.ayoprez.sobuu.presentation.custom_widgets
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -26,6 +34,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ayoprez.sobuu.R
 import com.ayoprez.sobuu.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -288,6 +297,92 @@ fun NotRoundedOutlineTextField(
                     contentDescription = "",
                     tint = SpanishGray,
                 )
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+fun SearchBarTextField(
+    searchFieldValue: String,
+    onSearchFieldValueChange: (String) -> Unit,
+    onSearchButtonClick: () -> Unit,
+    clearText: () -> Unit,
+    onSearchFieldFocusChange: (Boolean) -> Unit,
+    modifier: Modifier,
+) {
+
+    val focusManager = LocalFocusManager.current
+    val focused = remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    ProvideTextStyle(value = TextStyle(color = DarkLava)) {
+        OutlinedTextField(
+            value = searchFieldValue,
+            onValueChange = onSearchFieldValueChange,
+            modifier = Modifier
+                .background(
+                    shape = RoundedCornerShape(5.dp),
+                    color = WhiteBlue,
+                )
+                .height(52.dp)
+                .composed { modifier }
+                .onFocusChanged { focusState ->
+                    focused.value = focusState.isFocused
+                    onSearchFieldFocusChange(focusState.isFocused)
+                },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = DarkLava,
+                unfocusedBorderColor = DarkLava,
+                errorBorderColor = Vermilion,
+            ),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    onSearchButtonClick()
+                    keyboardController?.hide()
+                }
+            ),
+            placeholder = {
+                Text(
+                    text = stringResource(id = R.string.search_book),
+                    style = TextStyle(
+                        color = SpanishGray,
+                        fontFamily = SourceSans,
+                        fontSize = 20.sp,
+                    )
+                )
+            },
+            shape = RoundedCornerShape(5.dp),
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = null,
+                    tint = SpanishGray,
+                )
+            },
+            trailingIcon = if(focused.value) {
+                {
+                    IconButton(
+                        onClick = {
+                            if (searchFieldValue.isBlank()) {
+                                focusManager.clearFocus()
+                            } else {
+                                clearText()
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            tint = DarkLava,
+                            contentDescription = null,
+                        )
+                    }
+                }
+            } else {
+                {}
             }
         )
     }

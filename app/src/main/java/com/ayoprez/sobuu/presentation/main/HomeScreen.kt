@@ -6,8 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -29,9 +28,13 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 fun HomeScreen(
     nav: DestinationsNavigator,
-    loginViewModel: LoginViewModel = hiltViewModel()
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    searchViewModel: SearchViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val searchState = searchViewModel.state
+    var isSearchBarFocused by remember { mutableStateOf(false) }
+
     LaunchedEffect(loginViewModel, context) {
         loginViewModel.authResult.collect { result ->
             if (result == AuthenticationResult.LoggedOut<Unit>()) {
@@ -52,11 +55,32 @@ fun HomeScreen(
                 TopAppBarWithSearchAndProfile(
                     nav = nav,
                     text = stringResource(id = R.string.app_name),
-                    onSearchFieldValueChange = {},
-                    searchFieldValue = "",
+                    onSearchFieldValueChange = {
+                        searchViewModel.onEvent(
+                            SearchUIEvent.SearchTermChanged(it)
+                        )
+                    },
+                    searchFieldValue = searchState.searchTerm,
+                    onSearchButtonClick = {
+                        searchViewModel.onEvent(
+                            SearchUIEvent.searchTerm
+                        )
+                    },
+                    clearTextButtonClick = {
+                        searchViewModel.onEvent(
+                            SearchUIEvent.cleanSearchTerm
+                        )
+                    },
+                    onSearchFieldFocusChange = {
+                        isSearchBarFocused = it
+                    },
                 )
             },
-            content = { Content() }
+            content = {
+                Content(
+                    isSearchBarFocus = isSearchBarFocused,
+                )
+            }
         )
     }
 
@@ -64,12 +88,19 @@ fun HomeScreen(
 
 @Composable
 fun Content(
-    nav: DestinationsNavigator? = null
+    nav: DestinationsNavigator? = null,
+    isSearchBarFocus: Boolean = false,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(top = 150.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 150.dp),
     ) {
-        Text(text = "Welcome")
+        if(isSearchBarFocus) {
+            SearchListScreen()
+        } else {
+            Text(text = "Welcome")
+        }
     }
 }
 
@@ -81,6 +112,9 @@ fun ComposableHomeScreenTopBarPreview() {
         "Sobuu",
         searchFieldValue = "",
         onSearchFieldValueChange = {},
+        onSearchButtonClick = {},
+        clearTextButtonClick = {},
+        onSearchFieldFocusChange = {},
     )
 }
 

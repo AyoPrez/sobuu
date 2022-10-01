@@ -21,7 +21,7 @@
     <string name="auth_privacy_confirmation_3">of the app</string>
     <string name="auth_logout">Logout</string>
     <string name="auth_reset_password_email">We have sent you an email with a link that you can use to reset your password.</string>
-    <string name="auth_verification_email">We have sent you a verification email with a link. Click the link to finish the creation of the account.</string>
+    <string name="auth_verification_email">We have sent you a verification email with a link. Click the link to verify your email and conclude with the creation of the account.</string>
 
     <!-- Authorization Errors -->
     <string name="error_empty_credentials">Credentials were empty. Should introduce credentials to login</string>
@@ -37,6 +37,17 @@
     <!-- Home -->
     <string name="search_book">Search a book</string>
 
+    <!-- Search -->
+    <string name="user_has_not_read_the_book">You have not read it yet</string>
+    <string name="user_has_read_the_book">You have already read it</string>
+    <string name="plural_persons_reading_book">people are reading it</string>
+    <string name="one_person_reading_book">person is reading it</string>
+    <string name="none_reading_book">Nobody is reading it</string>
+    <string name="comment">comment</string>
+    <string name="comments">comments</string>
+    <string name="review">review</string>
+    <string name="reviews">reviews</string>
+    <string name="more_than_999">999+</string>
 
     <!-- Profile -->
     <string name="profile_title">Profile</string>

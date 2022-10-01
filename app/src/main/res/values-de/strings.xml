@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sobuu</string>
+    <string name="terms">Bedingungen und Konditionen</string>
+    <string name="privacy">Datenschutzbestimmungen</string>
+
+
+    <!-- Autorisierung -->
+    <string name="auth_login">Anmeldung</string>
+    <string name="auth_username">Benutzername</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Passwort</string>
+    <string name="auth_confirm_password">Kennwort bestätigen</string>
+    <string name="auth_forgot_password">Kennwort vergessen?</string>
+    <string name="auth_reset_password">Passwort zurücksetzen</string>
+    <string name="auth_create_new_account">Neues Konto erstellen</string>
+    <string name="auth_create_account">Konto erstellen</string>
+    <string name="auth_first_name_account">Vorname</string>
+    <string name="auth_last_name_account">Nachname</string>
+    <string name="auth_privacy_confirmation_1">Ich habe die</string>
+    <string name="auth_privacy_confirmation_2">und die</string>
+    <string name="auth_privacy_confirmation_3">der App</string>
+    <string name="auth_logout">Abmelden</string>
+    <string name="auth_reset_password_email">Wir haben Ihnen eine E-Mail mit einem Link geschickt, mit dem Sie Ihr Passwort zurücksetzen können.</string>
+    <string name="auth_verification_email">Wir haben Ihnen eine Bestätigungs-E-Mail mit einem Link geschickt. Klicken Sie auf den Link, um Ihre E-Mail zu verifizieren und die Erstellung des Kontos abzuschließen.</string>
+
+    <!-- Autorisierungsfehler -->
+    <string name="error_empty_credentials">Die Anmeldedaten waren leer. Sollte Anmeldedaten für die Anmeldung einführen</string>
+    <string name="error_empty_registration_fields">Ein oder mehrere Felder waren leer. Alle Felder sollten ausgefüllt sein, um ein Konto erstellen zu können</string>
+    <string name="error_wrong_email_format">Die eingegebene E-Mail hat ein falsches Format. Bitte geben Sie eine gültige E-Mail ein</string>
+    <string name="error_unknown">Es ist ein unbekannter Fehler aufgetreten. Bitte versuchen Sie es erneut</string>
+    <string name="error_timeout">Der Verbindungsaufbau hat zu lange gedauert. Überprüfen Sie Ihre Internetverbindung</string>
+    <string name="error_invalid_credentials">Ungültige Anmeldedaten. Sie sollten einen gültigen Benutzernamen und ein Passwort eingeben</string>
+    <string name="error_invalid_registration_fields">Ungültiger Text in den Feldern. Sie sollten eine gültige E-Mail, einen Benutzernamen und ein Passwort eingeben</string>
+    <string name="error_invalid_session_token">Ungültige Sitzung. Melden Sie sich erneut an</string>
+    <string name="error_not_read_terms_and_privacy">Sie müssen angeben, dass Sie die Allgemeinen Geschäftsbedingungen und die Datenschutzrichtlinie der App gelesen haben, um ein neues Konto zu erstellen</string>
+
+    <!-- Home -->
+    <string name="search_book">Suche ein Buch</string>
+
+    <!-- Suche -->
+    <string name="user_has_not_read_the_book">Sie haben es noch nicht gelesen</string>
+    <string name="user_has_read_the_book">Sie haben es bereits gelesen</string>
+    <string name="plural_persons_reading_book">Leute lesen es</string>
+    <string name="one_person_reading_book">Person liest es</string>
+    <string name="none_reading_book">Niemand liest es</string>
+    <string name="comment">Kommentar</string>
+    <string name="comments">Kommentare</string>
+    <string name="review">Rezension</string>
+    <string name="reviews">Rezensionen</string>
+    <string name="more_than_999">999+</string>
+
+    <!-- Profil -->
+    <string name="profile_title">Profil</string>
+    <string name="profile_name">Name: %s</string>
+
+    <!-- Regal-Fehler -->
+    <string name="error_empty_description"></string>
+    <string name="error_empty_name"></string>
+    <string name="error_empty_term"></string>
+
+    <!-- Allgemeine Fehler -->
+    <string name="unknown_error">Unbekannter Fehler.</string>
+    <string name="invalid_session_token_error">Ungültige Sitzung. Melden Sie sich erneut an.</string>
+    <string name="processing_query_error">Bei der Bearbeitung der Bestellung ist etwas schief gelaufen.</string>
+    <string name="time_out_error">Etwas ist schiefgelaufen. Versuchen Sie es erneut.</string>
+    <string name="Unauthorized_query_error">Sie sind nicht in der Lage, das zu tun.</string>
+</resources>

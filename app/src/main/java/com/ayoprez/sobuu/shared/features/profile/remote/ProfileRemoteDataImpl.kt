@@ -82,7 +82,6 @@ class ProfileRemoteDataImpl @Inject constructor(
                 else -> ProfileResult.Error(ProfileError.UnknownError)
             }
         } catch (e: Exception) {
-            println("---------Exception: $e")
             ProfileResult.Error(ProfileError.UnknownError)
         }
     }
@@ -104,7 +103,7 @@ class ProfileRemoteDataImpl @Inject constructor(
             }
     }
 
-    fun GetUserProfile.toProfile(): Profile {
+    private fun GetUserProfile.toProfile(): Profile {
         return Profile(
             id = this.result.id,
             firstName = this.result.firstName,
@@ -117,13 +116,13 @@ class ProfileRemoteDataImpl @Inject constructor(
         )
     }
 
-    fun List<GetUserProfile>.toProfileList(): List<Profile> {
+    private fun List<GetUserProfile>.toProfileList(): List<Profile> {
         return this.map {
             it.toProfile()
         }
     }
 
-    fun UserShelf.toShelf(): Shelf {
+    private fun UserShelf.toShelf(): Shelf {
         return Shelf(
             id = this.id,
             books = emptyList(),
@@ -133,13 +132,13 @@ class ProfileRemoteDataImpl @Inject constructor(
         )
     }
 
-    fun List<UserShelf>.toShelfList(): List<Shelf> {
+    private fun List<UserShelf>.toShelfList(): List<Shelf> {
         return this.map {
             it.toShelf()
         }
     }
 
-    fun bpApiModel.toBookProgress(): BookProgress {
+    private fun bpApiModel.toBookProgress(): BookProgress {
         return BookProgress(
             id = this.id,
             percentage = this.percentage,
@@ -149,7 +148,7 @@ class ProfileRemoteDataImpl @Inject constructor(
         )
     }
 
-    fun List<bpApiModel>.toBookProgressList(): List<BookProgress> {
+    private fun List<bpApiModel>.toBookProgressList(): List<BookProgress> {
         return this.map {
             it.toBookProgress()
         }

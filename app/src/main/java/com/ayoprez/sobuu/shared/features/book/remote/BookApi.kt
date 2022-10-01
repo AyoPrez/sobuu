@@ -4,6 +4,7 @@ import com.ayoprez.sobuu.shared.models.Book
 import com.ayoprez.sobuu.shared.models.BookProgress
 import com.ayoprez.sobuu.shared.models.Comment
 import com.ayoprez.sobuu.shared.models.UserBookRating
+import com.ayoprez.sobuu.shared.models.api_models.Books
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -22,7 +23,7 @@ interface BookApi {
     suspend fun searchBook(
         @Field("sessionToken") sessionToken: String,
         @Field("term") term: String,
-    ): Response<List<Book>>
+    ): Response<Books>
 
     @FormUrlEncoded
     @POST("functions/getAllCommentsFromBookAtPage")

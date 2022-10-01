@@ -8,8 +8,7 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -146,6 +145,9 @@ fun LoginScreen(
 
 @Composable
 fun LoginAppTitle() {
+
+    var textSize by remember { mutableStateOf(110.sp) }
+
     Text(
         stringResource(id = R.string.app_name),
         modifier = Modifier
@@ -158,11 +160,17 @@ fun LoginAppTitle() {
             )
             .background(GreenSheen),
         style = TextStyle(
-            fontSize = 110.sp,
+            fontSize = textSize,
             fontFamily = Solway,
             color = DarkLava,
         ),
         textAlign = TextAlign.Center,
+        maxLines = 1,
+        onTextLayout = { textLayoutResult ->
+            if (textLayoutResult.didOverflowWidth) {
+                textSize = textSize.times(0.9f)
+            }
+        }
     )
 }
 

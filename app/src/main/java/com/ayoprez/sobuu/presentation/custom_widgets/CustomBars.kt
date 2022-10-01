@@ -2,29 +2,25 @@ package com.ayoprez.sobuu.presentation.custom_widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ayoprez.sobuu.R
 import com.ayoprez.sobuu.presentation.destinations.ProfileScreenDestination
-import com.ayoprez.sobuu.ui.theme.*
+import com.ayoprez.sobuu.ui.theme.DarkLava
+import com.ayoprez.sobuu.ui.theme.Solway
+import com.ayoprez.sobuu.ui.theme.SourceSans
+import com.ayoprez.sobuu.ui.theme.WhiteBlue
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,7 +59,6 @@ fun CustomTopAppBar(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBarWithSearchAndProfile(
     nav: DestinationsNavigator?,
@@ -73,10 +68,17 @@ fun TopAppBarWithSearchAndProfile(
     titleColor: Color = DarkLava,
     searchFieldValue: String,
     onSearchFieldValueChange: (String) -> Unit,
+    onSearchButtonClick: () -> Unit,
+    clearTextButtonClick: () -> Unit,
+    onSearchFieldFocusChange: (Boolean) -> Unit,
 ) {
-    Surface(modifier = Modifier.background(backgroundColor).fillMaxWidth()) {
+    Surface(modifier = Modifier
+        .background(backgroundColor)
+        .fillMaxWidth()) {
         Column(
-            modifier = Modifier.fillMaxWidth().background(backgroundColor),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(backgroundColor),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -87,7 +89,9 @@ fun TopAppBarWithSearchAndProfile(
                     fontFamily = Solway,
                     fontWeight = FontWeight.Medium,
                 ),
-                modifier = Modifier.padding(20.dp).background(backgroundColor),
+                modifier = Modifier
+                    .padding(20.dp)
+                    .background(backgroundColor),
                 textAlign = TextAlign.Center,
             )
             Row(
@@ -95,49 +99,15 @@ fun TopAppBarWithSearchAndProfile(
                     .fillMaxWidth()
                     .padding(start = 12.dp, end = 12.dp)
             ) {
-                ProvideTextStyle(value = TextStyle(color = DarkLava)) {
-                    OutlinedTextField(
-                        value = searchFieldValue,
-                        onValueChange = onSearchFieldValueChange,
-                        modifier = Modifier
-                            .background(
-                                shape = RoundedCornerShape(5.dp),
-                                color = WhiteBlue,
-                            )
-                            .height(52.dp)
-                            .weight(3f),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = DarkLava,
-                            unfocusedBorderColor = DarkLava,
-                            errorBorderColor = Vermilion,
-                        ),
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                        keyboardActions = KeyboardActions(
-                            onNext = {
-
-                            }
-                        ),
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.search_book),
-                                style = TextStyle(
-                                    color = SpanishGray,
-                                    fontFamily = SourceSans,
-                                    fontSize = 20.sp,
-                                )
-                            )
-                        },
-                        shape = RoundedCornerShape(5.dp),
-                        singleLine = true,
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = null,
-                                tint = SpanishGray,
-                            )
-                        },
-                    )
-                }
+                SearchBarTextField(
+                    searchFieldValue = searchFieldValue,
+                    onSearchFieldValueChange = onSearchFieldValueChange,
+                    modifier = Modifier
+                        .weight(3f),
+                    onSearchButtonClick = onSearchButtonClick,
+                    clearText = clearTextButtonClick,
+                    onSearchFieldFocusChange = onSearchFieldFocusChange,
+                )
                 IconButton(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -148,7 +118,9 @@ fun TopAppBarWithSearchAndProfile(
                     }
                 ) {
                     Icon(
-                        modifier = Modifier.fillMaxWidth().height(52.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp),
                         imageVector = Icons.Filled.AccountCircle,
                         contentDescription = null,
                         tint = profileIconColor,
@@ -166,6 +138,9 @@ fun ComposableHomeScreenTopBarPreview() {
         null,
         "Sobuu",
         searchFieldValue = "",
-        onSearchFieldValueChange = {}
+        onSearchFieldValueChange = {},
+        onSearchButtonClick = {},
+        clearTextButtonClick = {},
+        onSearchFieldFocusChange = {}
     )
 }

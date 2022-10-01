@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sobuu</string>
+    <string name="terms">Términos y Condiciones</string>
+    <string name="privacy">Política de privacidad</string>
+
+    <!-- Authorization -->
+    <string name="auth_login">Iniciar sesión</string>
+    <string name="auth_username">Nombre de usuario</string>
+    <string name="auth_email">Correo electrónico</string>
+    <string name="auth_password">Contraseña</string>
+    <string name="auth_confirm_password">Confirmar contraseña</string>
+    <string name="auth_forgot_password">¿Olvidaste la contraseña?</string>
+    <string name="auth_reset_password">Restablecer contraseña</string>
+    <string name="auth_create_new_account">Crear nueva cuenta</string>
+    <string name="auth_create_account">Crear cuenta</string>
+    <string name="auth_first_name_account">Primer nombre</string>
+    <string name="auth_last_name_account">Apellidos</string>
+    <string name="auth_privacy_confirmation_1">He leído los</string>
+    <string name="auth_privacy_confirmation_2">y la</string>
+    <string name="auth_privacy_confirmation_3">de la aplicación</string>
+    <string name="auth_logout">Cerrar sesión</string>
+    <string name="auth_reset_password_email">Te hemos enviado un correo electrónico con un enlace que podrás usar para restablecer tu contraseña.</string>
+    <string name="auth_verification_email">Te hemos enviado un correo electrónico con un enlace. Presione en ese enlace para verificar su correo electrónico y concluir con la creación de la cuenta.</string>
+
+    <!-- Authorization Errors -->
+    <string name="error_empty_credentials">Las credenciales están vacías. Debes introducir credenciales para iniciar sesión</string>
+    <string name="error_empty_registration_fields">Uno o más campos están vacíos. Todos los campos deben ser rellenados para poder crear una cuenta</string>
+    <string name="error_wrong_email_format">El correo electrónico introducido no tiene el formato correcto. Por favor, introduce un correo electrónico válido</string>
+    <string name="error_unknown">Hubo un error. Por favor, inténtalo de nuevo</string>
+    <string name="error_timeout">Está tomando mucho tiempo para conectar. Comprueba tu conexión a internet</string>
+    <string name="error_invalid_credentials">Credenciales inválidos. Debes introducir un nombre de usuario y una contraseña válida</string>
+    <string name="error_invalid_registration_fields">En los campos hay texto con el formato incorrecto. Debes introducir un correo electrónico, una contraseña y un nombre de usuario que sean válidos</string>
+    <string name="error_invalid_session_token">Sesión inválida. Inicia sesión de nuevo</string>
+    <string name="error_not_read_terms_and_privacy">Debes indicar que has leído los Términos &amp; Condiciones y la Política de Privacidad de la aplicación para crear una cuenta</string>
+
+    <!-- Home -->
+    <string name="search_book">Busca un libro</string>
+
+    <!-- Search -->
+    <string name="user_has_not_read_the_book">No lo has leído aún</string>
+    <string name="user_has_read_the_book">Ya lo has leído</string>
+    <string name="plural_persons_reading_book">personas lo están leyendo</string>
+    <string name="one_person_reading_book">persona lo está leyendo</string>
+    <string name="none_reading_book">Nadie lo está leyendo</string>
+    <string name="comment">comentario</string>
+    <string name="comments">comentarios</string>
+    <string name="review">reseña</string>
+    <string name="reviews">reseñas</string>
+    <string name="more_than_999">999+</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Perfil</string>
+    <string name="profile_name">Nombre: %s</string>
+
+    <!-- Shelf Errors -->
+    <string name="error_empty_description"></string>
+    <string name="error_empty_name"></string>
+    <string name="error_empty_term"></string>
+
+    <!-- General Errors -->
+    <string name="unknown_error">Error desconocido.</string>
+    <string name="invalid_session_token_error">Sesión inválida. Inicia sesión de nuevo</string>
+    <string name="processing_query_error">Ocurrió un error mientras se procesaba la orden. Por favor, inténtalo de nuevo.</string>
+    <string name="time_out_error">Está tomando mucho tiempo para conectar. Comprueba tu conexión a internet</string>
+    <string name="Unauthorized_query_error">No estas autorizado a hacer eso.</string>
+</resources>
