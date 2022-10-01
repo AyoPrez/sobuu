@@ -17,8 +17,6 @@ class LoginActivity: ComponentActivity() {
         setContent {
             SobuuAuthTheme {
                 DestinationsNavHost(navGraph = NavGraphs.root)
-                //TODO add here an if, so it goes to the main
-                //TODO activity if there is a valid session token?
             }
         }
     }

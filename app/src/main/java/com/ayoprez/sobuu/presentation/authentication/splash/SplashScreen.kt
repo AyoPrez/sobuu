@@ -49,16 +49,24 @@ fun SplashScreen(
 
         LaunchedEffect(viewModel, context) {
             viewModel.authResult.collect { result ->
-                if(result is AuthenticationResult.Authorized) {
-                    nav?.navigate(HomeScreenDestination) {
-                        popUpTo(LoginScreenDestination.route) {
-                            inclusive = true
+                when (result) {
+                    is AuthenticationResult.Authorized -> {
+                        nav?.navigate(HomeScreenDestination) {
+                            popUpTo(HomeScreenDestination.route) {
+                                inclusive = true
+                            }
                         }
                     }
-                } else if (result is AuthenticationResult.Unauthorized) {
-                    nav?.navigate(LoginScreenDestination)
-                } else {
-                    viewModel.handleError(result.error)
+                    is AuthenticationResult.Unauthorized -> {
+                        nav?.navigate(LoginScreenDestination) {
+                            popUpTo(LoginScreenDestination.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                    else -> {
+                        viewModel.handleError(result.error)
+                    }
                 }
             }
         }

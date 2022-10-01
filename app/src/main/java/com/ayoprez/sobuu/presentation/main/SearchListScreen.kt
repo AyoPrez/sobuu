@@ -16,16 +16,15 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,23 +35,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.ayoprez.sobuu.R
 import com.ayoprez.sobuu.presentation.custom_widgets.IconAndText
+import com.ayoprez.sobuu.presentation.destinations.BookScreenDestination
+import com.ayoprez.sobuu.shared.features.book.remote.BookError
 import com.ayoprez.sobuu.ui.theme.*
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchListScreen(
+    nav: DestinationsNavigator? = null,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
     val bookList = viewModel.booksList
     val context = LocalContext.current
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    LaunchedEffect(viewModel, context) {
-        viewModel.searchResult.collect { result ->
-
-        }
-    }
 
     LazyColumn(contentPadding = PaddingValues(5.dp)) {
         items(bookList?.size ?: 0) { position ->
@@ -65,6 +60,11 @@ fun SearchListScreen(
                 cover = book.picture,
                 totalReviews = book.bookRating.size,
                 totalComments = book.bookComments.size,
+                modifier = Modifier.clickable {
+                    nav?.navigate(
+                        BookScreenDestination(book)
+                    )
+                }
             )
         }
     }
@@ -73,6 +73,21 @@ fun SearchListScreen(
         SearchScreenLoading()
     }
 
+    if(state.error != null) {
+        Spacer(modifier = Modifier.height(25.dp))
+
+        Text(
+            getStringFromError(error = state.error),
+            modifier = Modifier
+                .padding(start = 32.dp, end = 32.dp),
+            style = TextStyle(
+                color = Vermilion,
+                fontFamily = SourceSans,
+                fontSize = 20.sp
+            ),
+            textAlign = TextAlign.Center,
+        )
+    }
 }
 
 @Composable
@@ -89,6 +104,21 @@ fun SearchScreenLoading(
 }
 
 @Composable
+fun getStringFromError(error: BookError?): String {
+    return when (error) {
+        is BookError.EmptySearchTermError -> {
+            stringResource(id = R.string.error_empty_term)
+        }
+        is BookError.TimeOutError -> {
+            stringResource(id = R.string.error_timeout)
+        }
+        else -> {
+            stringResource(id = R.string.error_unknown)
+        }
+    }
+}
+
+@Composable
 fun BookListItem(
     peopleReadingTheBook: Int = 0,
     title: String,
@@ -100,6 +130,7 @@ fun BookListItem(
     description: String,
     cover: String,
     userHasReadTheBook: Boolean = false,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = Modifier
@@ -112,8 +143,7 @@ fun BookListItem(
                 shape = RoundedCornerShape(10.dp)
             )
             .clip(RoundedCornerShape(10.dp))
-            .clickable {
-            },
+            .composed { modifier },
     ) {
 
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
@@ -313,7 +343,8 @@ fun BookListItem(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 AsyncImage(
-                    model = cover,
+                    model = "https://books.google.com/books/content?id=ImAGEAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+//                    model = cover,
                     placeholder = painterResource(id = R.drawable.ic_cover_placeholder),
                     contentDescription = null,
                     modifier = Modifier
@@ -329,8 +360,6 @@ fun BookListItem(
                     iconPainter = painterResource(id = R.drawable.ic_book_open_page_variant),
                 )
             }
-
-
         }
     }
 }
@@ -366,7 +395,8 @@ fun CurrentlyReadingIcon(
     modifier: Modifier = Modifier
 ) {
     Box(
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
+        modifier = modifier,
     ) {
         Icon(
             painterResource(id = R.drawable.ic_book_open_variant),

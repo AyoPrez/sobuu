@@ -5,12 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ayoprez.sobuu.shared.features.book.remote.BookResult
+import com.ayoprez.sobuu.shared.features.book.remote.BookError
 import com.ayoprez.sobuu.shared.features.book.repository.BookRepositoryImpl
 import com.ayoprez.sobuu.shared.models.Book
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,9 +17,6 @@ class SearchViewModel @Inject constructor(private val book: BookRepositoryImpl):
 
     var state by mutableStateOf(SearchState())
     var booksList by mutableStateOf<List<Book>?>(emptyList())
-
-    private val resultChannel = Channel<BookResult<List<Book>>>()
-    val searchResult = resultChannel.receiveAsFlow()
 
     fun onEvent(event: SearchUIEvent) {
         when(event) {
@@ -36,9 +31,9 @@ class SearchViewModel @Inject constructor(private val book: BookRepositoryImpl):
         }
     }
 
-//    fun handleError(error: AuthenticationError?) {
-//        state = state.copy(error = error)
-//    }
+    fun handleError(error: BookError?) {
+        state = state.copy(error = error)
+    }
 
     private fun search() {
         viewModelScope.launch {
@@ -46,8 +41,6 @@ class SearchViewModel @Inject constructor(private val book: BookRepositoryImpl):
             val result = book.searchBook(
                 term = state.searchTerm
             )
-
-//            resultChannel.send(result)
 
             booksList = result.data
 

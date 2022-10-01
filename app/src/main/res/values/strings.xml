@@ -56,7 +56,7 @@
     <!-- Shelf Errors -->
     <string name="error_empty_description"></string>
     <string name="error_empty_name"></string>
-    <string name="error_empty_term"></string>
+    <string name="error_empty_term">The searched term was empty. Introduce some text to search it</string>
 
     <!-- General Errors -->
     <string name="unknown_error">Unknown error.</string>

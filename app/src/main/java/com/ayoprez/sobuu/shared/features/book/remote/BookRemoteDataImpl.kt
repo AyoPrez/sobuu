@@ -24,7 +24,6 @@ class BookRemoteDataImpl @Inject constructor(
     override suspend fun searchBook(sessionToken: String?, term: String): BookResult<List<Book>> {
         if (term.isBlank()) return BookResult.Error(BookError.EmptySearchTermError)
 
-
         val result = execute(sessionToken) {
             api.searchBook(
                 sessionToken = it,
