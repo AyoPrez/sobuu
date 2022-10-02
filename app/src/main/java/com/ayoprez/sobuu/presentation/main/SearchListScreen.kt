@@ -132,6 +132,7 @@ fun BookListItem(
     userHasReadTheBook: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
+
     Column(
         modifier = Modifier
             .background(WhiteBlue)
@@ -342,9 +343,9 @@ fun BookListItem(
             },
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+
                 AsyncImage(
-                    model = "https://books.google.com/books/content?id=ImAGEAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
-//                    model = cover,
+                    model = cover,
                     placeholder = painterResource(id = R.drawable.ic_cover_placeholder),
                     contentDescription = null,
                     modifier = Modifier
