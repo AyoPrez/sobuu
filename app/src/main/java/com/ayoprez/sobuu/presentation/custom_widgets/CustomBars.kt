@@ -5,17 +5,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.PopupProperties
 import com.ayoprez.sobuu.presentation.destinations.ProfileScreenDestination
 import com.ayoprez.sobuu.ui.theme.DarkLava
 import com.ayoprez.sobuu.ui.theme.Solway
@@ -130,6 +135,101 @@ fun TopAppBarWithSearchAndProfile(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopAppBarWithMenu(
+    nav: DestinationsNavigator?,
+    backgroundColor: Color = WhiteBlue,
+    title: String? = null,
+    titleColor: Color = DarkLava,
+    listItems: List<MenuItemData>,
+    modifier: Modifier = Modifier,
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    TopAppBar(
+        modifier = modifier
+            .fillMaxWidth()
+            .composed { modifier },
+        title = {
+            Text(
+                text = title ?: "",
+                style = TextStyle(
+                    color = titleColor,
+                    fontSize = 38.sp,
+                    fontFamily = Solway,
+                    fontWeight = FontWeight.Medium,
+                ),
+                textAlign = TextAlign.Center,
+            )
+        },
+        colors = TopAppBarDefaults.largeTopAppBarColors(backgroundColor),
+        actions = {
+            IconButton(onClick = {
+                expanded = true
+            }) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = null,
+                    tint = DarkLava
+                )
+            }
+
+            DropdownMenu(
+                modifier = Modifier
+                    .background(backgroundColor)
+                    .width(width = 200.dp),
+                expanded = expanded,
+                onDismissRequest = {
+                    expanded = false
+                },
+                offset = DpOffset(x = (-102).dp, y = (-64).dp),
+                properties = PopupProperties()
+            ) {
+
+                listItems.forEach { menuItemData ->
+                    DropdownMenuItem(
+                        onClick = {
+                            menuItemData.action()
+                            expanded = false
+                        },
+                        enabled = true,
+                        text = {
+                            Text(
+                                text = menuItemData.text,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp,
+                                color = DarkLava
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = menuItemData.icon,
+                                contentDescription = menuItemData.text,
+                                tint = DarkLava,
+                            )
+                        }
+                    )
+                }
+            }
+        },
+        navigationIcon = {
+            IconButton(onClick = {
+                nav?.navigateUp()
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "",
+                    tint = DarkLava,
+                )
+            }
+        }
+    )
+}
+
+
+data class MenuItemData(val text: String, val icon: ImageVector, val action: () -> Unit)
 
 @Preview(showSystemUi = true, showBackground = true, group = "Done")
 @Composable

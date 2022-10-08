@@ -49,6 +49,11 @@
     <string name="reviews">reviews</string>
     <string name="more_than_999">999+</string>
 
+    <!-- Book Details -->
+    <string name="add_to_shelf">Add to shelf</string>
+    <string name="start_to_read">Start to read</string>
+    <string name="search_in_map">Search in map near stores</string>
+
     <!-- Profile -->
     <string name="profile_title">Profile</string>
     <string name="profile_name">Name: %s</string>

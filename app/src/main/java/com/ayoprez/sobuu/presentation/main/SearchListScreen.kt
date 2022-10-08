@@ -6,12 +6,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -20,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -38,6 +36,10 @@ import com.ayoprez.sobuu.presentation.custom_widgets.IconAndText
 import com.ayoprez.sobuu.presentation.destinations.BookScreenDestination
 import com.ayoprez.sobuu.shared.features.book.remote.BookError
 import com.ayoprez.sobuu.ui.theme.*
+import com.gowtham.ratingbar.RatingBar
+import com.gowtham.ratingbar.RatingBarConfig
+import com.gowtham.ratingbar.RatingBarStyle
+import com.gowtham.ratingbar.StepSize
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
@@ -47,14 +49,18 @@ fun SearchListScreen(
 ) {
     val state = viewModel.state
     val bookList = viewModel.booksList
-    val context = LocalContext.current
+    val listState = rememberLazyListState()
 
-    LazyColumn(contentPadding = PaddingValues(5.dp)) {
+    LazyColumn(
+        state = listState,
+        contentPadding = PaddingValues(5.dp),
+    ) {
         items(bookList?.size ?: 0) { position ->
             val book = bookList?.get(position) ?: return@items
+
             BookListItem(
                 title = book.title,
-                author = book.authors[0],
+                author = book.authors.joinToString(", "),
                 totalPages = book.totalPages,
                 description = book.description,
                 cover = book.picture,
@@ -62,18 +68,20 @@ fun SearchListScreen(
                 totalComments = book.bookComments.size,
                 modifier = Modifier.clickable {
                     nav?.navigate(
-                        BookScreenDestination(book)
+                        BookScreenDestination(
+                            book = book,
+                        )
                     )
                 }
             )
         }
     }
 
-    if(state.isLoading) {
+    if (state.isLoading) {
         SearchScreenLoading()
     }
 
-    if(state.error != null) {
+    if (state.error != null) {
         Spacer(modifier = Modifier.height(25.dp))
 
         Text(
@@ -92,7 +100,8 @@ fun SearchListScreen(
 
 @Composable
 fun SearchScreenLoading(
-    modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -191,7 +200,13 @@ fun BookListItem(
                     .constrainAs(peopleReading) {
                         top.linkTo(bookRead.top)
                         bottom.linkTo(bookRead.bottom)
-                        linkTo(bookRead.end, parent.end, startMargin = 4.dp, endMargin = 4.dp, bias = 1F)
+                        linkTo(
+                            bookRead.end,
+                            parent.end,
+                            startMargin = 4.dp,
+                            endMargin = 4.dp,
+                            bias = 1F
+                        )
                     },
             )
 
@@ -204,7 +219,13 @@ fun BookListItem(
                         top.linkTo(bookRead.bottom)
                         bottom.linkTo(verticalMiddleGuideline)
                         start.linkTo(bookCover.end, 4.dp)
-                        linkTo(bookRead.bottom, bottomBox.top, topMargin = 2.dp, bottomMargin = 2.dp, bias = 1F)
+                        linkTo(
+                            bookRead.bottom,
+                            bottomBox.top,
+                            topMargin = 2.dp,
+                            bottomMargin = 2.dp,
+                            bias = 1F
+                        )
                     },
             )
 
@@ -329,18 +350,18 @@ fun BookListItem(
 
             Column(
                 modifier = Modifier.constrainAs(bookCover) {
-                start.linkTo(parent.start, 10.dp)
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom, 5.dp)
-                width = Dimension.percent(0.2f)
-                linkTo(
-                    parent.top,
-                    parent.bottom,
-                    topMargin = 5.dp,
-                    bottomMargin = 5.dp,
-                    bias = 0.1f
-                )
-            },
+                    start.linkTo(parent.start, 10.dp)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom, 5.dp)
+                    width = Dimension.percent(0.2f)
+                    linkTo(
+                        parent.top,
+                        parent.bottom,
+                        topMargin = 5.dp,
+                        bottomMargin = 5.dp,
+                        bias = 0.1f
+                    )
+                },
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
@@ -370,25 +391,21 @@ fun CalculateRateIcons(
     rate: Double,
     modifier: Modifier = Modifier
 ) {
-    LazyRow(modifier = modifier) {
-        items(5) { index ->
-            if (rate > index) {
-                Icon(
-                    imageVector = Icons.Filled.Star,
-                    modifier = Modifier.size(12.dp),
-                    contentDescription = null,
-                    tint = DarkLava,
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.Filled.StarBorder,
-                    modifier = Modifier.size(12.dp),
-                    contentDescription = null,
-                    tint = DarkLava,
-                )
-            }
-        }
-    }
+    RatingBar(
+        value = rate.toFloat(),
+        config = RatingBarConfig()
+            .activeColor(DarkLava)
+            .hideInactiveStars(false)
+            .inactiveColor(WhiteBlue)
+            .stepSize(StepSize.HALF)
+            .numStars(5)
+            .isIndicator(true)
+            .size(18.dp)
+            .padding(2.dp)
+            .style(RatingBarStyle.HighLighted),
+        onValueChange = {},
+        onRatingChanged = {}
+    )
 }
 
 @Composable
@@ -425,7 +442,9 @@ fun BookListItemPreview() {
         rate = 2.5,
         totalReviews = 542213,
         totalComments = 465132465,
-        description = "Durante mil años han caído cenizas del cielo. Durante mil años nada ha florecido. Durante mil años los skaa han sido esclavizados y viven en la miseria, sumidos en un miedo inevitable. Durante mil años...",
+        description = "Durante mil años han caído cenizas del cielo. Durante mil años nada ha florecido. " +
+                "Durante mil años los skaa han sido esclavizados y viven en la miseria, sumidos en un " +
+                "miedo inevitable. Durante mil años...",
         cover = "https://images-eu.ssl-images-amazon.com/images/I/51wrYVDxFNS._SY264_BO1,204,203,200_QL40_ML2_.jpg",
     )
 }

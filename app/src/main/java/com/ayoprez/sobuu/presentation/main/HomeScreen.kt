@@ -99,6 +99,7 @@ fun HomeScreen(
             },
             content = {
                 Content(
+                    nav = nav,
                     isSearchBarFocus = isSearchBarFocused,
                 )
             }
@@ -118,7 +119,7 @@ fun Content(
             .padding(top = 150.dp),
     ) {
         if(isSearchBarFocus) {
-            SearchListScreen(nav)
+            SearchListScreen(nav = nav)
         } else {
             Text(text = "Welcome")
         }

@@ -100,6 +100,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
 
+    //Others
+    implementation 'com.github.a914-gowtham:compose-ratingbar:1.2.3'
+    implementation 'com.google.accompanist:accompanist-flowlayout:0.26.4-beta'
+
     // Compose Nav Destinations
     implementation 'io.github.raamcosta.compose-destinations:animations-core:1.6.20-beta'
     ksp 'io.github.raamcosta.compose-destinations:ksp:1.6.20-beta'
