@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -87,6 +86,7 @@ fun BookScreen(
         content = {
             BookScreenContent(
                 nav = nav,
+                modifier = Modifier.padding(it),
                 peopleReadingIt = 0,
                 cover = book.picture,
                 title = book.title,
@@ -111,6 +111,7 @@ fun BookScreen(
 @Composable
 fun BookScreenContent(
     nav: DestinationsNavigator?,
+    modifier: Modifier = Modifier,
     peopleReadingIt: Int,
     cover: String,
     title: String,
@@ -134,7 +135,8 @@ fun BookScreenContent(
             .background(WhiteBlue)
             .padding(12.dp)
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(rememberScrollState())
+            .then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row {
@@ -382,6 +384,7 @@ fun CalculateRateIcons(
     modifier: Modifier = Modifier
 ) {
     RatingBar(
+        modifier = modifier,
         value = rate.toFloat(),
         config = RatingBarConfig()
             .activeColor(DarkLava)
@@ -447,7 +450,7 @@ fun CreateGenresChips(
     genres: List<String>,
     modifier: Modifier = Modifier,
 ) {
-    FlowRow(modifier = Modifier.fillMaxWidth().composed { modifier },) {
+    FlowRow(modifier = Modifier.fillMaxWidth().then(modifier)) {
         for(element in genres) {
             Chip(
                 text = element,
