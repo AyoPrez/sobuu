@@ -20,6 +20,7 @@ internal class BookRemoteDataImplTest {
     private lateinit var bookRemote: IBookRemoteData
 
     private val book = Utils.book
+    private val booksApi = Utils.bookApi
     private val bookProgress = Utils.bookProgress
     private val ratingBook = Utils.ratingBook
 
@@ -118,10 +119,10 @@ internal class BookRemoteDataImplTest {
     //region Search book
     @Test
     fun `Search book - Everything good`() {
-        coEvery { bookApi.searchBook(any(), any()) } returns Response.success(listOf(book))
+        coEvery { bookApi.searchBook(any(), any(), any(), any()) } returns Response.success(booksApi)
 
         val result = runBlocking {
-            bookRemote.searchBook("9hosnd9", "Dorian")
+            bookRemote.searchBook("9hosnd9", "Dorian", "es", false)
         }
 
         assertEquals(result.data?.get(0)?.id, "w98hidn")
@@ -129,10 +130,10 @@ internal class BookRemoteDataImplTest {
 
     @Test
     fun `Search book - If session token is empty, should return invalid session token error`() {
-        coEvery { bookApi.searchBook(any(), any()) } returns Response.success(listOf(book))
+        coEvery { bookApi.searchBook(any(), any(), any(), any()) } returns Response.success(booksApi)
 
         val result = runBlocking {
-            bookRemote.searchBook("", "Dorian")
+            bookRemote.searchBook("", "Dorian", "es", false)
         }
 
         MatcherAssert.assertThat(
@@ -143,10 +144,10 @@ internal class BookRemoteDataImplTest {
 
     @Test
     fun `Search book - If session token is null, should return invalid session token error`() {
-        coEvery { bookApi.searchBook(any(), any()) } returns Response.success(listOf(book))
+        coEvery { bookApi.searchBook(any(), any(), any(), any()) } returns Response.success(booksApi)
 
         val result = runBlocking {
-            bookRemote.searchBook(null, "Dorian")
+            bookRemote.searchBook(null, "Dorian", "es", false)
         }
 
         MatcherAssert.assertThat(
@@ -157,10 +158,10 @@ internal class BookRemoteDataImplTest {
 
     @Test
     fun `Search book - If term is empty, should return empty search term error`() {
-        coEvery { bookApi.searchBook(any(), any()) } returns Response.success(listOf(book))
+        coEvery { bookApi.searchBook(any(), any(), any(), any()) } returns Response.success(booksApi)
 
         val result = runBlocking {
-            bookRemote.searchBook("suierds9", "")
+            bookRemote.searchBook("suierds9", "", "es", false)
         }
 
         MatcherAssert.assertThat(
@@ -171,10 +172,10 @@ internal class BookRemoteDataImplTest {
 
     @Test
     fun `Search book - If request return 141 error, should return processing query error`() {
-        coEvery { bookApi.searchBook(any(), any()) } returns Response.error(404, "{\"code\":141,\"error\":\"The value being searched for must be a string.\"}".toResponseBody())
+        coEvery { bookApi.searchBook(any(), any(), any(), any()) } returns Response.error(404, "{\"code\":141,\"error\":\"The value being searched for must be a string.\"}".toResponseBody())
 
         val result = runBlocking {
-            bookRemote.searchBook("sp8hsh908", "Dorian")
+            bookRemote.searchBook("sp8hsh908", "Dorian", "es", false)
         }
 
         MatcherAssert.assertThat(
@@ -185,10 +186,10 @@ internal class BookRemoteDataImplTest {
 
     @Test
     fun `Search book - If request return 124 error, should return time out error`() {
-        coEvery { bookApi.searchBook(any(), any()) } returns Response.error(404, "{\"code\":124,\"error\":\"Timeout.\"}".toResponseBody())
+        coEvery { bookApi.searchBook(any(), any(), any(), any()) } returns Response.error(404, "{\"code\":124,\"error\":\"Timeout.\"}".toResponseBody())
 
         val result = runBlocking {
-            bookRemote.searchBook("sp8hsh908", "Dorian")
+            bookRemote.searchBook("sp8hsh908", "Dorian", "es", false)
         }
 
         MatcherAssert.assertThat(
@@ -199,10 +200,10 @@ internal class BookRemoteDataImplTest {
 
     @Test
     fun `Search book - If request return 101 error, should return unauthorized query error`() {
-        coEvery { bookApi.searchBook(any(), any()) } returns Response.error(404, "{\"code\":101,\"error\":\"Object not found.\"}".toResponseBody())
+        coEvery { bookApi.searchBook(any(), any(), any(), any()) } returns Response.error(404, "{\"code\":101,\"error\":\"Object not found.\"}".toResponseBody())
 
         val result = runBlocking {
-            bookRemote.searchBook("sp8hsh908", "Dorian")
+            bookRemote.searchBook("sp8hsh908", "Dorian", "es", false)
         }
 
         MatcherAssert.assertThat(

@@ -1,6 +1,9 @@
 package com.ayoprez.sobuu.shared.features
 
-import com.ayoprez.sobuu.shared.models.*
+import com.ayoprez.sobuu.shared.models.api_models.BookExtras
+import com.ayoprez.sobuu.shared.models.api_models.Books
+import com.ayoprez.sobuu.shared.models.api_models.ResultBooks
+import com.ayoprez.sobuu.shared.models.bo_models.*
 import java.time.LocalDateTime
 
 object Utils {
@@ -40,15 +43,46 @@ object Utils {
         authors = listOf("Comodoer"),
         title = "Laying Down Above",
         description = "",
-        bookComments = listOf(comment),
-        bookRating = listOf(),
         credits = listOf(),
         id = "w98hidn",
         isbn = listOf("", ""),
         picture = "",
         publishedDate = "",
         publisher = "",
-        totalPages = 544
+        totalPages = 544,
+        totalRating = 2.0,
+        readingStatus = BookReadingStatus.READING,
+        peopleReadingIt = 6,
+        totalComments = 5,
+        genres = listOf("", ""),
+        allReviews = listOf(),
+        userRating = null,
+    )
+
+    private val resultBookApi = ResultBooks(
+        authors = listOf("Comodoer"),
+        title = "Laying Down Above",
+        description = "",
+        credits = listOf(),
+        id = "w98hidn",
+        isbn = listOf("", ""),
+        picture = "",
+        publishedDate = "",
+        publisher = "",
+        totalPages = 544,
+        genres = listOf("", ""),
+        extras = BookExtras(
+            totalRating = 2.0,
+            readingStatus = 1,
+            peopleReadingIt = 6,
+            totalComments = 5,
+            allReviews = listOf(),
+            userRating = null,
+        ),
+    )
+
+    val bookApi = Books(
+        result = listOf(resultBookApi)
     )
 
     val ratingBook = UserBookRating(
@@ -57,6 +91,7 @@ object Utils {
         user = profile,
         rating = 5.5,
         review = "",
+        date = LocalDateTime.now(),
     )
 
     val report = Report(

@@ -29,9 +29,10 @@ import com.ayoprez.sobuu.presentation.custom_widgets.Chip
 import com.ayoprez.sobuu.presentation.custom_widgets.IconAndText
 import com.ayoprez.sobuu.presentation.custom_widgets.MenuItemData
 import com.ayoprez.sobuu.presentation.custom_widgets.TopAppBarWithMenu
-import com.ayoprez.sobuu.shared.models.Book
-import com.ayoprez.sobuu.shared.models.Profile
-import com.ayoprez.sobuu.shared.models.UserBookRating
+import com.ayoprez.sobuu.shared.models.bo_models.Book
+import com.ayoprez.sobuu.shared.models.bo_models.BookReadingStatus
+import com.ayoprez.sobuu.shared.models.bo_models.Profile
+import com.ayoprez.sobuu.shared.models.bo_models.UserBookRating
 import com.ayoprez.sobuu.ui.theme.*
 import com.google.accompanist.flowlayout.FlowRow
 import com.gowtham.ratingbar.RatingBar
@@ -87,22 +88,23 @@ fun BookScreen(
             BookScreenContent(
                 nav = nav,
                 modifier = Modifier.padding(it),
-                peopleReadingIt = 0,
+                peopleReadingIt = book.peopleReadingIt,
                 cover = book.picture,
                 title = book.title,
                 authors = book.authors.joinToString(", "),
                 description = book.description,
-                credits = book.credits.joinToString(", "),
+                credits = book.credits?.joinToString(", ") ?: "",
                 publisher = book.publisher,
                 publishedDate = book.publishedDate,
                 totalPages = book.totalPages.toString(),
                 isbn10 = book.isbn[0],
                 isbn13 = book.isbn[1],
-                genres = emptyList(),
-                userHasReadTheBook = false,
-                totalComments = book.bookComments.size,
-                rating = 0.0,
-                reviews = book.bookRating,
+                genres = book.genres,
+                userHasReadTheBook = book.readingStatus,
+                totalComments = book.totalComments,
+                rating = book.totalRating,
+                reviews = book.allReviews,
+                userReview = book.userRating,
             )
         }
     )
@@ -124,7 +126,7 @@ fun BookScreenContent(
     isbn10: String?,
     isbn13: String?,
     genres: List<String>,
-    userHasReadTheBook: Boolean,
+    userHasReadTheBook: BookReadingStatus,
     totalComments: Int,
     rating: Double,
     reviews: List<UserBookRating>,
@@ -249,10 +251,12 @@ fun BookScreenContent(
 
         ) {
             Text(
-                text = if (userHasReadTheBook)
-                    stringResource(id = R.string.user_has_read_the_book)
-                else
-                    stringResource(id = R.string.user_has_not_read_the_book),
+                text = when(userHasReadTheBook) {
+                    BookReadingStatus.NOT_READ -> stringResource(id = R.string.user_has_not_read_the_book)
+                    BookReadingStatus.READING -> stringResource(id = R.string.user_is_reading_the_book)
+                    BookReadingStatus.FINISHED -> stringResource(id = R.string.user_has_read_the_book)
+                    BookReadingStatus.GIVE_UP -> stringResource(id = R.string.user_gave_up_with_the_book)
+                },
                 style = TextStyle(
                     fontFamily = SourceSans,
                     color = DarkLava,
@@ -494,7 +498,7 @@ fun BookScreenContentPreview() {
         isbn10 = "5746854987",
         isbn13 = "1698465465475",
         genres = listOf("Fantasy", "Science fiction", "Contemporary fiction", "Horror", "Fiction", "Middle Age"),
-        userHasReadTheBook = false,
+        userHasReadTheBook = BookReadingStatus.FINISHED,
         totalComments = 211,
         rating = 2.5,
         reviews = emptyList(),

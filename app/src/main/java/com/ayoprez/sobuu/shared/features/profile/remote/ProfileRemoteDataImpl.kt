@@ -1,10 +1,10 @@
 package com.ayoprez.sobuu.shared.features.profile.remote
 
-import com.ayoprez.sobuu.shared.models.BookProgress
-import com.ayoprez.sobuu.shared.models.Profile
-import com.ayoprez.sobuu.shared.models.Shelf
 import com.ayoprez.sobuu.shared.models.api_models.GetUserProfile
 import com.ayoprez.sobuu.shared.models.api_models.UserShelf
+import com.ayoprez.sobuu.shared.models.bo_models.BookProgress
+import com.ayoprez.sobuu.shared.models.bo_models.Profile
+import com.ayoprez.sobuu.shared.models.bo_models.Shelf
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.HttpException

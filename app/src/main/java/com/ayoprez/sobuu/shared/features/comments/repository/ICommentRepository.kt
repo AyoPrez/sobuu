@@ -1,9 +1,9 @@
 package com.ayoprez.sobuu.shared.features.comments.repository
 
 import com.ayoprez.sobuu.shared.features.comments.remote.CommentResult
-import com.ayoprez.sobuu.shared.models.Comment
-import com.ayoprez.sobuu.shared.models.Report
-import com.ayoprez.sobuu.shared.models.ReportReason
+import com.ayoprez.sobuu.shared.models.bo_models.Comment
+import com.ayoprez.sobuu.shared.models.bo_models.Report
+import com.ayoprez.sobuu.shared.models.bo_models.ReportReason
 
 interface ICommentRepository {
 

@@ -11,13 +11,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -64,8 +61,8 @@ fun SearchListScreen(
                 totalPages = book.totalPages,
                 description = book.description,
                 cover = book.picture,
-                totalReviews = book.bookRating.size,
-                totalComments = book.bookComments.size,
+                totalReviews = book.allReviews.size,
+                totalComments = book.totalComments,
                 modifier = Modifier.clickable {
                     nav?.navigate(
                         BookScreenDestination(
@@ -73,6 +70,25 @@ fun SearchListScreen(
                         )
                     )
                 }
+            )
+        }
+    }
+
+    if(!state.searchFurther && state.searchTerm.isNotEmpty()) {
+        ElevatedButton(
+            onClick = {
+                viewModel.onEvent(SearchUIEvent.searchFurther)
+            },
+            colors = ButtonDefaults.buttonColors(Vermilion),
+            modifier = Modifier.fillMaxWidth().padding(12.dp)
+        ) {
+            Text(
+                text = stringResource(id = R.string.search_further),
+                style = TextStyle(
+                    color = WhiteBlue,
+                    fontSize = 16.sp,
+                    fontFamily = SourceSans
+                )
             )
         }
     }
@@ -129,6 +145,7 @@ fun getStringFromError(error: BookError?): String {
 
 @Composable
 fun BookListItem(
+    modifier: Modifier = Modifier,
     peopleReadingTheBook: Int = 0,
     title: String,
     author: String,
@@ -139,7 +156,6 @@ fun BookListItem(
     description: String,
     cover: String,
     userHasReadTheBook: Boolean = false,
-    modifier: Modifier = Modifier,
 ) {
 
     Column(
@@ -153,7 +169,7 @@ fun BookListItem(
                 shape = RoundedCornerShape(10.dp)
             )
             .clip(RoundedCornerShape(10.dp))
-            .composed { modifier },
+            .then(modifier),
     ) {
 
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
@@ -388,10 +404,11 @@ fun BookListItem(
 
 @Composable
 fun CalculateRateIcons(
+    modifier: Modifier = Modifier,
     rate: Double,
-    modifier: Modifier = Modifier
 ) {
     RatingBar(
+        modifier = Modifier.then(modifier),
         value = rate.toFloat(),
         config = RatingBarConfig()
             .activeColor(DarkLava)

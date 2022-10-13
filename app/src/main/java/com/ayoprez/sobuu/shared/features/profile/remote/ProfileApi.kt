@@ -1,7 +1,7 @@
 package com.ayoprez.sobuu.shared.features.profile.remote
 
-import com.ayoprez.sobuu.shared.models.Profile
 import com.ayoprez.sobuu.shared.models.api_models.GetUserProfile
+import com.ayoprez.sobuu.shared.models.bo_models.Profile
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

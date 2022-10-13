@@ -41,6 +41,8 @@
     <!-- Suche -->
     <string name="user_has_not_read_the_book">Sie haben es noch nicht gelesen</string>
     <string name="user_has_read_the_book">Sie haben es bereits gelesen</string>
+    <string name="user_is_reading_the_book">Sie lesen es gerade</string>
+    <string name="user_gave_up_with_the_book">Sie haben es versucht und aufgegeben</string>
     <string name="plural_persons_reading_book">Leute lesen es</string>
     <string name="one_person_reading_book">Person liest es</string>
     <string name="none_reading_book">Niemand liest es</string>
@@ -65,4 +67,5 @@
     <string name="processing_query_error">Bei der Bearbeitung der Bestellung ist etwas schief gelaufen.</string>
     <string name="time_out_error">Etwas ist schiefgelaufen. Versuchen Sie es erneut.</string>
     <string name="Unauthorized_query_error">Sie sind nicht in der Lage, das zu tun.</string>
+    <string name="search_further">Weiter suchen</string>
 </resources>

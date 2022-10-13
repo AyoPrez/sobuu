@@ -1,6 +1,6 @@
 package com.ayoprez.sobuu.shared.features.shelf.remote
 
-import com.ayoprez.sobuu.shared.models.Shelf
+import com.ayoprez.sobuu.shared.models.bo_models.Shelf
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.HttpException

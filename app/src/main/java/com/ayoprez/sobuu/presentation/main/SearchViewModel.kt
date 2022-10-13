@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ayoprez.sobuu.shared.features.book.remote.BookError
 import com.ayoprez.sobuu.shared.features.book.repository.BookRepositoryImpl
-import com.ayoprez.sobuu.shared.models.Book
+import com.ayoprez.sobuu.shared.models.bo_models.Book
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,17 +21,25 @@ class SearchViewModel @Inject constructor(private val book: BookRepositoryImpl):
     fun onEvent(event: SearchUIEvent) {
         when(event) {
             is SearchUIEvent.SearchTermChanged -> {
-                state = state.copy(searchTerm = event.value)
+                state = state.copy(
+                    searchTerm = event.value,
+                    language = event.lang,
+                    searchFurther = true,
+                )
             }
             is SearchUIEvent.removeErrorState -> TODO()
             is SearchUIEvent.searchTerm -> search()
             is SearchUIEvent.cleanSearchTerm -> {
-                state = state.copy(searchTerm = "")
+                state = state.copy(
+                    searchTerm = "",
+                    language = "",
+                )
             }
+            is SearchUIEvent.searchFurther -> searchFurther()
         }
     }
 
-    fun handleError(error: BookError?) {
+    private fun handleError(error: BookError?) {
         state = state.copy(error = error)
     }
 
@@ -39,10 +47,35 @@ class SearchViewModel @Inject constructor(private val book: BookRepositoryImpl):
         viewModelScope.launch {
             state = state.copy(isLoading = true)
             val result = book.searchBook(
-                term = state.searchTerm
+                term = state.searchTerm,
+                language = state.language,
+                searchFurther = state.searchFurther,
             )
 
-            booksList = result.data
+            if(result.data.isNullOrEmpty()) {
+                handleError(result.error)
+            } else {
+                booksList = result.data
+            }
+
+            state = state.copy(isLoading = false)
+        }
+    }
+
+    private fun searchFurther() {
+        viewModelScope.launch {
+            state = state.copy(isLoading = true)
+            val result = book.searchBook(
+                term = state.searchTerm,
+                language = state.language,
+                searchFurther = state.searchFurther,
+            )
+
+            if(result.data.isNullOrEmpty()) {
+                handleError(result.error)
+            } else {
+                booksList = result.data
+            }
 
             state = state.copy(isLoading = false)
         }

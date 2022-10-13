@@ -4,10 +4,10 @@ import com.ayoprez.sobuu.shared.features.book.database.IBookLocalData
 import com.ayoprez.sobuu.shared.features.book.remote.BookError
 import com.ayoprez.sobuu.shared.features.book.remote.BookResult
 import com.ayoprez.sobuu.shared.features.book.remote.IBookRemoteData
-import com.ayoprez.sobuu.shared.models.Book
-import com.ayoprez.sobuu.shared.models.BookProgress
-import com.ayoprez.sobuu.shared.models.Comment
-import com.ayoprez.sobuu.shared.models.UserBookRating
+import com.ayoprez.sobuu.shared.models.bo_models.Book
+import com.ayoprez.sobuu.shared.models.bo_models.BookProgress
+import com.ayoprez.sobuu.shared.models.bo_models.Comment
+import com.ayoprez.sobuu.shared.models.bo_models.UserBookRating
 import javax.inject.Inject
 
 class BookRepositoryImpl @Inject constructor(
@@ -18,10 +18,12 @@ class BookRepositoryImpl @Inject constructor(
         bookRemoteData.getUserCurrentReadingBook(it)
     }
 
-    override suspend fun searchBook(term: String): BookResult<List<Book>> = execute {
+    override suspend fun searchBook(term: String, language: String, searchFurther: Boolean): BookResult<List<Book>> = execute {
         bookRemoteData.searchBook(
             sessionToken = it,
             term = term,
+            language = language,
+            searchFurther = searchFurther,
         )
     }
 

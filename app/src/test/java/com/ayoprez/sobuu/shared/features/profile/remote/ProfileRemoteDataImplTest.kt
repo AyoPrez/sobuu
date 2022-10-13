@@ -1,8 +1,8 @@
 package com.ayoprez.sobuu.shared.features.profile.remote
 
-import com.ayoprez.sobuu.shared.models.Profile
 import com.ayoprez.sobuu.shared.models.api_models.GetUserProfile
 import com.ayoprez.sobuu.shared.models.api_models.Result
+import com.ayoprez.sobuu.shared.models.bo_models.Profile
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK

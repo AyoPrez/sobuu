@@ -1,7 +1,7 @@
 package com.ayoprez.sobuu.shared.features.shelf.remote
 
-import com.ayoprez.sobuu.shared.models.Book
-import com.ayoprez.sobuu.shared.models.Shelf
+import com.ayoprez.sobuu.shared.features.Utils
+import com.ayoprez.sobuu.shared.models.bo_models.Shelf
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -17,20 +17,7 @@ import kotlin.test.assertEquals
 internal class ShelfRemoteDataImplTest {
 
     private lateinit var shelfRemote: IShelfRemoteData
-    private val book = Book(
-        authors = listOf("Comodoer"),
-        title = "Laying Down Above",
-        description = "",
-        bookComments = listOf(),
-        bookRating = listOf(),
-        credits = listOf(),
-        id = "w98hidn",
-        isbn = listOf("", ""),
-        picture = "",
-        publishedDate = "",
-        publisher = "",
-        totalPages = 544
-    )
+    private val book = Utils.book
 
     @MockK
     lateinit var shelfApi: ShelfApi
@@ -371,7 +358,9 @@ internal class ShelfRemoteDataImplTest {
     //region Change description
     @Test
     fun `Change Description - Not null`() {
-        coEvery { shelfApi.changeShelfDescription(any(), any(), any()) } returns Response.success(Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Huge Fantasy", isPublic = true))
+        coEvery { shelfApi.changeShelfDescription(any(), any(), any()) } returns Response.success(
+            Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Huge Fantasy", isPublic = true)
+        )
 
         val result = runBlocking {
             shelfRemote.changeShelfDescription("9hosnd9", "aw98hiw98", "Huge Fantasy")
@@ -382,7 +371,9 @@ internal class ShelfRemoteDataImplTest {
 
     @Test
     fun `Change Description - If session token is empty, should return invalid session token error`() {
-        coEvery { shelfApi.changeShelfDescription(any(), any(), any()) } returns Response.success(Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Fantasy for everybody", isPublic = true))
+        coEvery { shelfApi.changeShelfDescription(any(), any(), any()) } returns Response.success(
+            Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Fantasy for everybody", isPublic = true)
+        )
 
         val result = runBlocking {
             shelfRemote.changeShelfDescription("", "aw98hiw98", "Huge Fantasy")
@@ -393,7 +384,9 @@ internal class ShelfRemoteDataImplTest {
 
     @Test
     fun `Change Description - If session token is null, should return invalid session token error`() {
-        coEvery { shelfApi.changeShelfDescription(any(), any(), any()) } returns Response.success(Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Fantasy for everybody", isPublic = true))
+        coEvery { shelfApi.changeShelfDescription(any(), any(), any()) } returns Response.success(
+            Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Fantasy for everybody", isPublic = true)
+        )
 
         val result = runBlocking {
             shelfRemote.changeShelfDescription(null, "aw98hiw98", "Huge Fantasy")
@@ -404,7 +397,9 @@ internal class ShelfRemoteDataImplTest {
 
     @Test
     fun `Change Description - If shelf shelf Id is empty, should return empty shelf id error`() {
-        coEvery { shelfApi.changeShelfDescription(any(), any(), any()) } returns Response.success(Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Fantasy for everybody", isPublic = true))
+        coEvery { shelfApi.changeShelfDescription(any(), any(), any()) } returns Response.success(
+            Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Fantasy for everybody", isPublic = true)
+        )
 
         val result = runBlocking {
             shelfRemote.changeShelfDescription("9hosnd9", "", "Huge Fantasy")
@@ -415,7 +410,9 @@ internal class ShelfRemoteDataImplTest {
 
     @Test
     fun `Change Description - If shelf new description is empty, should return empty name error`() {
-        coEvery { shelfApi.changeShelfDescription(any(), any(), any()) } returns Response.success(Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Fantasy for everybody", isPublic = true))
+        coEvery { shelfApi.changeShelfDescription(any(), any(), any()) } returns Response.success(
+            Shelf(id="s98hwe", name="Fantasy", books = listOf(), description = "Fantasy for everybody", isPublic = true)
+        )
 
         val result = runBlocking {
             shelfRemote.changeShelfDescription("9hosnd9", "aw98hiw98", "")

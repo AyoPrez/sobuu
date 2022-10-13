@@ -4,7 +4,7 @@ import com.ayoprez.sobuu.shared.features.shelf.database.IShelfLocalData
 import com.ayoprez.sobuu.shared.features.shelf.remote.IShelfRemoteData
 import com.ayoprez.sobuu.shared.features.shelf.remote.ShelfError
 import com.ayoprez.sobuu.shared.features.shelf.remote.ShelfResult
-import com.ayoprez.sobuu.shared.models.Shelf
+import com.ayoprez.sobuu.shared.models.bo_models.Shelf
 import javax.inject.Inject
 
 class ShelfRepositoryImpl @Inject constructor(

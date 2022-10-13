@@ -1,7 +1,7 @@
 package com.ayoprez.sobuu.presentation.profile
 
 import android.os.Parcelable
-import com.ayoprez.sobuu.shared.models.Profile
+import com.ayoprez.sobuu.shared.models.bo_models.Profile
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

@@ -4,9 +4,9 @@ import com.ayoprez.sobuu.shared.features.comments.database.ICommentLocalData
 import com.ayoprez.sobuu.shared.features.comments.remote.CommentError
 import com.ayoprez.sobuu.shared.features.comments.remote.CommentResult
 import com.ayoprez.sobuu.shared.features.comments.remote.ICommentRemoteData
-import com.ayoprez.sobuu.shared.models.Comment
-import com.ayoprez.sobuu.shared.models.Report
-import com.ayoprez.sobuu.shared.models.ReportReason
+import com.ayoprez.sobuu.shared.models.bo_models.Comment
+import com.ayoprez.sobuu.shared.models.bo_models.Report
+import com.ayoprez.sobuu.shared.models.bo_models.ReportReason
 import javax.inject.Inject
 
 class CommentRepositoryImpl @Inject constructor(

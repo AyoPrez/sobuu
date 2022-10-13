@@ -25,7 +25,7 @@ interface AuthenticationApi {
     @GET("parse/users/me")
     suspend fun authenticate(
         @Header("X-Parse-Session-Token") sessionToken: String,
-    ): Response<SessionTokenApi>
+    ): Response<AuthSessionTokenApi>
 
     @FormUrlEncoded
     @POST("functions/logout")

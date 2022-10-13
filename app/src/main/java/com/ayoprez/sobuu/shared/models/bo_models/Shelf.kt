@@ -1,4 +1,4 @@
-package com.ayoprez.sobuu.shared.models
+package com.ayoprez.sobuu.shared.models.bo_models
 
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass

@@ -40,6 +40,8 @@
     <!-- Search -->
     <string name="user_has_not_read_the_book">No lo has leído aún</string>
     <string name="user_has_read_the_book">Ya lo has leído</string>
+    <string name="user_is_reading_the_book">Lo estas leyendo</string>
+    <string name="user_gave_up_with_the_book">Lo intentaste y lo dejaste</string>
     <string name="plural_persons_reading_book">personas lo están leyendo</string>
     <string name="one_person_reading_book">persona lo está leyendo</string>
     <string name="none_reading_book">Nadie lo está leyendo</string>
@@ -64,4 +66,5 @@
     <string name="processing_query_error">Ocurrió un error mientras se procesaba la orden. Por favor, inténtalo de nuevo.</string>
     <string name="time_out_error">Está tomando mucho tiempo para conectar. Comprueba tu conexión a internet</string>
     <string name="Unauthorized_query_error">No estas autorizado a hacer eso.</string>
+    <string name="search_further">Buscar más</string>
 </resources>

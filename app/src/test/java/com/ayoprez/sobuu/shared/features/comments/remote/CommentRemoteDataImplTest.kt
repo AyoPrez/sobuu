@@ -1,7 +1,7 @@
 package com.ayoprez.sobuu.shared.features.comments.remote
 
 import com.ayoprez.sobuu.shared.features.Utils
-import com.ayoprez.sobuu.shared.models.ReportReason
+import com.ayoprez.sobuu.shared.models.bo_models.ReportReason
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK

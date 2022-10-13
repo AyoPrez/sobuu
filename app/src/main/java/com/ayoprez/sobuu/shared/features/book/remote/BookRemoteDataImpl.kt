@@ -1,10 +1,7 @@
 package com.ayoprez.sobuu.shared.features.book.remote
 
-import com.ayoprez.sobuu.shared.models.Book
-import com.ayoprez.sobuu.shared.models.BookProgress
-import com.ayoprez.sobuu.shared.models.Comment
-import com.ayoprez.sobuu.shared.models.UserBookRating
 import com.ayoprez.sobuu.shared.models.api_models.Books
+import com.ayoprez.sobuu.shared.models.bo_models.*
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.HttpException
@@ -21,13 +18,15 @@ class BookRemoteDataImpl @Inject constructor(
         )
     }
 
-    override suspend fun searchBook(sessionToken: String?, term: String): BookResult<List<Book>> {
+    override suspend fun searchBook(sessionToken: String?, term: String, language: String, searchFurther: Boolean): BookResult<List<Book>> {
         if (term.isBlank()) return BookResult.Error(BookError.EmptySearchTermError)
 
         val result = execute(sessionToken) {
             api.searchBook(
                 sessionToken = it,
                 term = term,
+                lang = language,
+                searchFurther = searchFurther,
             )
         }
 
@@ -220,7 +219,7 @@ class BookRemoteDataImpl @Inject constructor(
                 else -> BookResult.Error(BookError.UnknownError)
             }
         } catch (e: Exception) {
-            println("-------Exception: $e")
+            println("---Error: $e")
             BookResult.Error(BookError.UnknownError)
         }
     }
@@ -246,7 +245,7 @@ class BookRemoteDataImpl @Inject constructor(
     private fun Books.toBookList(): List<Book> {
         return this.result.map {
             Book(
-                id = "",
+                id = it.id,
                 title = it.title,
                 authors = it.authors,
                 description = it.description,
@@ -255,9 +254,20 @@ class BookRemoteDataImpl @Inject constructor(
                 publisher = it.publisher,
                 picture = it.picture,
                 isbn = it.isbn,
+                genres = it.genres,
                 credits = it.credits,
-                bookRating = emptyList(),
-                bookComments = emptyList(),
+                totalComments = it.extras?.totalComments ?: 0,
+                peopleReadingIt = it.extras?.peopleReadingIt ?: 0,
+                readingStatus = when(it.extras?.readingStatus){
+                    1 -> BookReadingStatus.READING
+                    2 -> BookReadingStatus.FINISHED
+                    3 -> BookReadingStatus.GIVE_UP
+                    else -> BookReadingStatus.NOT_READ },
+//                allReviews = it.extras?.allReviews ?: emptyList(),
+//                userRating = it.extras?.userRating,
+                allReviews = emptyList(),
+                userRating = null,
+                totalRating = it.extras?.totalRating ?: 0.0,
             )
         }
     }

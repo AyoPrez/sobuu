@@ -1,6 +1,6 @@
 package com.ayoprez.sobuu.shared.features.profile.remote
 
-import com.ayoprez.sobuu.shared.models.Profile
+import com.ayoprez.sobuu.shared.models.bo_models.Profile
 
 interface IProfileRemoteData {
     suspend fun getUserProfile(sessionToken: String?): ProfileResult<Profile>

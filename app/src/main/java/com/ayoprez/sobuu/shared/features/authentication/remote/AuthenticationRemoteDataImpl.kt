@@ -29,6 +29,7 @@ class AuthenticationRemoteDataImpl @Inject constructor(
                 AuthenticationResult.Error(AuthenticationError.UnknownError)
             }
         } catch (e: Exception) {
+            print("*------Error in auth: $e")
             AuthenticationResult.Error(AuthenticationError.UnknownError)
         }
     }
@@ -105,6 +106,7 @@ class AuthenticationRemoteDataImpl @Inject constructor(
                 }
             }
         } catch (e: Exception) {
+            print("---Error in authenticate: $e")
             AuthenticationResult.Error(AuthenticationError.UnknownError)
         }
     }

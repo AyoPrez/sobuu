@@ -4,7 +4,7 @@ import com.ayoprez.sobuu.shared.features.profile.database.IProfileLocalData
 import com.ayoprez.sobuu.shared.features.profile.remote.IProfileRemoteData
 import com.ayoprez.sobuu.shared.features.profile.remote.ProfileError
 import com.ayoprez.sobuu.shared.features.profile.remote.ProfileResult
-import com.ayoprez.sobuu.shared.models.Profile
+import com.ayoprez.sobuu.shared.models.bo_models.Profile
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(

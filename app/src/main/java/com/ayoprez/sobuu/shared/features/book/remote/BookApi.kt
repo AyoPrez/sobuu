@@ -1,10 +1,10 @@
 package com.ayoprez.sobuu.shared.features.book.remote
 
-import com.ayoprez.sobuu.shared.models.Book
-import com.ayoprez.sobuu.shared.models.BookProgress
-import com.ayoprez.sobuu.shared.models.Comment
-import com.ayoprez.sobuu.shared.models.UserBookRating
 import com.ayoprez.sobuu.shared.models.api_models.Books
+import com.ayoprez.sobuu.shared.models.bo_models.Book
+import com.ayoprez.sobuu.shared.models.bo_models.BookProgress
+import com.ayoprez.sobuu.shared.models.bo_models.Comment
+import com.ayoprez.sobuu.shared.models.bo_models.UserBookRating
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -23,6 +23,8 @@ interface BookApi {
     suspend fun searchBook(
         @Field("sessionToken") sessionToken: String,
         @Field("term") term: String,
+        @Field("lang") lang: String,
+        @Field("searchFurther") searchFurther: Boolean,
     ): Response<Books>
 
     @FormUrlEncoded

@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ayoprez.sobuu.R
-import com.ayoprez.sobuu.shared.models.Profile
+import com.ayoprez.sobuu.shared.models.bo_models.Profile
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

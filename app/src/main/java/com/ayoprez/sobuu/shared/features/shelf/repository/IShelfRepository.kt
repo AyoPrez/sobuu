@@ -1,7 +1,7 @@
 package com.ayoprez.sobuu.shared.features.shelf.repository
 
 import com.ayoprez.sobuu.shared.features.shelf.remote.ShelfResult
-import com.ayoprez.sobuu.shared.models.Shelf
+import com.ayoprez.sobuu.shared.models.bo_models.Shelf
 
 interface IShelfRepository {
 
