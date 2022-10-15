@@ -1,11 +1,15 @@
 package com.ayoprez.sobuu.shared.features.book.remote
 
-import com.ayoprez.sobuu.shared.models.api_models.Books
+import com.ayoprez.sobuu.shared.models.api_models.books_api.AllReview
+import com.ayoprez.sobuu.shared.models.api_models.books_api.BooksApi
+import com.ayoprez.sobuu.shared.models.api_models.books_api.User
+import com.ayoprez.sobuu.shared.models.api_models.books_api.UserRating
 import com.ayoprez.sobuu.shared.models.bo_models.*
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.HttpException
 import retrofit2.Response
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class BookRemoteDataImpl @Inject constructor(
@@ -242,10 +246,10 @@ class BookRemoteDataImpl @Inject constructor(
     }
 
 
-    private fun Books.toBookList(): List<Book> {
+    private fun BooksApi.toBookList(): List<Book> {
         return this.result.map {
             Book(
-                id = it.id,
+                id = it.id ?: "",
                 title = it.title,
                 authors = it.authors,
                 description = it.description,
@@ -263,12 +267,44 @@ class BookRemoteDataImpl @Inject constructor(
                     2 -> BookReadingStatus.FINISHED
                     3 -> BookReadingStatus.GIVE_UP
                     else -> BookReadingStatus.NOT_READ },
-//                allReviews = it.extras?.allReviews ?: emptyList(),
-//                userRating = it.extras?.userRating,
-                allReviews = emptyList(),
-                userRating = null,
-                totalRating = it.extras?.totalRating ?: 0.0,
+                allReviews = it.extras?.allReviews?.toUserBookRatingList() ?: emptyList(),
+                userRating = it.extras?.userRating?.toUserBookRating(null),
+                totalRating = it.extras?.totalRating?.toDouble() ?: 0.0,
             )
         }
+    }
+
+    private fun List<AllReview>.toUserBookRatingList() : List<UserBookRating> {
+        return this.map { it.toUserBookRating(null) }
+    }
+
+    private fun AllReview.toUserBookRating(book: Book?) : UserBookRating {
+        return UserBookRating(
+            id = this.id,
+            book = book,
+            review = this.review,
+            rating = this.rating.toDouble(),
+            user = this.user.toProfile(),
+            date = LocalDateTime.parse(this.date.iso.substring(0, this.date.iso.length - 1))
+        )
+    }
+
+    private fun UserRating.toUserBookRating(book: Book?) : UserBookRating {
+        return UserBookRating(
+            id = this.id,
+            book = book,
+            review = this.review,
+            rating = this.rating.toDouble(),
+            user = this.user.toProfile(),
+            date = LocalDateTime.parse(this.date.iso.substring(0, this.date.iso.length - 1))
+        )
+    }
+
+    private fun User.toProfile(): Profile {
+        return Profile(
+            id= this.id,
+            firstName = this.firstName,
+            lastName = this.lastName,
+        )
     }
 }

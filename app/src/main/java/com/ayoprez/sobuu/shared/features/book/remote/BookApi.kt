@@ -1,6 +1,6 @@
 package com.ayoprez.sobuu.shared.features.book.remote
 
-import com.ayoprez.sobuu.shared.models.api_models.Books
+import com.ayoprez.sobuu.shared.models.api_models.books_api.BooksApi
 import com.ayoprez.sobuu.shared.models.bo_models.Book
 import com.ayoprez.sobuu.shared.models.bo_models.BookProgress
 import com.ayoprez.sobuu.shared.models.bo_models.Comment
@@ -25,7 +25,7 @@ interface BookApi {
         @Field("term") term: String,
         @Field("lang") lang: String,
         @Field("searchFurther") searchFurther: Boolean,
-    ): Response<Books>
+    ): Response<BooksApi>
 
     @FormUrlEncoded
     @POST("functions/getAllCommentsFromBookAtPage")

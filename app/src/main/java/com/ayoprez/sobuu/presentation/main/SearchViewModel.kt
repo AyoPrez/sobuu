@@ -24,7 +24,7 @@ class SearchViewModel @Inject constructor(private val book: BookRepositoryImpl):
                 state = state.copy(
                     searchTerm = event.value,
                     language = event.lang,
-                    searchFurther = true,
+                    searchFurther = state.searchFurther,
                 )
             }
             is SearchUIEvent.removeErrorState -> TODO()
@@ -49,7 +49,7 @@ class SearchViewModel @Inject constructor(private val book: BookRepositoryImpl):
             val result = book.searchBook(
                 term = state.searchTerm,
                 language = state.language,
-                searchFurther = state.searchFurther,
+                searchFurther = false,
             )
 
             if(result.data.isNullOrEmpty()) {
@@ -68,7 +68,7 @@ class SearchViewModel @Inject constructor(private val book: BookRepositoryImpl):
             val result = book.searchBook(
                 term = state.searchTerm,
                 language = state.language,
-                searchFurther = state.searchFurther,
+                searchFurther = true,
             )
 
             if(result.data.isNullOrEmpty()) {

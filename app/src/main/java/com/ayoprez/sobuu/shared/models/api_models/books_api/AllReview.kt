@@ -1,0 +1,12 @@
+package com.ayoprez.sobuu.shared.models.api_models.books_api
+
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
+data class AllReview(
+    val date: Date,
+    val id: String,
+    val rating: Int,
+    val review: String,
+    val user: User
+)

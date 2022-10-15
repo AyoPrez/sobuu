@@ -1,16 +1,11 @@
 package com.ayoprez.sobuu.shared.features.profile.remote
 
-import com.ayoprez.sobuu.shared.models.api_models.GetUserProfile
-import com.ayoprez.sobuu.shared.models.api_models.UserShelf
-import com.ayoprez.sobuu.shared.models.bo_models.BookProgress
 import com.ayoprez.sobuu.shared.models.bo_models.Profile
-import com.ayoprez.sobuu.shared.models.bo_models.Shelf
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.HttpException
 import retrofit2.Response
 import javax.inject.Inject
-import com.ayoprez.sobuu.shared.models.api_models.BookProgress as bpApiModel
 
 class ProfileRemoteDataImpl @Inject constructor(
     private val api: ProfileApi
@@ -24,7 +19,7 @@ class ProfileRemoteDataImpl @Inject constructor(
         }
 
         return if(result.data != null) {
-            ProfileResult.Success(data = result.data.toProfile())
+            ProfileResult.Success(data = result.data)
         } else {
             ProfileResult.Error(error = result.error)
         }
@@ -103,54 +98,54 @@ class ProfileRemoteDataImpl @Inject constructor(
             }
     }
 
-    private fun GetUserProfile.toProfile(): Profile {
-        return Profile(
-            id = this.result.id,
-            firstName = this.result.firstName,
-            lastName = this.result.lastName,
-            following = emptyList(),
-            userShelves = this.result.userShelves.toShelfList(),
-            bookProgress = this.result.bookProgress.toBookProgressList(),
-            giveUp = emptyList(),
-            alreadyRead = emptyList()
-        )
-    }
+//    private fun GetUserProfile.toProfile(): Profile {
+//        return Profile(
+//            id = this.result.id,
+//            firstName = this.result.firstName,
+//            lastName = this.result.lastName,
+//            following = emptyList(),
+//            userShelves = this.result.userShelves.toShelfList(),
+//            bookProgress = this.result.bookProgress.toBookProgressList(),
+//            giveUp = emptyList(),
+//            alreadyRead = emptyList()
+//        )
+//    }
 
-    private fun List<GetUserProfile>.toProfileList(): List<Profile> {
-        return this.map {
-            it.toProfile()
-        }
-    }
-
-    private fun UserShelf.toShelf(): Shelf {
-        return Shelf(
-            id = this.id,
-            books = emptyList(),
-            name = this.name,
-            description = this.description ?: "",
-            isPublic = this.isPublic,
-        )
-    }
-
-    private fun List<UserShelf>.toShelfList(): List<Shelf> {
-        return this.map {
-            it.toShelf()
-        }
-    }
-
-    private fun bpApiModel.toBookProgress(): BookProgress {
-        return BookProgress(
-            id = this.id,
-            percentage = this.percentage,
-            page = this.page,
-            finished = this.finished,
-            giveUp = this.giveUp,
-        )
-    }
-
-    private fun List<bpApiModel>.toBookProgressList(): List<BookProgress> {
-        return this.map {
-            it.toBookProgress()
-        }
-    }
+//    private fun List<GetUserProfile>.toProfileList(): List<Profile> {
+//        return this.map {
+//            it.toProfile()
+//        }
+//    }
+//
+//    private fun UserShelf.toShelf(): Shelf {
+//        return Shelf(
+//            id = this.id,
+//            books = emptyList(),
+//            name = this.name,
+//            description = this.description ?: "",
+//            isPublic = this.isPublic,
+//        )
+//    }
+//
+//    private fun List<UserShelf>.toShelfList(): List<Shelf> {
+//        return this.map {
+//            it.toShelf()
+//        }
+//    }
+//
+//    private fun bpApiModel.toBookProgress(): BookProgress {
+//        return BookProgress(
+//            id = this.id,
+//            percentage = this.percentage,
+//            page = this.page,
+//            finished = this.finished,
+//            giveUp = this.giveUp,
+//        )
+//    }
+//
+//    private fun List<bpApiModel>.toBookProgressList(): List<BookProgress> {
+//        return this.map {
+//            it.toBookProgress()
+//        }
+//    }
 }

@@ -119,7 +119,7 @@ fun Content(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 150.dp)
+            .padding(top = 15.dp)
             .then(modifier),
     ) {
         if(isSearchBarFocus) {

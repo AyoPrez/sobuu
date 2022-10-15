@@ -32,6 +32,7 @@ import com.ayoprez.sobuu.R
 import com.ayoprez.sobuu.presentation.custom_widgets.IconAndText
 import com.ayoprez.sobuu.presentation.destinations.BookScreenDestination
 import com.ayoprez.sobuu.shared.features.book.remote.BookError
+import com.ayoprez.sobuu.shared.models.bo_models.BookReadingStatus
 import com.ayoprez.sobuu.ui.theme.*
 import com.gowtham.ratingbar.RatingBar
 import com.gowtham.ratingbar.RatingBarConfig
@@ -63,6 +64,9 @@ fun SearchListScreen(
                 cover = book.picture,
                 totalReviews = book.allReviews.size,
                 totalComments = book.totalComments,
+                peopleReadingTheBook = book.peopleReadingIt,
+                rate = book.totalRating,
+                userHasReadTheBook = book.readingStatus,
                 modifier = Modifier.clickable {
                     nav?.navigate(
                         BookScreenDestination(
@@ -70,25 +74,6 @@ fun SearchListScreen(
                         )
                     )
                 }
-            )
-        }
-    }
-
-    if(!state.searchFurther && state.searchTerm.isNotEmpty()) {
-        ElevatedButton(
-            onClick = {
-                viewModel.onEvent(SearchUIEvent.searchFurther)
-            },
-            colors = ButtonDefaults.buttonColors(Vermilion),
-            modifier = Modifier.fillMaxWidth().padding(12.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.search_further),
-                style = TextStyle(
-                    color = WhiteBlue,
-                    fontSize = 16.sp,
-                    fontFamily = SourceSans
-                )
             )
         }
     }
@@ -111,6 +96,25 @@ fun SearchListScreen(
             ),
             textAlign = TextAlign.Center,
         )
+    }
+
+    if(!state.searchFurther && state.searchTerm.isNotEmpty() && !bookList.isNullOrEmpty()) {
+        ElevatedButton(
+            onClick = {
+                viewModel.onEvent(SearchUIEvent.searchFurther)
+            },
+            colors = ButtonDefaults.buttonColors(Vermilion),
+            modifier = Modifier.fillMaxWidth().padding(12.dp)
+        ) {
+            Text(
+                text = stringResource(id = R.string.search_further),
+                style = TextStyle(
+                    color = WhiteBlue,
+                    fontSize = 16.sp,
+                    fontFamily = SourceSans
+                )
+            )
+        }
     }
 }
 
@@ -155,7 +159,7 @@ fun BookListItem(
     rate: Double = 0.0,
     description: String,
     cover: String,
-    userHasReadTheBook: Boolean = false,
+    userHasReadTheBook: BookReadingStatus = BookReadingStatus.NOT_READ,
 ) {
 
     Column(
@@ -180,10 +184,16 @@ fun BookListItem(
             val verticalMiddleGuideline = createGuidelineFromTop(0.3f)
 
             Text(
-                text = if (userHasReadTheBook)
-                    stringResource(id = R.string.user_has_read_the_book)
-                else
-                    stringResource(id = R.string.user_has_not_read_the_book),
+                text = when(userHasReadTheBook) {
+                    BookReadingStatus.NOT_READ ->
+                        stringResource(id = R.string.user_has_not_read_the_book)
+                    BookReadingStatus.READING ->
+                        stringResource(id = R.string.user_is_reading_the_book)
+                    BookReadingStatus.FINISHED ->
+                        stringResource(id = R.string.user_has_read_the_book)
+                    BookReadingStatus.GIVE_UP ->
+                        stringResource(id = R.string.user_gave_up_with_the_book)
+                },
                 style = TextStyle(
                     fontFamily = SourceSans,
                     color = DarkLava,
@@ -390,13 +400,15 @@ fun BookListItem(
                         .height(139.dp)
                 )
 
-                IconAndText(
-                    text = totalPages.toString(),
-                    fontSize = 14.sp,
-                    iconColor = WhiteBlue,
-                    textColor = WhiteBlue,
-                    iconPainter = painterResource(id = R.drawable.ic_book_open_page_variant),
-                )
+                if(totalPages > 0) {
+                    IconAndText(
+                        text = totalPages.toString(),
+                        fontSize = 14.sp,
+                        iconColor = WhiteBlue,
+                        textColor = WhiteBlue,
+                        iconPainter = painterResource(id = R.drawable.ic_book_open_page_variant),
+                    )
+                }
             }
         }
     }
