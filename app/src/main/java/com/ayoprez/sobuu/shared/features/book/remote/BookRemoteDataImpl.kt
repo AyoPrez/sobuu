@@ -269,7 +269,7 @@ class BookRemoteDataImpl @Inject constructor(
                     else -> BookReadingStatus.NOT_READ },
                 allReviews = it.extras?.allReviews?.toUserBookRatingList() ?: emptyList(),
                 userRating = it.extras?.userRating?.toUserBookRating(null),
-                totalRating = it.extras?.totalRating?.toDouble() ?: 0.0,
+                totalRating = it.extras?.totalRating ?: 0.0,
             )
         }
     }
@@ -283,7 +283,7 @@ class BookRemoteDataImpl @Inject constructor(
             id = this.id,
             book = book,
             review = this.review,
-            rating = this.rating.toDouble(),
+            rating = this.rating,
             user = this.user.toProfile(),
             date = LocalDateTime.parse(this.date.iso.substring(0, this.date.iso.length - 1))
         )
@@ -294,7 +294,7 @@ class BookRemoteDataImpl @Inject constructor(
             id = this.id,
             book = book,
             review = this.review,
-            rating = this.rating.toDouble(),
+            rating = this.rating,
             user = this.user.toProfile(),
             date = LocalDateTime.parse(this.date.iso.substring(0, this.date.iso.length - 1))
         )

@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -141,7 +143,9 @@ fun BookScreenContent(
             .then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Row {
+        Row(
+            horizontalArrangement = Arrangement.Center
+        ) {
             AsyncImage(
                 model = cover,
                 placeholder = painterResource(id = R.drawable.ic_cover_placeholder),
@@ -150,7 +154,9 @@ fun BookScreenContent(
                     .width(120.dp)
                     .height(200.dp),
             )
-//            PeopleReadingItSign(peopleReadingIt = peopleReadingIt)
+//            PeopleReadingItSign(
+//                peopleReadingIt = peopleReadingIt
+//            )
         }
 
         Text(
@@ -289,7 +295,7 @@ fun BookScreenContent(
                 },
             horizontalArrangement = Arrangement.Center,
         ) {
-            CalculateRateIcons(rate = rating)
+            CalculateRateIcons(rate = rating, color = DarkLava)
 
             Text(
                 text = when {
@@ -305,7 +311,7 @@ fun BookScreenContent(
                 style = TextStyle(
                     fontFamily = SourceSans,
                     color = DarkLava,
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                 ),
             )
         }
@@ -344,6 +350,7 @@ fun CreateISBNIcon(
 
 @Composable
 fun PeopleReadingItSign(
+    modifier: Modifier = Modifier,
     peopleReadingIt: Int
 ) {
     Row(
@@ -351,7 +358,8 @@ fun PeopleReadingItSign(
             .background(SpanishGray)
             .width(70.dp)
             .height(20.dp)
-            .offset(x = (-10).dp),
+            .offset(x = (-10).dp)
+            .then(modifier),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -384,20 +392,22 @@ fun PeopleReadingItSign(
 
 @Composable
 fun CalculateRateIcons(
+    modifier: Modifier = Modifier,
     rate: Double,
-    modifier: Modifier = Modifier
+    color: Color,
+    starSize: Dp = 24.dp,
 ) {
     RatingBar(
         modifier = modifier,
         value = rate.toFloat(),
         config = RatingBarConfig()
-            .activeColor(DarkLava)
+            .activeColor(color)
             .hideInactiveStars(false)
             .inactiveColor(WhiteBlue)
             .stepSize(StepSize.HALF)
             .numStars(5)
             .isIndicator(true)
-            .size(18.dp)
+            .size(starSize)
             .padding(2.dp)
             .style(RatingBarStyle.HighLighted),
         onValueChange = {},
@@ -413,7 +423,7 @@ fun ReviewItem(
         modifier = Modifier.fillMaxWidth().background(DarkLava)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(5.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
@@ -424,6 +434,13 @@ fun ReviewItem(
                     color = Vermilion,
                     fontSize = 12.sp,
                 ),
+            )
+
+            CalculateRateIcons(
+                modifier = Modifier.padding(5.dp),
+                starSize = 12.dp,
+                rate = review.rating,
+                color = Vermilion
             )
 
             Text(
@@ -439,7 +456,7 @@ fun ReviewItem(
 
         Text(
             text = review.review,
-            modifier = Modifier.padding(top = 10.dp, start = 5.dp, end = 5.dp, bottom = 5.dp),
+            modifier = Modifier.padding(10.dp),
             style = TextStyle(
                 fontFamily = SourceSans,
                 color = WhiteBlue,

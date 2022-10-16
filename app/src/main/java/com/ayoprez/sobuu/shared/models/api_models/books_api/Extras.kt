@@ -8,6 +8,6 @@ data class Extras(
     val peopleReadingIt: Int,
     val readingStatus: Int,
     val totalComments: Int,
-    val totalRating: Int,
+    val totalRating: Double,
     val userRating: UserRating?
 )

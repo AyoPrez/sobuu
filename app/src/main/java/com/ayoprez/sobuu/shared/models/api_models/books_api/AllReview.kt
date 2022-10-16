@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 data class AllReview(
     val date: Date,
     val id: String,
-    val rating: Int,
+    val rating: Double,
     val review: String,
     val user: User
 )
