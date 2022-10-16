@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Result(
     val authors: List<String>,
-    val credits: List<String>,
+    val credits: List<String>?,
     val description: String,
     val extras: Extras?,
     val genres: List<String>,

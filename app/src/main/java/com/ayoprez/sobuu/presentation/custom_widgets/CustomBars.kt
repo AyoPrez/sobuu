@@ -10,7 +10,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
@@ -138,20 +137,49 @@ fun TopAppBarWithSearchAndProfile(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+fun SimpleTransparentTopAppBar(
+    modifier: Modifier = Modifier,
+    nav: DestinationsNavigator?,
+    backgroundColor: Color = WhiteBlue.copy(alpha = 0f),
+) {
+    TopAppBar(
+        modifier = modifier
+            .fillMaxWidth()
+            .then(modifier),
+        title = {
+            Text("")
+        },
+        colors = TopAppBarDefaults.largeTopAppBarColors(backgroundColor),
+        navigationIcon = {
+            IconButton(onClick = {
+                nav?.navigateUp()
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "",
+                    tint = DarkLava,
+                )
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun TopAppBarWithMenu(
+    modifier: Modifier = Modifier,
     nav: DestinationsNavigator?,
     backgroundColor: Color = WhiteBlue,
     title: String? = null,
     titleColor: Color = DarkLava,
     listItems: List<MenuItemData>,
-    modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     TopAppBar(
         modifier = modifier
             .fillMaxWidth()
-            .composed { modifier },
+            .then(modifier),
         title = {
             Text(
                 text = title ?: "",

@@ -4,20 +4,24 @@ import android.app.Activity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ayoprez.sobuu.R
 import com.ayoprez.sobuu.presentation.authentication.login.LoginViewModel
@@ -25,7 +29,10 @@ import com.ayoprez.sobuu.presentation.custom_widgets.TopAppBarWithSearchAndProfi
 import com.ayoprez.sobuu.presentation.destinations.HomeScreenDestination
 import com.ayoprez.sobuu.presentation.destinations.LoginScreenDestination
 import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationResult
+import com.ayoprez.sobuu.ui.theme.DarkLava
 import com.ayoprez.sobuu.ui.theme.SobuuTheme
+import com.ayoprez.sobuu.ui.theme.SourceSans
+import com.ayoprez.sobuu.ui.theme.SpanishGray
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -36,6 +43,7 @@ fun HomeScreen(
     nav: DestinationsNavigator,
     loginViewModel: LoginViewModel = hiltViewModel(),
     searchViewModel: SearchViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val searchState = searchViewModel.state
@@ -102,7 +110,8 @@ fun HomeScreen(
                 Content(
                     nav = nav,
                     isSearchBarFocus = isSearchBarFocused,
-                    modifier = Modifier.padding(it)
+                    modifier = Modifier.padding(it),
+                    homeViewModel = homeViewModel
                 )
             }
         )
@@ -115,6 +124,7 @@ fun Content(
     modifier: Modifier = Modifier,
     nav: DestinationsNavigator? = null,
     isSearchBarFocus: Boolean = false,
+    homeViewModel: HomeViewModel
 ) {
     Column(
         modifier = Modifier
@@ -125,10 +135,103 @@ fun Content(
         if(isSearchBarFocus) {
             SearchListScreen(nav = nav)
         } else {
-            Text(text = "Welcome")
+            HomeContent(nav = nav, homeViewModel = homeViewModel)
         }
     }
 }
+
+@Composable
+fun HomeContent(
+    modifier: Modifier = Modifier,
+    nav: DestinationsNavigator? = null,
+    homeViewModel: HomeViewModel = hiltViewModel(),
+) {
+    var currentSection: Int by remember { mutableStateOf(0) }
+
+    Column {
+        Row(
+            modifier = Modifier
+                .padding(5.dp)
+                .then(modifier),
+            horizontalArrangement = Arrangement.SpaceAround,
+        ) {
+            TextButton(onClick = {
+                currentSection = 0
+            }) {
+                Text(
+                    text = "Currently reading",
+                    style = TextStyle(
+                        color = if (currentSection == 0) DarkLava else SpanishGray,
+                        fontSize = if (currentSection == 0) 20.sp else 14.sp,
+                        fontFamily = SourceSans
+                    )
+                )
+            }
+            TextButton(onClick = {
+                currentSection = 1
+            }) {
+                Text(
+                    text = "Already read",
+                    style = TextStyle(
+                        color = if (currentSection == 1) DarkLava else SpanishGray,
+                        fontSize = if (currentSection == 1) 20.sp else 14.sp,
+                        fontFamily = SourceSans
+                    )
+                )
+            }
+            TextButton(onClick = {
+                currentSection = 2
+            }) {
+                Text(
+                    text = "Give up",
+                    style = TextStyle(
+                        color = if (currentSection == 2) DarkLava else SpanishGray,
+                        fontSize = if (currentSection == 2) 20.sp else 14.sp,
+                        fontFamily = SourceSans
+                    )
+                )
+            }
+        }
+
+        when (currentSection) {
+            0 -> SectionCurrentlyReading(homeViewModel = homeViewModel)
+            1 -> SectionAlreadyRead(homeViewModel = homeViewModel)
+            2 -> SectionGiveUp(homeViewModel = homeViewModel)
+        }
+    }
+}
+
+@Composable
+fun SectionCurrentlyReading(homeViewModel: HomeViewModel) {
+
+    val bookList = homeViewModel.currentlyReadingBooksList
+    val listState = rememberLazyListState()
+
+    LazyRow(
+        state = listState,
+        contentPadding = PaddingValues(5.dp),
+    ) {
+        items(bookList?.size ?: 0) { position ->
+            val book = bookList?.get(position) ?: return@items
+
+        }
+    }
+    LazyColumn(
+        state = listState,
+        contentPadding = PaddingValues(5.dp),
+    ) {
+        items(bookList?.size ?: 0) { position ->
+            val book = bookList?.get(position) ?: return@items
+
+        }
+    }
+}
+
+@Composable
+fun SectionAlreadyRead(homeViewModel: HomeViewModel) {}
+
+@Composable
+fun SectionGiveUp(homeViewModel: HomeViewModel) {}
 
 @Composable
 fun BackPressHandler(
@@ -172,6 +275,6 @@ fun ComposableHomeScreenTopBarPreview() {
 @Preview(showSystemUi = true, showBackground = true, group = "Done")
 @Composable
 fun ComposableHomeScreenContentPreview() {
-    Content()
+    HomeContent()
 }
 

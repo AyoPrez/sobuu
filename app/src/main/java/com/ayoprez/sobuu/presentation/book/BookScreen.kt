@@ -31,6 +31,7 @@ import com.ayoprez.sobuu.presentation.custom_widgets.Chip
 import com.ayoprez.sobuu.presentation.custom_widgets.IconAndText
 import com.ayoprez.sobuu.presentation.custom_widgets.MenuItemData
 import com.ayoprez.sobuu.presentation.custom_widgets.TopAppBarWithMenu
+import com.ayoprez.sobuu.presentation.destinations.BookCoverScreenDestination
 import com.ayoprez.sobuu.shared.models.bo_models.Book
 import com.ayoprez.sobuu.shared.models.bo_models.BookReadingStatus
 import com.ayoprez.sobuu.shared.models.bo_models.Profile
@@ -152,7 +153,14 @@ fun BookScreenContent(
                 contentDescription = null,
                 modifier = Modifier
                     .width(120.dp)
-                    .height(200.dp),
+                    .height(200.dp)
+                    .clickable {
+                        nav?.navigate(
+                            BookCoverScreenDestination(
+                                cover = cover,
+                            )
+                        )
+                    },
             )
 //            PeopleReadingItSign(
 //                peopleReadingIt = peopleReadingIt

@@ -34,6 +34,7 @@ class SearchViewModel @Inject constructor(private val book: BookRepositoryImpl):
                     searchTerm = "",
                     language = "",
                 )
+                booksList = emptyList()
             }
             is SearchUIEvent.searchFurther -> searchFurther()
         }
@@ -56,6 +57,7 @@ class SearchViewModel @Inject constructor(private val book: BookRepositoryImpl):
                 handleError(result.error)
             } else {
                 booksList = result.data
+                handleError(null)
             }
 
             state = state.copy(isLoading = false)
@@ -75,6 +77,7 @@ class SearchViewModel @Inject constructor(private val book: BookRepositoryImpl):
                 handleError(result.error)
             } else {
                 booksList = result.data
+                handleError(null)
             }
 
             state = state.copy(isLoading = false)
