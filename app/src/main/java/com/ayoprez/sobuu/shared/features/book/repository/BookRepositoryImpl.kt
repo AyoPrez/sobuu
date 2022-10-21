@@ -4,18 +4,23 @@ import com.ayoprez.sobuu.shared.features.book.database.IBookLocalData
 import com.ayoprez.sobuu.shared.features.book.remote.BookError
 import com.ayoprez.sobuu.shared.features.book.remote.BookResult
 import com.ayoprez.sobuu.shared.features.book.remote.IBookRemoteData
-import com.ayoprez.sobuu.shared.models.bo_models.Book
-import com.ayoprez.sobuu.shared.models.bo_models.BookProgress
-import com.ayoprez.sobuu.shared.models.bo_models.Comment
-import com.ayoprez.sobuu.shared.models.bo_models.UserBookRating
+import com.ayoprez.sobuu.shared.models.bo_models.*
 import javax.inject.Inject
 
 class BookRepositoryImpl @Inject constructor(
     private val bookRemoteData: IBookRemoteData,
     private val bookLocalData: IBookLocalData
 ): IBookRepository {
-    override suspend fun getUserCurrentReadingBook(): BookResult<List<Book>> = execute {
+    override suspend fun getUserCurrentReadingBook(): BookResult<List<CurrentlyReadingBook>> = execute {
         bookRemoteData.getUserCurrentReadingBook(it)
+    }
+
+    override suspend fun getUserFinishedReadingBook(): BookResult<List<FinishedReadingBook>> = execute {
+        bookRemoteData.getUserAlreadyReadBooks(it)
+    }
+
+    override suspend fun getUserGiveUpBook(): BookResult<List<GiveUpBook>> = execute {
+        bookRemoteData.getUserGiveUpBooks(it)
     }
 
     override suspend fun searchBook(term: String, language: String, searchFurther: Boolean): BookResult<List<Book>> = execute {

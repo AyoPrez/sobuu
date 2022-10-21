@@ -1,13 +1,14 @@
 package com.ayoprez.sobuu.shared.features.book.repository
 
 import com.ayoprez.sobuu.shared.features.book.remote.BookResult
-import com.ayoprez.sobuu.shared.models.bo_models.Book
-import com.ayoprez.sobuu.shared.models.bo_models.BookProgress
-import com.ayoprez.sobuu.shared.models.bo_models.Comment
-import com.ayoprez.sobuu.shared.models.bo_models.UserBookRating
+import com.ayoprez.sobuu.shared.models.bo_models.*
 
 interface IBookRepository {
-    suspend fun getUserCurrentReadingBook() : BookResult<List<Book>>
+    suspend fun getUserCurrentReadingBook() : BookResult<List<CurrentlyReadingBook>>
+
+    suspend fun getUserFinishedReadingBook() : BookResult<List<FinishedReadingBook>>
+
+    suspend fun getUserGiveUpBook() : BookResult<List<GiveUpBook>>
 
     suspend fun searchBook(term: String, language: String, searchFurther: Boolean) : BookResult<List<Book>>
 

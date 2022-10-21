@@ -23,6 +23,7 @@ import com.ayoprez.sobuu.ui.theme.WhiteBlue
 
 @Composable
 fun IconAndText(
+    modifier: Modifier = Modifier,
     text: String,
     textColor: Color = DarkLava,
     fontSize: TextUnit,
@@ -30,7 +31,6 @@ fun IconAndText(
     iconPainter: Painter? = null,
     customIcon: @Composable () -> Unit = {},
     iconColor: Color = DarkLava,
-    modifier: Modifier = Modifier,
     ) {
     Row (
         modifier = modifier,

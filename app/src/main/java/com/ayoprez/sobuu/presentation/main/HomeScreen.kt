@@ -4,37 +4,60 @@ import android.app.Activity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Book
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.ayoprez.sobuu.R
 import com.ayoprez.sobuu.presentation.authentication.login.LoginViewModel
 import com.ayoprez.sobuu.presentation.custom_widgets.TopAppBarWithSearchAndProfile
 import com.ayoprez.sobuu.presentation.destinations.HomeScreenDestination
 import com.ayoprez.sobuu.presentation.destinations.LoginScreenDestination
+import com.ayoprez.sobuu.presentation.destinations.ShelvesScreenDestination
 import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationResult
-import com.ayoprez.sobuu.ui.theme.DarkLava
-import com.ayoprez.sobuu.ui.theme.SobuuTheme
-import com.ayoprez.sobuu.ui.theme.SourceSans
-import com.ayoprez.sobuu.ui.theme.SpanishGray
+import com.ayoprez.sobuu.shared.features.book.remote.BookError
+import com.ayoprez.sobuu.shared.models.bo_models.BookProgress
+import com.ayoprez.sobuu.shared.models.bo_models.CurrentlyReadingBook
+import com.ayoprez.sobuu.shared.models.bo_models.FinishedReadingBook
+import com.ayoprez.sobuu.shared.models.bo_models.GiveUpBook
+import com.ayoprez.sobuu.ui.theme.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+enum class BookStatusType {
+    CURRENTLY_READING, ALREADY_READ, GIVE_UP
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,10 +90,10 @@ fun HomeScreen(
         darkTheme = false,
     ) {
         BackPressHandler(onBackPressed = {
-            if(!isSearchBarFocused) {
+            if (!isSearchBarFocused) {
                 activity?.finish()
             } else {
-                if(searchState.searchTerm.isNotBlank()) {
+                if (searchState.searchTerm.isNotBlank()) {
                     searchViewModel.onEvent(
                         SearchUIEvent.cleanSearchTerm
                     )
@@ -113,7 +136,8 @@ fun HomeScreen(
                     modifier = Modifier.padding(it),
                     homeViewModel = homeViewModel
                 )
-            }
+            },
+            bottomBar = { BottomAppBar(nav = nav) }
         )
     }
 
@@ -132,7 +156,7 @@ fun Content(
             .padding(top = 15.dp)
             .then(modifier),
     ) {
-        if(isSearchBarFocus) {
+        if (isSearchBarFocus) {
             SearchListScreen(nav = nav)
         } else {
             HomeContent(nav = nav, homeViewModel = homeViewModel)
@@ -146,7 +170,6 @@ fun HomeContent(
     nav: DestinationsNavigator? = null,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
-    var currentSection: Int by remember { mutableStateOf(0) }
 
     Column {
         Row(
@@ -156,82 +179,375 @@ fun HomeContent(
             horizontalArrangement = Arrangement.SpaceAround,
         ) {
             TextButton(onClick = {
-                currentSection = 0
+                homeViewModel.onEvent(HomeUIEvent.displayCurrentlyReading)
+//                currentSection = BookStatusType.CURRENTLY_READING
             }) {
                 Text(
-                    text = "Currently reading",
+                    text = stringResource(id = R.string.reading),
                     style = TextStyle(
-                        color = if (currentSection == 0) DarkLava else SpanishGray,
-                        fontSize = if (currentSection == 0) 20.sp else 14.sp,
+                        color = if (homeViewModel.currentSection == BookStatusType.CURRENTLY_READING) DarkLava else SpanishGray,
+                        fontSize = if (homeViewModel.currentSection == BookStatusType.CURRENTLY_READING) 20.sp else 14.sp,
                         fontFamily = SourceSans
                     )
                 )
             }
             TextButton(onClick = {
-                currentSection = 1
+                homeViewModel.onEvent(HomeUIEvent.displayFinished)
+//                currentSection = BookStatusType.ALREADY_READ
             }) {
                 Text(
-                    text = "Already read",
+                    text = stringResource(id = R.string.already_read),
                     style = TextStyle(
-                        color = if (currentSection == 1) DarkLava else SpanishGray,
-                        fontSize = if (currentSection == 1) 20.sp else 14.sp,
+                        color = if (homeViewModel.currentSection == BookStatusType.ALREADY_READ) DarkLava else SpanishGray,
+                        fontSize = if (homeViewModel.currentSection == BookStatusType.ALREADY_READ) 20.sp else 14.sp,
                         fontFamily = SourceSans
                     )
                 )
             }
             TextButton(onClick = {
-                currentSection = 2
+                homeViewModel.onEvent(HomeUIEvent.displayGiveUp)
+//                currentSection = BookStatusType.GIVE_UP
             }) {
                 Text(
-                    text = "Give up",
+                    text = stringResource(id = R.string.give_up),
                     style = TextStyle(
-                        color = if (currentSection == 2) DarkLava else SpanishGray,
-                        fontSize = if (currentSection == 2) 20.sp else 14.sp,
+                        color = if (homeViewModel.currentSection == BookStatusType.GIVE_UP) DarkLava else SpanishGray,
+                        fontSize = if (homeViewModel.currentSection == BookStatusType.GIVE_UP) 20.sp else 14.sp,
                         fontFamily = SourceSans
                     )
                 )
             }
         }
 
-        when (currentSection) {
-            0 -> SectionCurrentlyReading(homeViewModel = homeViewModel)
-            1 -> SectionAlreadyRead(homeViewModel = homeViewModel)
-            2 -> SectionGiveUp(homeViewModel = homeViewModel)
+        if (homeViewModel.state.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(WhiteBlue),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator(modifier = modifier, color = GreenSheen)
+            }
+        }
+
+        if (homeViewModel.state.error == null) {
+            when (homeViewModel.currentSection) {
+                BookStatusType.CURRENTLY_READING -> {
+                    SectionCurrentlyReading(bookList = homeViewModel.currentlyReadingBooksList)
+                }
+                BookStatusType.ALREADY_READ -> {
+                    SectionAlreadyRead(bookList = homeViewModel.finishedBooksList)
+                }
+                BookStatusType.GIVE_UP -> {
+                    SectionGiveUp(bookList = homeViewModel.giveUpBooksList)
+                }
+            }
+        } else {
+            when (homeViewModel.state.error) {
+                is BookError.TimeOutError -> {
+                    stringResource(id = R.string.error_timeout)
+                }
+                else -> {
+                    stringResource(id = R.string.error_unknown)
+                }
+            }
         }
     }
 }
 
 @Composable
-fun SectionCurrentlyReading(homeViewModel: HomeViewModel) {
-
-    val bookList = homeViewModel.currentlyReadingBooksList
-    val listState = rememberLazyListState()
-
-    LazyRow(
-        state = listState,
-        contentPadding = PaddingValues(5.dp),
+fun BottomAppBar(
+    nav: DestinationsNavigator? = null,
+) {
+    NavigationBar(
+        modifier = Modifier
+            .fillMaxWidth(),
+        containerColor = GreenSheen,
     ) {
-        items(bookList?.size ?: 0) { position ->
-            val book = bookList?.get(position) ?: return@items
+        var currentRoute by remember { mutableStateOf(HomeScreenDestination.route) }
 
-        }
+        NavigationBarItem(
+            selected = currentRoute == HomeScreenDestination.route,
+            onClick = {
+                nav?.navigate(HomeScreenDestination)
+                currentRoute = HomeScreenDestination.route
+            },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = DarkLava,
+                unselectedIconColor = WhiteBlue,
+                indicatorColor = Vermilion,
+            ),
+            icon = {
+                Icon(imageVector = Icons.Filled.Book, contentDescription = "")
+            },
+        )
+        NavigationBarItem(
+            selected = currentRoute == ShelvesScreenDestination.route,
+            onClick = {
+                currentRoute = ShelvesScreenDestination.route
+            },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = DarkLava,
+                unselectedIconColor = WhiteBlue,
+                indicatorColor = Vermilion,
+            ),
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_bookshelf),
+                    contentDescription = ""
+                )
+            }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { /*TODO*/ },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = DarkLava,
+                unselectedIconColor = WhiteBlue,
+                indicatorColor = Vermilion,
+            ),
+            icon = {
+                Icon(imageVector = Icons.Filled.Groups, contentDescription = "")
+            }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { /*TODO*/ },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = DarkLava,
+                unselectedIconColor = WhiteBlue,
+                indicatorColor = Vermilion,
+            ),
+            icon = {
+                Icon(painter = painterResource(id = R.drawable.ic_trophy), contentDescription = "")
+            }
+        )
     }
-    LazyColumn(
-        state = listState,
-        contentPadding = PaddingValues(5.dp),
-    ) {
-        items(bookList?.size ?: 0) { position ->
-            val book = bookList?.get(position) ?: return@items
+}
 
-        }
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun SectionCurrentlyReading(bookList: List<CurrentlyReadingBook>?) {
+    val pagerState = rememberPagerState()
+    val config = LocalConfiguration.current
+
+    val screenHeight = config.screenHeightDp.dp
+    val screenWidth = config.screenWidthDp.dp
+
+    HorizontalPager(
+        state = pagerState,
+        count = bookList?.size ?: 0,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(WhiteBlue),
+        contentPadding = PaddingValues(20.dp),
+        itemSpacing = 10.dp
+    ) { page ->
+        val book = bookList?.get(page) ?: return@HorizontalPager
+
+        BooksCarousel(
+            picture = book.picture,
+            progress = book.bookProgress?.progressInPercentage?.toInt() ?: 0,
+            startedToRead = book.bookProgress?.startedToRead,
+            finishedToRead = book.bookProgress?.finishedToRead,
+            title = book.title,
+            authors = book.authors,
+            finished = false,
+            giveUp = false,
+        )
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun SectionAlreadyRead(bookList: List<FinishedReadingBook>?) {
+    val pagerState = rememberPagerState()
+
+    HorizontalPager(
+        state = pagerState,
+        count = bookList?.size ?: 0,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(WhiteBlue),
+        contentPadding = PaddingValues(20.dp),
+        itemSpacing = (-20).dp
+    ) { page ->
+        val book = bookList?.get(page) ?: return@HorizontalPager
+
+        BooksCarousel(
+            picture = book.picture,
+            progress = book.bookProgress?.progressInPercentage?.toInt() ?: 0,
+            startedToRead = book.bookProgress?.startedToRead,
+            finishedToRead = book.bookProgress?.finishedToRead,
+            title = book.title,
+            authors = book.authors,
+            finished = true,
+            giveUp = false,
+        )
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun SectionGiveUp(bookList: List<GiveUpBook>?) {
+    val pagerState = rememberPagerState()
+
+    HorizontalPager(
+        state = pagerState,
+        count = bookList?.size ?: 0,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(WhiteBlue),
+        contentPadding = PaddingValues(20.dp),
+        itemSpacing = (-20).dp
+    ) { page ->
+        val book = bookList?.get(page) ?: return@HorizontalPager
+
+        BooksCarousel(
+            picture = book.picture,
+            progress = book.bookProgress?.progressInPercentage?.toInt() ?: 0,
+            startedToRead = book.bookProgress?.startedToRead,
+            finishedToRead = book.bookProgress?.finishedToRead,
+            title = book.title,
+            authors = book.authors,
+            finished = false,
+            giveUp = true,
+        )
     }
 }
 
 @Composable
-fun SectionAlreadyRead(homeViewModel: HomeViewModel) {}
+fun BooksCarousel(
+    picture: String,
+    progress: Int,
+    startedToRead: LocalDateTime?,
+    finishedToRead: LocalDateTime?,
+    title: String,
+    authors: List<String>,
+    finished: Boolean,
+    giveUp: Boolean,
+) {
+    val config = LocalConfiguration.current
+    val screenHeight = config.screenHeightDp.dp
+    val screenWidth = config.screenWidthDp.dp
 
-@Composable
-fun SectionGiveUp(homeViewModel: HomeViewModel) {}
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .width(screenWidth - 70.dp)
+            .border(
+                border = BorderStroke(2.dp, color = DarkLava),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .clip(RoundedCornerShape(20.dp))
+            .background(DarkLava)
+            .padding(10.dp)
+    ) {
+
+        ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+
+            val (bookCover, bookTitle, bookAuthors, startedDate,
+                progressIndicator, endDate) = createRefs()
+
+            createVerticalChain(bookTitle, bookAuthors, chainStyle = ChainStyle.Packed)
+
+            AsyncImage(
+                model = picture,
+                placeholder = painterResource(id = R.drawable.ic_cover_placeholder),
+                contentDescription = null,
+                modifier = Modifier
+                    .height(screenHeight / 3)
+                    .constrainAs(bookCover) {
+                        top.linkTo(parent.top, margin = 10.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        centerHorizontallyTo(parent)
+                    },
+            )
+            ProgressIndicator(
+                progress = progress,
+                modifier = Modifier.constrainAs(progressIndicator) {
+                    bottom.linkTo(bookCover.bottom, margin = 10.dp)
+                    end.linkTo(bookCover.end, margin = 10.dp)
+                }
+            )
+            Text(
+                "${stringResource(id = R.string.started_book_on)} ${
+                    startedToRead?.format(DateTimeFormatter.ISO_LOCAL_DATE) ?: LocalDateTime.now()
+                        .format(
+                            DateTimeFormatter.ISO_LOCAL_DATE
+                        )
+                }",
+                style = TextStyle(
+                    fontFamily = SourceSans,
+                    fontSize = 12.sp,
+                    color = WhiteBlue,
+                ),
+                modifier = Modifier
+                    .padding(top = 5.dp, bottom = 5.dp)
+                    .constrainAs(startedDate) {
+                        top.linkTo(bookCover.bottom)
+                        start.linkTo(bookCover.start)
+                    },
+            )
+            if (finishedToRead != null && (finished || giveUp)) {
+                Text(
+                    "${
+                        if(finished) {
+                            stringResource(id = R.string.finished_book_on)
+                        } else {
+                            stringResource(id = R.string.gave_up_book_on)
+                        }
+                    } ${
+                        finishedToRead.format(DateTimeFormatter.ISO_LOCAL_DATE)
+                    }",
+                    style = TextStyle(
+                        fontFamily = SourceSans,
+                        fontSize = 12.sp,
+                        color = WhiteBlue,
+                    ),
+                    modifier = Modifier
+                        .padding(bottom = 20.dp)
+                        .constrainAs(endDate) {
+                            top.linkTo(startedDate.bottom)
+                            start.linkTo(startedDate.start)
+                        },
+                )
+            }
+            Text(
+                text = title,
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    color = WhiteBlue,
+                    fontFamily = SourceSans
+                ),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.constrainAs(bookTitle) {
+                    start.linkTo(parent.start, margin = 50.dp)
+                    end.linkTo(parent.end, margin = 50.dp)
+                    centerHorizontallyTo(parent)
+                    linkTo(startedDate.bottom, bookAuthors.top, bias = 0.90f)
+                },
+            )
+            Text(
+                text = authors.joinToString(", "),
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    color = WhiteBlue,
+                    fontFamily = SourceSans
+                ),
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .constrainAs(bookAuthors) {
+                        start.linkTo(parent.start, margin = 50.dp)
+                        end.linkTo(parent.end, margin = 50.dp)
+                        centerHorizontallyTo(parent)
+                        linkTo(bookTitle.bottom, parent.bottom, bias = 0.90f)
+                    },
+            )
+        }
+    }
+}
 
 @Composable
 fun BackPressHandler(
@@ -258,6 +574,42 @@ fun BackPressHandler(
     }
 }
 
+@Composable
+fun ProgressIndicator(modifier: Modifier = Modifier, progress: Int) {
+    Box(
+        modifier = Modifier
+            .width(60.dp)
+            .height(60.dp)
+            .wrapContentSize(Center)
+            .then(modifier)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(60.dp)
+                .align(Center)
+                .clip(CircleShape)
+                .background(Vermilion.copy(alpha = 0.7f))
+        )
+        Box(
+            modifier = Modifier
+                .size(45.dp)
+                .align(Center)
+                .clip(CircleShape)
+                .background(GreenSheen.copy(alpha = 0.7f))
+        ) {
+            Text(
+                text = "${progress}%",
+                modifier = Modifier.align(Center),
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontFamily = SourceSans,
+                    color = WhiteBlue
+                )
+            )
+        }
+    }
+}
+
 @Preview(showSystemUi = true, showBackground = true, group = "Done")
 @Composable
 fun ComposableHomeScreenTopBarPreview() {
@@ -274,7 +626,40 @@ fun ComposableHomeScreenTopBarPreview() {
 
 @Preview(showSystemUi = true, showBackground = true, group = "Done")
 @Composable
+fun ComposableProgressIndicatorPreview() {
+    ProgressIndicator(progress = 10)
+}
+
+@Preview(showSystemUi = true, showBackground = true, group = "Done")
+@Composable
+fun ComposableCurrentlyReadingPreview() {
+    SectionCurrentlyReading(
+        bookList = listOf(
+            CurrentlyReadingBook(
+                authors = listOf("J.R.R Tolkien"),
+                title = "El señor de los anillos: La comunidad del anillo",
+                id = "w98hidn",
+                picture = "",
+                bookProgress = BookProgress(
+                    progressInPercentage = 10,
+                    startedToRead = LocalDateTime.now(),
+                    percentage = 10,
+                    page = null,
+                ),
+            )
+        )
+    )
+}
+
+@Preview(showSystemUi = true, showBackground = true, group = "Done")
+@Composable
 fun ComposableHomeScreenContentPreview() {
     HomeContent()
+}
+
+@Preview(showSystemUi = true, showBackground = true, group = "Done")
+@Composable
+fun ComposableBottomNavigationBarPreview() {
+    BottomAppBar()
 }
 

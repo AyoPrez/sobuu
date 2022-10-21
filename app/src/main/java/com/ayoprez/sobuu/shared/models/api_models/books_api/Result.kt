@@ -12,6 +12,7 @@ data class Result(
     val id: String?,
     val isbn: List<String>,
     val picture: String,
+    val thumbnail: String,
     val publishedDate: String,
     val publisher: String,
     val title: String,

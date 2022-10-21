@@ -61,7 +61,7 @@ fun SearchListScreen(
                 author = book.authors.joinToString(", "),
                 totalPages = book.totalPages,
                 description = book.description,
-                cover = book.picture,
+                cover = book.thumbnail,
                 totalReviews = book.allReviews.size,
                 totalComments = book.totalComments,
                 peopleReadingTheBook = book.peopleReadingIt,

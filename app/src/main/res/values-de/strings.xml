@@ -37,6 +37,18 @@
 
     <!-- Home -->
     <string name="search_book">Suche ein Buch</string>
+    <string name="reading">Derzeit lesen</string>
+    <string name="already_read">Bereits gelesen</string>
+    <string name="give_up">Aufgeben</string>
+    <string name="started_book_on">Angefangen am:</string>
+    <string name="finished_book_on">Beenden am:</string>
+    <string name="gave_up_book_on">Aufgegeben am:</string>
+
+    <!-- Bottom Menu labels -->
+    <string name="books">Bücher</string>
+    <string name="shelves">Regale</string>
+    <string name="challenges">Challenges</string>
+    <string name="friends">Freunde</string>
 
     <!-- Suche -->
     <string name="user_has_not_read_the_book">Sie haben es noch nicht gelesen</string>

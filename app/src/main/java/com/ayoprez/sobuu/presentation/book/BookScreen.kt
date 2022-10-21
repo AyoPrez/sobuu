@@ -435,7 +435,7 @@ fun ReviewItem(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = "${review.user.firstName} ${review.user.lastName}",
+                text = "${review.user?.firstName ?: ""} ${review.user?.lastName ?: ""}",
                 modifier = Modifier.padding(start = 5.dp),
                 style = TextStyle(
                     fontFamily = SourceSans,
@@ -463,7 +463,7 @@ fun ReviewItem(
         }
 
         Text(
-            text = review.review,
+            text = review.review ?: "",
             modifier = Modifier.padding(10.dp),
             style = TextStyle(
                 fontFamily = SourceSans,

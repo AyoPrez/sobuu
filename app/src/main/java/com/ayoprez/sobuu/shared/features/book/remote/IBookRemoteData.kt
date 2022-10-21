@@ -1,13 +1,14 @@
 package com.ayoprez.sobuu.shared.features.book.remote
 
-import com.ayoprez.sobuu.shared.models.bo_models.Book
-import com.ayoprez.sobuu.shared.models.bo_models.BookProgress
-import com.ayoprez.sobuu.shared.models.bo_models.Comment
-import com.ayoprez.sobuu.shared.models.bo_models.UserBookRating
+import com.ayoprez.sobuu.shared.models.bo_models.*
 
 interface IBookRemoteData {
 
-    suspend fun getUserCurrentReadingBook(sessionToken: String?) : BookResult<List<Book>>
+    suspend fun getUserCurrentReadingBook(sessionToken: String?) : BookResult<List<CurrentlyReadingBook>>
+
+    suspend fun getUserAlreadyReadBooks(sessionToken: String?) : BookResult<List<FinishedReadingBook>>
+
+    suspend fun getUserGiveUpBooks(sessionToken: String?) : BookResult<List<GiveUpBook>>
 
     suspend fun searchBook(sessionToken: String?, term: String, language: String, searchFurther: Boolean) : BookResult<List<Book>>
 

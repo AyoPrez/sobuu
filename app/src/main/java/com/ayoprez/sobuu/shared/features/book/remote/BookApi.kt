@@ -1,6 +1,9 @@
 package com.ayoprez.sobuu.shared.features.book.remote
 
 import com.ayoprez.sobuu.shared.models.api_models.books_api.BooksApi
+import com.ayoprez.sobuu.shared.models.api_models.currently_reading_api.CurrentlyReadingBookApi
+import com.ayoprez.sobuu.shared.models.api_models.finished_books_api.FinishedBooksApi
+import com.ayoprez.sobuu.shared.models.api_models.give_up_books_api.GiveUpBooksApi
 import com.ayoprez.sobuu.shared.models.bo_models.Book
 import com.ayoprez.sobuu.shared.models.bo_models.BookProgress
 import com.ayoprez.sobuu.shared.models.bo_models.Comment
@@ -16,7 +19,19 @@ interface BookApi {
     @POST("functions/getUserCurrentReadingBook")
     suspend fun getUserCurrentReadingBook(
         @Field("sessionToken") sessionToken: String,
-    ): Response<List<Book>>
+    ): Response<CurrentlyReadingBookApi>
+
+    @FormUrlEncoded
+    @POST("functions/getUserAlreadyReadBooks")
+    suspend fun getUserAlreadyReadBooks(
+        @Field("sessionToken") sessionToken: String,
+    ): Response<FinishedBooksApi>
+
+    @FormUrlEncoded
+    @POST("functions/getUserGiveUpBooks")
+    suspend fun getUserGiveUpBooks(
+        @Field("sessionToken") sessionToken: String,
+    ): Response<GiveUpBooksApi>
 
     @FormUrlEncoded
     @POST("functions/search")

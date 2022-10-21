@@ -103,7 +103,7 @@ fun SobuuTheme(
     systemUiController.isStatusBarVisible = true
     systemUiController.setStatusBarColor( color = WhiteBlue)
     systemUiController.setSystemBarsColor(
-        color = WhiteBlue
+        color = GreenSheen, darkIcons = true
     )
 
     MaterialTheme(
