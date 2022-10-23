@@ -74,6 +74,7 @@ fun RegistrationScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(it)
                     .background(GreenSheen),
 
                 ) {
@@ -99,38 +100,38 @@ fun RegistrationScreen(
 
                 RegistrationForm(
                     usernameFieldValue = state.registrationUsername,
-                    onUsernameValueChange = {
-                        viewModel.onEvent(RegistrationUIEvent.RegistrationUsernameChanged(it))
+                    onUsernameValueChange = { username ->
+                        viewModel.onEvent(RegistrationUIEvent.RegistrationUsernameChanged(username))
                     },
                     emailFieldValue = state.registrationEmail,
-                    onEmailValueChange = {
-                        viewModel.onEvent(RegistrationUIEvent.RegistrationEmailChanged(it))
+                    onEmailValueChange = { email ->
+                        viewModel.onEvent(RegistrationUIEvent.RegistrationEmailChanged(email))
                     },
                     passwordFieldValue = state.registrationPassword,
-                    onPasswordValueChange = {
-                        viewModel.onEvent(RegistrationUIEvent.RegistrationPasswordChanged(it))
+                    onPasswordValueChange = { password ->
+                        viewModel.onEvent(RegistrationUIEvent.RegistrationPasswordChanged(password))
                     },
                     passwordConfirmationFieldValue = state.registrationPasswordConfirmation,
-                    onPasswordConfirmationValueChange = {
+                    onPasswordConfirmationValueChange = { password ->
                         viewModel.onEvent(
                             RegistrationUIEvent.RegistrationPasswordConfirmationChanged(
-                                it
+                                password
                             )
                         )
                     },
                     firstNameFieldValue = state.registrationFirstname,
-                    onFirstNameValueChange = {
-                        viewModel.onEvent(RegistrationUIEvent.RegistrationFirstNameChanged(it))
+                    onFirstNameValueChange = { firstName ->
+                        viewModel.onEvent(RegistrationUIEvent.RegistrationFirstNameChanged(firstName))
                     },
                     lastNameFieldValue = state.registrationLastname,
-                    onLastNameValueChange = {
-                        viewModel.onEvent(RegistrationUIEvent.RegistrationLastNameChanged(it))
+                    onLastNameValueChange = { lastName ->
+                        viewModel.onEvent(RegistrationUIEvent.RegistrationLastNameChanged(lastName))
                     },
                     privacyPolicyConfirmationSwitchValue = state.privacyPolicyConfirmationSwitch,
-                    onPrivacyPolicyConfirmationSwitchValueChange = {
+                    onPrivacyPolicyConfirmationSwitchValueChange = { policy ->
                         viewModel.onEvent(
                             RegistrationUIEvent.PrivacyPolicyConfirmationSwitchChanged(
-                                it
+                                policy
                             )
                         )
                     },

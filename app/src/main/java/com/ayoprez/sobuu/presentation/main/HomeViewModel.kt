@@ -18,7 +18,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val book: BookRepositoryImpl): ViewModel() {
 
-
     var currentSection: BookStatusType by mutableStateOf(BookStatusType.CURRENTLY_READING)
     var state by mutableStateOf(HomeState())
     var currentlyReadingBooksList by mutableStateOf<List<CurrentlyReadingBook>?>(emptyList())
@@ -26,14 +25,19 @@ class HomeViewModel @Inject constructor(private val book: BookRepositoryImpl): V
     var giveUpBooksList by mutableStateOf<List<GiveUpBook>?>(emptyList())
 
     init {
-        onEvent(HomeUIEvent.displayCurrentlyReading)
+        onEvent(HomeUIEvent.DisplayCurrentlyReading)
     }
 
     fun onEvent(event: HomeUIEvent) {
         when(event) {
-            HomeUIEvent.displayCurrentlyReading -> getUserCurrentReadingBooks()
-            HomeUIEvent.displayFinished -> getUserFinishedBooks()
-            HomeUIEvent.displayGiveUp -> getUserGiveUpBooks()
+            HomeUIEvent.DisplayCurrentlyReading -> getUserCurrentReadingBooks()
+            HomeUIEvent.DisplayFinished -> getUserFinishedBooks()
+            HomeUIEvent.DisplayGiveUp -> getUserGiveUpBooks()
+            is HomeUIEvent.DisplaySearch -> {
+                state = state.copy(
+                    isOnSearch = event.value,
+                )
+            }
         }
     }
 
@@ -43,6 +47,9 @@ class HomeViewModel @Inject constructor(private val book: BookRepositoryImpl): V
 
     private fun getUserCurrentReadingBooks() {
         currentSection = BookStatusType.CURRENTLY_READING
+        state = state.copy(
+            isOnSearch = false,
+        )
 
         viewModelScope.launch {
             state = state.copy(isLoading = true)
@@ -61,6 +68,10 @@ class HomeViewModel @Inject constructor(private val book: BookRepositoryImpl): V
 
     private fun getUserFinishedBooks() {
         currentSection = BookStatusType.ALREADY_READ
+        state = state.copy(
+            isOnSearch = false,
+
+        )
 
         viewModelScope.launch {
             state = state.copy(isLoading = true)
@@ -79,6 +90,9 @@ class HomeViewModel @Inject constructor(private val book: BookRepositoryImpl): V
 
     private fun getUserGiveUpBooks() {
         currentSection = BookStatusType.GIVE_UP
+        state = state.copy(
+            isOnSearch = false,
+        )
 
         viewModelScope.launch {
             state = state.copy(isLoading = true)

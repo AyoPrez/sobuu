@@ -7,15 +7,12 @@ import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,10 +33,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.ayoprez.sobuu.R
 import com.ayoprez.sobuu.presentation.authentication.login.LoginViewModel
+import com.ayoprez.sobuu.presentation.custom_widgets.CustomBottomAppBar
 import com.ayoprez.sobuu.presentation.custom_widgets.TopAppBarWithSearchAndProfile
+import com.ayoprez.sobuu.presentation.destinations.CurrentlyReadingScreenDestination
 import com.ayoprez.sobuu.presentation.destinations.HomeScreenDestination
 import com.ayoprez.sobuu.presentation.destinations.LoginScreenDestination
-import com.ayoprez.sobuu.presentation.destinations.ShelvesScreenDestination
 import com.ayoprez.sobuu.shared.features.authentication.remote.AuthenticationResult
 import com.ayoprez.sobuu.shared.features.book.remote.BookError
 import com.ayoprez.sobuu.shared.models.bo_models.BookProgress
@@ -70,7 +68,6 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
     val searchState = searchViewModel.state
-    var isSearchBarFocused by remember { mutableStateOf(false) }
     val activity = (LocalContext.current as? Activity)
     val focus = LocalFocusManager.current
 
@@ -90,7 +87,7 @@ fun HomeScreen(
         darkTheme = false,
     ) {
         BackPressHandler(onBackPressed = {
-            if (!isSearchBarFocused) {
+            if (!homeViewModel.state.isOnSearch) {
                 activity?.finish()
             } else {
                 if (searchState.searchTerm.isNotBlank()) {
@@ -125,19 +122,18 @@ fun HomeScreen(
                         )
                     },
                     onSearchFieldFocusChange = {
-                        isSearchBarFocused = it
+                        homeViewModel.onEvent(HomeUIEvent.DisplaySearch(it))
                     },
                 )
             },
             content = {
                 Content(
                     nav = nav,
-                    isSearchBarFocus = isSearchBarFocused,
                     modifier = Modifier.padding(it),
                     homeViewModel = homeViewModel
                 )
             },
-            bottomBar = { BottomAppBar(nav = nav) }
+            bottomBar = { CustomBottomAppBar(nav = nav) }
         )
     }
 
@@ -147,7 +143,6 @@ fun HomeScreen(
 fun Content(
     modifier: Modifier = Modifier,
     nav: DestinationsNavigator? = null,
-    isSearchBarFocus: Boolean = false,
     homeViewModel: HomeViewModel
 ) {
     Column(
@@ -156,7 +151,7 @@ fun Content(
             .padding(top = 15.dp)
             .then(modifier),
     ) {
-        if (isSearchBarFocus) {
+        if (homeViewModel.state.isOnSearch) {
             SearchListScreen(nav = nav)
         } else {
             HomeContent(nav = nav, homeViewModel = homeViewModel)
@@ -179,8 +174,7 @@ fun HomeContent(
             horizontalArrangement = Arrangement.SpaceAround,
         ) {
             TextButton(onClick = {
-                homeViewModel.onEvent(HomeUIEvent.displayCurrentlyReading)
-//                currentSection = BookStatusType.CURRENTLY_READING
+                homeViewModel.onEvent(HomeUIEvent.DisplayCurrentlyReading)
             }) {
                 Text(
                     text = stringResource(id = R.string.reading),
@@ -192,8 +186,7 @@ fun HomeContent(
                 )
             }
             TextButton(onClick = {
-                homeViewModel.onEvent(HomeUIEvent.displayFinished)
-//                currentSection = BookStatusType.ALREADY_READ
+                homeViewModel.onEvent(HomeUIEvent.DisplayFinished)
             }) {
                 Text(
                     text = stringResource(id = R.string.already_read),
@@ -205,8 +198,7 @@ fun HomeContent(
                 )
             }
             TextButton(onClick = {
-                homeViewModel.onEvent(HomeUIEvent.displayGiveUp)
-//                currentSection = BookStatusType.GIVE_UP
+                homeViewModel.onEvent(HomeUIEvent.DisplayGiveUp)
             }) {
                 Text(
                     text = stringResource(id = R.string.give_up),
@@ -224,7 +216,7 @@ fun HomeContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(WhiteBlue),
-                contentAlignment = Alignment.Center,
+                contentAlignment = Center,
             ) {
                 CircularProgressIndicator(modifier = modifier, color = GreenSheen)
             }
@@ -233,7 +225,12 @@ fun HomeContent(
         if (homeViewModel.state.error == null) {
             when (homeViewModel.currentSection) {
                 BookStatusType.CURRENTLY_READING -> {
-                    SectionCurrentlyReading(bookList = homeViewModel.currentlyReadingBooksList)
+                    SectionCurrentlyReading(
+                        bookList = homeViewModel.currentlyReadingBooksList,
+                        onClick = {
+                            nav?.navigate(CurrentlyReadingScreenDestination(it))
+                        }
+                    )
                 }
                 BookStatusType.ALREADY_READ -> {
                     SectionAlreadyRead(bookList = homeViewModel.finishedBooksList)
@@ -255,84 +252,13 @@ fun HomeContent(
     }
 }
 
-@Composable
-fun BottomAppBar(
-    nav: DestinationsNavigator? = null,
-) {
-    NavigationBar(
-        modifier = Modifier
-            .fillMaxWidth(),
-        containerColor = GreenSheen,
-    ) {
-        var currentRoute by remember { mutableStateOf(HomeScreenDestination.route) }
-
-        NavigationBarItem(
-            selected = currentRoute == HomeScreenDestination.route,
-            onClick = {
-                nav?.navigate(HomeScreenDestination)
-                currentRoute = HomeScreenDestination.route
-            },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = DarkLava,
-                unselectedIconColor = WhiteBlue,
-                indicatorColor = Vermilion,
-            ),
-            icon = {
-                Icon(imageVector = Icons.Filled.Book, contentDescription = "")
-            },
-        )
-        NavigationBarItem(
-            selected = currentRoute == ShelvesScreenDestination.route,
-            onClick = {
-                currentRoute = ShelvesScreenDestination.route
-            },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = DarkLava,
-                unselectedIconColor = WhiteBlue,
-                indicatorColor = Vermilion,
-            ),
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_bookshelf),
-                    contentDescription = ""
-                )
-            }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { /*TODO*/ },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = DarkLava,
-                unselectedIconColor = WhiteBlue,
-                indicatorColor = Vermilion,
-            ),
-            icon = {
-                Icon(imageVector = Icons.Filled.Groups, contentDescription = "")
-            }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { /*TODO*/ },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = DarkLava,
-                unselectedIconColor = WhiteBlue,
-                indicatorColor = Vermilion,
-            ),
-            icon = {
-                Icon(painter = painterResource(id = R.drawable.ic_trophy), contentDescription = "")
-            }
-        )
-    }
-}
-
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun SectionCurrentlyReading(bookList: List<CurrentlyReadingBook>?) {
+fun SectionCurrentlyReading(
+    bookList: List<CurrentlyReadingBook>?,
+    onClick: (book: CurrentlyReadingBook) -> Unit,
+) {
     val pagerState = rememberPagerState()
-    val config = LocalConfiguration.current
-
-    val screenHeight = config.screenHeightDp.dp
-    val screenWidth = config.screenWidthDp.dp
 
     HorizontalPager(
         state = pagerState,
@@ -346,6 +272,7 @@ fun SectionCurrentlyReading(bookList: List<CurrentlyReadingBook>?) {
         val book = bookList?.get(page) ?: return@HorizontalPager
 
         BooksCarousel(
+            modifier = Modifier.clickable { onClick.invoke(book) },
             picture = book.picture,
             progress = book.bookProgress?.progressInPercentage?.toInt() ?: 0,
             startedToRead = book.bookProgress?.startedToRead,
@@ -418,6 +345,7 @@ fun SectionGiveUp(bookList: List<GiveUpBook>?) {
 
 @Composable
 fun BooksCarousel(
+    modifier: Modifier = Modifier,
     picture: String,
     progress: Int,
     startedToRead: LocalDateTime?,
@@ -442,6 +370,7 @@ fun BooksCarousel(
             .clip(RoundedCornerShape(20.dp))
             .background(DarkLava)
             .padding(10.dp)
+            .then(modifier)
     ) {
 
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
@@ -473,10 +402,7 @@ fun BooksCarousel(
             )
             Text(
                 "${stringResource(id = R.string.started_book_on)} ${
-                    startedToRead?.format(DateTimeFormatter.ISO_LOCAL_DATE) ?: LocalDateTime.now()
-                        .format(
-                            DateTimeFormatter.ISO_LOCAL_DATE
-                        )
+                    startedToRead?.toStringDateWithDayAndTime() ?: LocalDateTime.now().toStringDateWithDayAndTime()
                 }",
                 style = TextStyle(
                     fontFamily = SourceSans,
@@ -499,7 +425,7 @@ fun BooksCarousel(
                             stringResource(id = R.string.gave_up_book_on)
                         }
                     } ${
-                        finishedToRead.format(DateTimeFormatter.ISO_LOCAL_DATE)
+                        finishedToRead.toStringDateWithDayAndTime()
                     }",
                     style = TextStyle(
                         fontFamily = SourceSans,
@@ -574,6 +500,15 @@ fun BackPressHandler(
     }
 }
 
+fun LocalDateTime.toStringDateWithDayAndTime(): String {
+    if(this.isEqual(LocalDateTime.now())) {
+        return "Today"
+    }
+
+    val formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy, HH:mm")
+    return this.format(formatter)
+}
+
 @Composable
 fun ProgressIndicator(modifier: Modifier = Modifier, progress: Int) {
     Box(
@@ -610,6 +545,7 @@ fun ProgressIndicator(modifier: Modifier = Modifier, progress: Int) {
     }
 }
 
+// region Previews
 @Preview(showSystemUi = true, showBackground = true, group = "Done")
 @Composable
 fun ComposableHomeScreenTopBarPreview() {
@@ -634,6 +570,7 @@ fun ComposableProgressIndicatorPreview() {
 @Composable
 fun ComposableCurrentlyReadingPreview() {
     SectionCurrentlyReading(
+        onClick = {},
         bookList = listOf(
             CurrentlyReadingBook(
                 authors = listOf("J.R.R Tolkien"),
@@ -660,6 +597,7 @@ fun ComposableHomeScreenContentPreview() {
 @Preview(showSystemUi = true, showBackground = true, group = "Done")
 @Composable
 fun ComposableBottomNavigationBarPreview() {
-    BottomAppBar()
+    CustomBottomAppBar()
 }
+// endregion
 

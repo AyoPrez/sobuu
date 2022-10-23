@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 data class Extras(
     val commentsInProgress: List<CommentsInProgress>,
     val currentPercentage: Int? = null,
-    val currentProgress: Int,
+    val currentProgress: Double,
     val currentPage: Int? = null,
     val startedToRead: StartedToRead
 )

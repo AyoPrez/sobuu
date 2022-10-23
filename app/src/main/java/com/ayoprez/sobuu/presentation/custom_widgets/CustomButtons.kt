@@ -5,6 +5,7 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -19,11 +20,13 @@ import com.ayoprez.sobuu.ui.theme.WhiteBlue
 
 @Composable
 fun RoundedFillButton(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     color: Color = Vermilion,
     text: String,
 ) {
     FilledTonalButton(
+        modifier = modifier,
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = color,

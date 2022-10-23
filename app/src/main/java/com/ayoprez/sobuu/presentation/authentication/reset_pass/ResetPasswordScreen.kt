@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -34,7 +33,7 @@ import com.ayoprez.sobuu.ui.theme.WhiteBlue
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Destination
 fun ResetPasswordScreen(
@@ -69,12 +68,13 @@ fun ResetPasswordScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(it)
                     .background(GreenSheen),
             ) {
                 ResetPasswordForm(
                     emailFieldValue = state.forgotEmail,
-                    onEmailValueChange = {
-                        viewModel.onEvent(ResetPassUIEvent.ForgotPasswordEmailChanged(it))
+                    onEmailValueChange = { email ->
+                        viewModel.onEvent(ResetPassUIEvent.ForgotPasswordEmailChanged(email))
                     },
                     onResetPasswordButtonClick = {
                         viewModel.onEvent(ResetPassUIEvent.resetPassword)

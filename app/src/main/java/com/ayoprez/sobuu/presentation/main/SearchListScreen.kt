@@ -356,6 +356,7 @@ fun BookListItem(
                     width = Dimension.fillToConstraints
                 }
             )
+
             Text(
                 text = description,
                 style = TextStyle(

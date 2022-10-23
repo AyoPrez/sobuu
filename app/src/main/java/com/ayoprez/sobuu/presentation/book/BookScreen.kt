@@ -4,16 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -25,13 +24,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ayoprez.sobuu.R
 import com.ayoprez.sobuu.presentation.custom_widgets.Chip
 import com.ayoprez.sobuu.presentation.custom_widgets.IconAndText
 import com.ayoprez.sobuu.presentation.custom_widgets.MenuItemData
 import com.ayoprez.sobuu.presentation.custom_widgets.TopAppBarWithMenu
 import com.ayoprez.sobuu.presentation.destinations.BookCoverScreenDestination
+import com.ayoprez.sobuu.presentation.destinations.HomeScreenDestination
+import com.ayoprez.sobuu.shared.features.book.remote.BookError
 import com.ayoprez.sobuu.shared.models.bo_models.Book
 import com.ayoprez.sobuu.shared.models.bo_models.BookReadingStatus
 import com.ayoprez.sobuu.shared.models.bo_models.Profile
@@ -57,7 +65,9 @@ enum class ISBNType {
 fun BookScreen(
     nav: DestinationsNavigator? = null,
     book: Book,
+    bookViewModel: BookViewModel = hiltViewModel()
 ) {
+
     Scaffold(
         topBar = {
             TopAppBarWithMenu(
@@ -67,15 +77,21 @@ fun BookScreen(
                         text = stringResource(id = R.string.add_to_shelf),
                         icon = Icons.Filled.Add,
                         action = {
-
+                            bookViewModel.onEvent(BookUIEvent.DisplayUserShelves)
                         }
                     ),
                     MenuItemData(
                         text = stringResource(id = R.string.start_to_read),
                         icon = Icons.Filled.ImportContacts,
                         action = {
-
-                        }
+                            bookViewModel.onEvent(
+                                BookUIEvent.StartToReadBook(
+                                    bookId = book.id,
+                                    bookTitle = book.title,
+                                )
+                            )
+                        },
+                        displayIt = book.readingStatus != BookReadingStatus.READING,
                     ),
                     MenuItemData(
                         text = stringResource(id = R.string.search_in_map),
@@ -109,6 +125,70 @@ fun BookScreen(
                 reviews = book.allReviews,
                 userReview = book.userRating,
             )
+
+            if (bookViewModel.state.isLoading) {
+                Dialog(
+                    onDismissRequest = { !bookViewModel.state.isLoading },
+                    DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .background(WhiteBlue, shape = RoundedCornerShape(8.dp))
+                            .padding(20.dp)
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
+
+            if (bookViewModel.state.displayStartedToRead) {
+                SuccessStartToReadDialog(
+                    isLoading = !bookViewModel.state.isLoading,
+                    bookTitle = bookViewModel.state.bookStartedReadingTitle ?: "",
+                    onClickButton = {
+                        nav?.navigate(HomeScreenDestination)
+                    }
+                )
+            }
+
+            if (bookViewModel.state.error != null) {
+                AlertDialog(
+                    title = {
+                        Text(
+                            text = stringResource(id = R.string.error_title_book_details),
+                            style = TextStyle(
+                                fontSize = 18.sp,
+                                fontFamily = SourceSans,
+                                color = DarkLava
+                            )
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = getStringFromBookError(bookViewModel.state.error),
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                fontFamily = SourceSans,
+                                color = DarkLava
+                            )
+                        )
+                    },
+                    containerColor = WhiteBlue,
+                    textContentColor = DarkLava,
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                bookViewModel.onEvent(BookUIEvent.CancelAllErrors)
+                            }) {
+                            Text(stringResource(id = R.string.ok))
+                        }
+                    },
+                    shape = RoundedCornerShape(8.dp),
+                    onDismissRequest = {}
+                )
+            }
         }
     )
 }
@@ -260,12 +340,14 @@ fun BookScreenContent(
         CreateGenresChips(genres = genres)
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp, bottom = 5.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
 
-        ) {
+            ) {
             Text(
-                text = when(userHasReadTheBook) {
+                text = when (userHasReadTheBook) {
                     BookReadingStatus.NOT_READ -> stringResource(id = R.string.user_has_not_read_the_book)
                     BookReadingStatus.READING -> stringResource(id = R.string.user_is_reading_the_book)
                     BookReadingStatus.FINISHED -> stringResource(id = R.string.user_has_read_the_book)
@@ -324,7 +406,7 @@ fun BookScreenContent(
             )
         }
 
-        if(userReview != null) {
+        if (userReview != null) {
             ReviewItem(review = userReview)
         } else {
             Spacer(Modifier.height(30.dp))
@@ -428,10 +510,14 @@ fun ReviewItem(
     review: UserBookRating,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().background(DarkLava)
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(DarkLava)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(5.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
@@ -463,7 +549,7 @@ fun ReviewItem(
         }
 
         Text(
-            text = review.review ?: "",
+            text = review.review,
             modifier = Modifier.padding(10.dp),
             style = TextStyle(
                 fontFamily = SourceSans,
@@ -479,8 +565,12 @@ fun CreateGenresChips(
     genres: List<String>,
     modifier: Modifier = Modifier,
 ) {
-    FlowRow(modifier = Modifier.fillMaxWidth().then(modifier)) {
-        for(element in genres) {
+    FlowRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(modifier)
+    ) {
+        for (element in genres) {
             Chip(
                 text = element,
                 backgroundColor = GreenSheen,
@@ -489,6 +579,98 @@ fun CreateGenresChips(
         }
     }
 
+}
+
+@Composable
+fun SuccessStartToReadDialog(isLoading: Boolean, bookTitle: String, onClickButton: () -> Unit) {
+    var showDialog by remember { mutableStateOf(!isLoading) }
+
+    if (showDialog) {
+        Dialog(
+            onDismissRequest = { showDialog = false },
+            DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+                    .background(WhiteBlue, shape = RoundedCornerShape(8.dp))
+                    .padding(20.dp),
+            ) {
+                BookAnimation()
+
+                Text(
+                    modifier = Modifier.padding(10.dp),
+                    text = "${stringResource(id = R.string.started_read_successfully)} '$bookTitle'",
+                    style = TextStyle(
+                        fontFamily = SourceSans,
+                        fontSize = 18.sp,
+                        color = DarkLava
+                    ),
+                )
+
+                FilledTonalButton(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(10.dp)),
+                    onClick = {
+                        showDialog = false
+                        onClickButton.invoke()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Vermilion,
+                        contentColor = WhiteBlue,
+                        disabledContainerColor = SpanishGray,
+                        disabledContentColor = WhiteBlue,
+                    )
+                ) {
+                    Text(
+                        stringResource(id = R.string.started_read_successfully_button),
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            color = WhiteBlue,
+                            fontWeight = FontWeight.Normal,
+                            fontFamily = SourceSans
+                        ),
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun getStringFromBookError(error: BookError?): String {
+    if(error == null) return ""
+    return when (error) {
+        BookError.InvalidBookIdError -> stringResource(id = R.string.error_invalid_book_id_book_details)
+        BookError.InvalidDoubleValueError,
+        BookError.InvalidFinishedAndGiveUpBookValuesError,
+        BookError.InvalidPageNumberError,
+        BookError.InvalidPercentageNumberError -> stringResource(id = R.string.error_invalid_progress_book_details)
+        BookError.InvalidRateIdError,
+        BookError.InvalidRateNumberError -> stringResource(id = R.string.error_invalid_rate_book_details)
+        BookError.InvalidSessionTokenError -> stringResource(id = R.string.error_session_token_book_details)
+        BookError.ProcessingQueryError -> stringResource(id = R.string.error_processing_query_book_details)
+        BookError.TimeOutError -> stringResource(id = R.string.error_timeout_book_details)
+        BookError.UnauthorizedQueryError -> stringResource(id = R.string.error_unauthorized_book_details)
+        else -> stringResource(id = R.string.error_unknown_book_details)
+    }
+}
+
+@Composable
+fun BookAnimation() {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.book_animation))
+    val progress by animateLottieCompositionAsState(composition)
+
+    LottieAnimation(
+        modifier = Modifier
+            .width(100.dp)
+            .height(100.dp),
+        composition = composition,
+        progress = { progress },
+    )
 }
 
 @Preview(showSystemUi = true, showBackground = true, group = "Done")
@@ -522,7 +704,14 @@ fun BookScreenContentPreview() {
         totalPages = "623",
         isbn10 = "5746854987",
         isbn13 = "1698465465475",
-        genres = listOf("Fantasy", "Science fiction", "Contemporary fiction", "Horror", "Fiction", "Middle Age"),
+        genres = listOf(
+            "Fantasy",
+            "Science fiction",
+            "Contemporary fiction",
+            "Horror",
+            "Fiction",
+            "Middle Age"
+        ),
         userHasReadTheBook = BookReadingStatus.FINISHED,
         totalComments = 211,
         rating = 2.5,
@@ -547,7 +736,7 @@ fun BookScreenContentPreview() {
     )
 }
 
-@Preview
+@Preview(group = "Undone")
 @Composable
 fun PeopleReadingItSignPreview() {
     PeopleReadingItSign(
@@ -555,19 +744,28 @@ fun PeopleReadingItSignPreview() {
     )
 }
 
-@Preview
+@Preview(group = "Done")
 @Composable
 fun ISBNIconPreview() {
     CreateISBNIcon(type = ISBNType.ISBN13)
 }
 
-@Preview
+@Preview(group = "Done")
 @Composable
 fun GenreChipsPreview() {
-    CreateGenresChips(genres = listOf("Fantasy", "Science fiction", "Contemporary fiction", "Horror", "Fiction", "Middle Age"))
+    CreateGenresChips(
+        genres = listOf(
+            "Fantasy",
+            "Science fiction",
+            "Contemporary fiction",
+            "Horror",
+            "Fiction",
+            "Middle Age"
+        )
+    )
 }
 
-@Preview
+@Preview(group = "Done")
 @Composable
 fun ReviewItemPreview() {
     ReviewItem(
@@ -588,5 +786,15 @@ fun ReviewItemPreview() {
             ),
             date = LocalDateTime.now(),
         )
+    )
+}
+
+@Preview(group = "Undone")
+@Composable
+fun StartToReadSuccessDialogPreview() {
+    SuccessStartToReadDialog(
+        isLoading = false,
+        bookTitle = "El imperio final",
+        onClickButton = {}
     )
 }

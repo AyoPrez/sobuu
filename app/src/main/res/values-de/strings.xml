@@ -4,6 +4,9 @@
     <string name="terms">Bedingungen und Konditionen</string>
     <string name="privacy">Datenschutzbestimmungen</string>
 
+    <!-- General -->
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
 
     <!-- Autorisierung -->
     <string name="auth_login">Anmeldung</string>
@@ -44,6 +47,16 @@
     <string name="finished_book_on">Beenden am:</string>
     <string name="gave_up_book_on">Aufgegeben am:</string>
 
+    <!-- Currently reading book -->
+    <string name="update_progress_button">Fortschritte aktualisieren</string>
+    <string name="give_up_book_button">Aufgebe</string>
+    <string name="finish_book_button">Beenden!</string>
+
+    <!-- Comments -->
+    <string name="comments_on_percentage">Kommentaren zu</string>
+    <string name="comments_on_page">Kommentaren zur Seite</string>
+    <string name="write_comment">Schreib Kommentar</string>
+
     <!-- Bottom Menu labels -->
     <string name="books">Bücher</string>
     <string name="shelves">Regale</string>
@@ -63,6 +76,26 @@
     <string name="review">Rezension</string>
     <string name="reviews">Rezensionen</string>
     <string name="more_than_999">999+</string>
+
+    <!-- Book Details -->
+    <string name="add_to_shelf">Zum Bücherregal hinzufügen</string>
+    <string name="start_to_read">Lesen beginnen</string>
+    <string name="search_in_map">Suche nach Buchhandlungen in der Nähe</string>
+    <string name="started_read_successfully">Alles bereit. Viel Spaß beim Lesen</string>
+    <string name="started_read_successfully_button">Gerne!</string>
+
+    <!-- Book Details Errors -->
+    <string name="error_title_book_details">Fehler</string>
+    <string name="error_invalid_book_id_book_details">Es gab einen Fehler mit dem ausgewählten Buch</string>
+    <string name="error_unknown_book_details">Es gab einen unbekannten Fehler. Bitte versuchen Sie es erneut</string>
+    <string name="error_timeout_book_details">Der Verbindungsaufbau hat zu lange gedauert. Überprüfen Sie Ihre Internetverbindung</string>
+    <string name="error_unauthorized_book_details">Sie sind nicht autorisiert, dies zu tun</string>
+    <string name="error_processing_query_book_details">Es gab einen Fehler bei der Verarbeitung der Anfrage</string>
+    <string name="error_session_token_book_details">Ungültige Sitzung. Bitte melden Sie sich erneut an</string>
+    <string name="error_invalid_rate_book_details">Es gab einen Fehler beim Abrufen der Bewertung des Buches</string>
+    <string name="error_invalid_progress_book_details">Es gab einen Fehler bei der Ermittlung des Buchfortschritts</string>
+
+    Übersetzt mit www.DeepL.com/Translator (kostenlose Version)
 
     <!-- Profil -->
     <string name="profile_title">Profil</string>

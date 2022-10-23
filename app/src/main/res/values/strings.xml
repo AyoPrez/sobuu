@@ -3,6 +3,9 @@
     <string name="terms">Terms and Conditions</string>
     <string name="privacy">Privacy policy</string>
 
+    <!-- General -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Authorization -->
     <string name="auth_login">Login</string>
@@ -43,6 +46,16 @@
     <string name="finished_book_on">Finished on:</string>
     <string name="gave_up_book_on">Gave up on:</string>
 
+    <!-- Currently reading book -->
+    <string name="update_progress_button">Update progress</string>
+    <string name="give_up_book_button">Give up</string>
+    <string name="finish_book_button">Finish it!</string>
+
+    <!-- Comments -->
+    <string name="comments_on_percentage">Comments on</string>
+    <string name="comments_on_page">Comments on page</string>
+    <string name="write_comment">Write comment</string>
+
     <!-- Bottom Menu labels -->
     <string name="books">Books</string>
     <string name="shelves">Shelves</string>
@@ -68,6 +81,19 @@
     <string name="add_to_shelf">Add to shelf</string>
     <string name="start_to_read">Start to read</string>
     <string name="search_in_map">Search in map near stores</string>
+    <string name="started_read_successfully">Everything set. Enjoy reading</string>
+    <string name="started_read_successfully_button">With pleasure!</string>
+
+    <!-- Book Details Errors -->
+    <string name="error_title_book_details">Error</string>
+    <string name="error_invalid_book_id_book_details">There was an error with the selected book</string>
+    <string name="error_unknown_book_details">There was an unknown error. Please, try again</string>
+    <string name="error_timeout_book_details">It was taking too long to connect. Check your internet connection</string>
+    <string name="error_unauthorized_book_details">You are not authorized to do that</string>
+    <string name="error_processing_query_book_details">There was an error processing the request</string>
+    <string name="error_session_token_book_details">Invalid session. Please, login again</string>
+    <string name="error_invalid_rate_book_details">There was an error obtaining the rating of the book</string>
+    <string name="error_invalid_progress_book_details">There was an error obtaining the progress of the book</string>
 
     <!-- Profile -->
     <string name="profile_title">Profile</string>

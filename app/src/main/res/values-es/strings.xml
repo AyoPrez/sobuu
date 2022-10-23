@@ -4,6 +4,10 @@
     <string name="terms">Términos y Condiciones</string>
     <string name="privacy">Política de privacidad</string>
 
+    <!-- General -->
+    <string name="ok">Vale</string>
+    <string name="cancel">Cancelar</string>
+
     <!-- Authorization -->
     <string name="auth_login">Iniciar sesión</string>
     <string name="auth_username">Nombre de usuario</string>
@@ -43,6 +47,16 @@
     <string name="finished_book_on">Terminado el día:</string>
     <string name="gave_up_book_on">Abandonado el día:</string>
 
+    <!-- Currently reading book -->
+    <string name="update_progress_button">Actualizar progreso</string>
+    <string name="give_up_book_button">Abandonar</string>
+    <string name="finish_book_button">¡Terminarlo!</string>
+
+    <!-- Comments -->
+    <string name="comments_on_percentage">Comentarios en el</string>
+    <string name="comments_on_page">Comentarios en la página</string>
+    <string name="write_comment">Escribir comentario</string>
+
     <!-- Bottom Menu labels -->
     <string name="books">Libros</string>
     <string name="shelves">Estanterías</string>
@@ -62,6 +76,24 @@
     <string name="review">reseña</string>
     <string name="reviews">reseñas</string>
     <string name="more_than_999">999+</string>
+
+    <!-- Book Details -->
+    <string name="add_to_shelf">Añadir a estantería</string>
+    <string name="start_to_read">Empezar a leer</string>
+    <string name="search_in_map">Buscar librerías cercanas en el mapa</string>
+    <string name="started_read_successfully">Todo listo. Disfruta leyendo</string>
+    <string name="started_read_successfully_button">¡Será un placer!</string>
+
+    <!-- Book Details Errors -->
+    <string name="error_title_book_details">Error</string>
+    <string name="error_invalid_book_id_book_details">Hubo un error con el libro seleccionado</string>
+    <string name="error_unknown_book_details">Hubo un error. Por favor, inténtalo de nuevo</string>
+    <string name="error_timeout_book_details">Está tomando mucho tiempo para conectar. Comprueba tu conexión a internet</string>
+    <string name="error_unauthorized_book_details">No estas autorizado a hacer eso.</string>
+    <string name="error_processing_query_book_details">Hubo un error procesando la petición</string>
+    <string name="error_session_token_book_details">Sesión inválida. Inicia sesión de nuevo</string>
+    <string name="error_invalid_rate_book_details">Hubo un error al obtener la valoración del libro</string>
+    <string name="error_invalid_progress_book_details">Hubo un error al obtener el progreso del libro</string>
 
     <!-- Profile -->
     <string name="profile_title">Perfil</string>
