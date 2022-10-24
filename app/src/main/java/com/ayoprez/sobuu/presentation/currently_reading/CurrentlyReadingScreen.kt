@@ -59,7 +59,7 @@ fun CurrentlyReadingScreen(
                 modifier = Modifier
                     .padding(it)
                     .clickable {
-                        if(book.bookProgressComments != null) {
+                        if (book.bookProgressComments != null) {
                             nav?.navigate(CommentsScreenDestination(commentsList = ArrayList(book.bookProgressComments)))
                         }
                     },
@@ -103,46 +103,46 @@ fun CurrentlyReadingContent(
                 modifier = Modifier.padding(start = 10.dp),
                 onClick = { /*TODO*/ }
             ) {
-               Text(
-                   stringResource(id = R.string.update_progress_button),
-                   maxLines = 2,
-                   style = TextStyle(
-                       fontFamily = SourceSans,
-                       fontSize = 18.sp,
-                       color = DarkLava,
-                   )
-               )
-           }
+                Text(
+                    stringResource(id = R.string.update_progress_button),
+                    maxLines = 2,
+                    style = TextStyle(
+                        fontFamily = SourceSans,
+                        fontSize = 18.sp,
+                        color = DarkLava,
+                    )
+                )
+            }
 
             TextButton(
                 modifier = Modifier.padding(start = 10.dp),
                 onClick = { /*TODO*/ }
             ) {
-               Text(
-                   stringResource(id = R.string.give_up_book_button),
-                   maxLines = 1,
-                   style = TextStyle(
-                       fontFamily = SourceSans,
-                       fontSize = 18.sp,
-                       color = DarkLava,
-                   )
-               )
+                Text(
+                    stringResource(id = R.string.give_up_book_button),
+                    maxLines = 1,
+                    style = TextStyle(
+                        fontFamily = SourceSans,
+                        fontSize = 18.sp,
+                        color = DarkLava,
+                    )
+                )
             }
 
             TextButton(
                 modifier = Modifier.padding(end = 10.dp),
                 onClick = { /*TODO*/ }
             ) {
-               Text(
-                   stringResource(id = R.string.finish_book_button),
-                   maxLines = 1,
-                   style = TextStyle(
-                       fontFamily = SourceSans,
-                       fontSize = 18.sp,
-                       color = DarkLava,
-                   )
-               )
-           }
+                Text(
+                    stringResource(id = R.string.finish_book_button),
+                    maxLines = 1,
+                    style = TextStyle(
+                        fontFamily = SourceSans,
+                        fontSize = 18.sp,
+                        color = DarkLava,
+                    )
+                )
+            }
 
         }
     }
@@ -241,7 +241,8 @@ fun BookProgressCard(
             )
             Text(
                 "${stringResource(id = R.string.started_book_on)} ${
-                    startedToRead?.toStringDateWithDayAndTime() ?: LocalDateTime.now().toStringDateWithDayAndTime()
+                    startedToRead?.toStringDateWithDayAndTime() ?: LocalDateTime.now()
+                        .toStringDateWithDayAndTime()
                 }",
                 style = TextStyle(
                     fontFamily = SourceSans,
@@ -258,7 +259,7 @@ fun BookProgressCard(
             if (finishedToRead != null && (finished || giveUp)) {
                 Text(
                     "${
-                        if(finished) {
+                        if (finished) {
                             stringResource(id = R.string.finished_book_on)
                         } else {
                             stringResource(id = R.string.gave_up_book_on)

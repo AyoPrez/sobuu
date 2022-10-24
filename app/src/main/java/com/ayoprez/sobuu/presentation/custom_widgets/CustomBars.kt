@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -284,7 +285,9 @@ fun TopAppBarWithMenu(
 
 @Composable
 fun CustomBottomAppBar(
+    modifier: Modifier = Modifier,
     nav: DestinationsNavigator? = null,
+    displayLabels: Boolean = true,
 ) {
     NavigationBar(
         modifier = Modifier
@@ -297,7 +300,7 @@ fun CustomBottomAppBar(
         val screenWidth = config.screenWidthDp.dp
         val itemWidth = screenWidth / 4
 
-        Box(
+        Column(
             modifier = Modifier
                 .background(if (currentRoute == HomeScreenDestination.route) Vermilion else GreenSheen)
                 .width(itemWidth)
@@ -306,7 +309,8 @@ fun CustomBottomAppBar(
                     nav?.navigate(HomeScreenDestination)
                     currentRoute = HomeScreenDestination.route
                 },
-            contentAlignment = Alignment.Center
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Icon(
                 imageVector = Icons.Filled.Book,
@@ -316,9 +320,20 @@ fun CustomBottomAppBar(
                     .height(36.dp),
                 tint = if (currentRoute == HomeScreenDestination.route) DarkLava else WhiteBlue
             )
+            if(displayLabels) {
+                Text(
+                    text = stringResource(id = R.string.bottom_menu_books),
+                    style = TextStyle(
+                        fontFamily = SourceSans,
+                        fontSize = if (currentRoute == HomeScreenDestination.route) 16.sp else 12.sp,
+                        color = if (currentRoute == HomeScreenDestination.route) DarkLava else WhiteBlue,
+                        fontWeight = if (currentRoute == HomeScreenDestination.route) FontWeight.Medium else FontWeight.Normal,
+                    )
+                )
+            }
         }
 
-        Box(
+        Column(
             modifier = Modifier
                 .background(if (currentRoute == ShelvesScreenDestination.route) Vermilion else GreenSheen)
                 .width(itemWidth)
@@ -327,7 +342,8 @@ fun CustomBottomAppBar(
                     nav?.navigate(ShelvesScreenDestination)
                     currentRoute = ShelvesScreenDestination.route
                 },
-            contentAlignment = Alignment.Center
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_bookshelf),
@@ -337,16 +353,28 @@ fun CustomBottomAppBar(
                     .height(36.dp),
                 tint = if (currentRoute == ShelvesScreenDestination.route) DarkLava else WhiteBlue
             )
+            if(displayLabels) {
+                Text(
+                    text = stringResource(id = R.string.bottom_menu_shelves),
+                    style = TextStyle(
+                        fontFamily = SourceSans,
+                        fontSize = if (currentRoute == ShelvesScreenDestination.route) 16.sp else 12.sp,
+                        color = if (currentRoute == ShelvesScreenDestination.route) DarkLava else WhiteBlue,
+                        fontWeight = if (currentRoute == ShelvesScreenDestination.route) FontWeight.Medium else FontWeight.Normal,
+                    )
+                )
+            }
         }
 
-        Box(
+        Column(
             modifier = Modifier
                 .background(GreenSheen)
                 .width(itemWidth)
                 .fillMaxHeight()
                 .clickable {
                 },
-            contentAlignment = Alignment.Center
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Icon(
                 imageVector = Icons.Filled.Groups,
@@ -356,16 +384,27 @@ fun CustomBottomAppBar(
                     .height(36.dp),
                 tint = WhiteBlue
             )
+            if(displayLabels) {
+                Text(
+                    text = stringResource(id = R.string.bottom_menu_friends),
+                    style = TextStyle(
+                        fontFamily = SourceSans,
+                        fontSize = 12.sp,
+                        color = WhiteBlue,
+                    )
+                )
+            }
         }
 
-        Box(
+        Column(
             modifier = Modifier
                 .background(GreenSheen)
                 .width(itemWidth)
                 .fillMaxHeight()
                 .clickable {
                 },
-            contentAlignment = Alignment.Center
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_trophy),
@@ -375,6 +414,17 @@ fun CustomBottomAppBar(
                     .height(36.dp),
                 tint = WhiteBlue
             )
+
+            if(displayLabels) {
+                Text(
+                    text = stringResource(id = R.string.bottom_menu_challenges),
+                    style = TextStyle(
+                        fontFamily = SourceSans,
+                        fontSize = 12.sp,
+                        color = WhiteBlue,
+                    )
+                )
+            }
         }
     }
 }

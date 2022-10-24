@@ -46,6 +46,12 @@
     <string name="finished_book_on">Finished on:</string>
     <string name="gave_up_book_on">Gave up on:</string>
 
+    <!-- Bottom Menu labels -->
+    <string name="bottom_menu_books">Books</string>
+    <string name="bottom_menu_shelves">Shelves</string>
+    <string name="bottom_menu_friends">Friends</string>
+    <string name="bottom_menu_challenges">Challenges</string>
+
     <!-- Currently reading book -->
     <string name="update_progress_button">Update progress</string>
     <string name="give_up_book_button">Give up</string>
@@ -55,12 +61,6 @@
     <string name="comments_on_percentage">Comments on</string>
     <string name="comments_on_page">Comments on page</string>
     <string name="write_comment">Write comment</string>
-
-    <!-- Bottom Menu labels -->
-    <string name="books">Books</string>
-    <string name="shelves">Shelves</string>
-    <string name="challenges">Challenges</string>
-    <string name="friends">Friends</string>
 
     <!-- Search -->
     <string name="user_has_not_read_the_book">You have not read it yet</string>

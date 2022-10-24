@@ -47,6 +47,12 @@
     <string name="finished_book_on">Terminado el día:</string>
     <string name="gave_up_book_on">Abandonado el día:</string>
 
+    <!-- Bottom Menu labels -->
+    <string name="bottom_menu_books">Libros</string>
+    <string name="bottom_menu_shelves">Estanterías</string>
+    <string name="bottom_menu_friends">Amigos</string>
+    <string name="bottom_menu_challenges">Retos</string>
+
     <!-- Currently reading book -->
     <string name="update_progress_button">Actualizar progreso</string>
     <string name="give_up_book_button">Abandonar</string>
@@ -56,12 +62,6 @@
     <string name="comments_on_percentage">Comentarios en el</string>
     <string name="comments_on_page">Comentarios en la página</string>
     <string name="write_comment">Escribir comentario</string>
-
-    <!-- Bottom Menu labels -->
-    <string name="books">Libros</string>
-    <string name="shelves">Estanterías</string>
-    <string name="challenges">Retos</string>
-    <string name="friends">Amigos</string>
 
     <!-- Search -->
     <string name="user_has_not_read_the_book">No lo has leído aún</string>

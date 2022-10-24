@@ -47,6 +47,12 @@
     <string name="finished_book_on">Beenden am:</string>
     <string name="gave_up_book_on">Aufgegeben am:</string>
 
+    <!-- Bottom Menu labels -->
+    <string name="bottom_menu_books">Bücher</string>
+    <string name="bottom_menu_shelves">Regale</string>
+    <string name="bottom_menu_friends">Freunden</string>
+    <string name="bottom_menu_challenges">Herausforderungen</string>
+
     <!-- Currently reading book -->
     <string name="update_progress_button">Fortschritte aktualisieren</string>
     <string name="give_up_book_button">Aufgebe</string>
@@ -56,12 +62,6 @@
     <string name="comments_on_percentage">Kommentaren zu</string>
     <string name="comments_on_page">Kommentaren zur Seite</string>
     <string name="write_comment">Schreib Kommentar</string>
-
-    <!-- Bottom Menu labels -->
-    <string name="books">Bücher</string>
-    <string name="shelves">Regale</string>
-    <string name="challenges">Challenges</string>
-    <string name="friends">Freunde</string>
 
     <!-- Suche -->
     <string name="user_has_not_read_the_book">Sie haben es noch nicht gelesen</string>
