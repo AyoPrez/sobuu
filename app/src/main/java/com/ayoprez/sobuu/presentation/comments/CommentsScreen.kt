@@ -9,9 +9,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -37,20 +39,39 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 fun CommentsScreen(
     nav: DestinationsNavigator? = null,
-    commentsList: ArrayList<Comment>,
+    bookId: String,
+    page: Number? = null,
+    percentage: Number? = null,
     viewModel: CommentsViewModel = hiltViewModel(),
 ) {
-    val page = commentsList[0].pageNumber
-    val percentage = commentsList[0].percentage
+    val context = LocalContext.current
+
+    LaunchedEffect(viewModel, context) {
+        viewModel.onEvent(
+            CommentsUIEvents.DisplayCommentsScreen(
+                bookId = bookId,
+                page = page,
+                percentage = percentage,
+            )
+        )
+    }
 
     Scaffold(
         topBar = {
             TopAppBarWithMenu(
                 nav = nav,
                 title = if (page != null) {
-                    "${stringResource(id = R.string.comments_on_page)} $page"
+                    if(page.toInt() <= 0) {
+                        stringResource(id = R.string.comments_on_percentage_or_page_minus_0)
+                    } else {
+                        "${stringResource(id = R.string.comments_on_page)} $page"
+                    }
                 } else {
-                    "${stringResource(id = R.string.comments_on_percentage)} $percentage%"
+                    if((percentage?.toInt() ?: 0) <= 0) {
+                        stringResource(id = R.string.comments_on_percentage_or_page_minus_0)
+                    } else {
+                        "${stringResource(id = R.string.comments_on_percentage)} $percentage%"
+                    }
                 },
                 titleSize = 24.sp,
                 listItems = listOf(
@@ -95,9 +116,9 @@ fun CommentsScreen(
                 }
 
                 CommentsInPage(
-                    page = page,
-                    percentage = percentage,
-                    comments = commentsList,
+                    page = page?.toInt(),
+                    percentage = percentage?.toByte(),
+                    comments = viewModel.listOFComments ?: emptyList(),
                 )
             }
         }

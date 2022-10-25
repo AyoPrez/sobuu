@@ -59,6 +59,7 @@
 
     <!-- Comments -->
     <string name="comments_on_percentage">Comments on</string>
+    <string name="comments_on_percentage_or_page_minus_0">Comments before start</string>
     <string name="comments_on_page">Comments on page</string>
     <string name="write_comment">Write comment</string>
 

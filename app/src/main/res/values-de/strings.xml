@@ -60,6 +60,7 @@
 
     <!-- Comments -->
     <string name="comments_on_percentage">Kommentaren zu</string>
+    <string name="comments_on_percentage_or_page_minus_0">Kommentaren vor starten</string>
     <string name="comments_on_page">Kommentaren zur Seite</string>
     <string name="write_comment">Schreib Kommentar</string>
 

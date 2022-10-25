@@ -9,6 +9,6 @@ enum class CommentFilterType {
 
 sealed class CommentsUIEvents {
     data class FilterByType(val type: CommentFilterType): CommentsUIEvents()
-    object displayFilterScreen: CommentsUIEvents()
-    object displayCommentsScreen: CommentsUIEvents()
+    data class DisplayCommentsScreen(val bookId: String, val page: Number? = null, val percentage: Number? = null ): CommentsUIEvents()
+    object DisplayFilterScreen: CommentsUIEvents()
 }

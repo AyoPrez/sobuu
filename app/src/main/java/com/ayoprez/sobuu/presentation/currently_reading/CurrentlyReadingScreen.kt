@@ -60,7 +60,11 @@ fun CurrentlyReadingScreen(
                     .padding(it)
                     .clickable {
                         if (book.bookProgressComments != null) {
-                            nav?.navigate(CommentsScreenDestination(commentsList = ArrayList(book.bookProgressComments)))
+                            nav?.navigate(CommentsScreenDestination(
+                                bookId = book.id,
+                                page = book.bookProgress?.page,
+                                percentage = book.bookProgress?.percentage,
+                            ))
                         }
                     },
                 book = book,

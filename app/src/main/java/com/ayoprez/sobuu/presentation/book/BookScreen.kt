@@ -54,7 +54,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
+// TODO When the user start a new book, the app should confirm it and jump to home screen
 enum class ISBNType {
     ISBN10, ISBN13
 }
@@ -583,7 +583,7 @@ fun CreateGenresChips(
 
 @Composable
 fun SuccessStartToReadDialog(isLoading: Boolean, bookTitle: String, onClickButton: () -> Unit) {
-    var showDialog by remember { mutableStateOf(!isLoading) }
+    var showDialog by remember { mutableStateOf(isLoading) }
 
     if (showDialog) {
         Dialog(
