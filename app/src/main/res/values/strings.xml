@@ -57,6 +57,13 @@
     <string name="give_up_book_button">Give up</string>
     <string name="finish_book_button">Finish it!</string>
 
+    <!-- Update book progress -->
+    <string name="update_book_progress_dialog_title">Update book progress</string>
+    <string name="update_book_progress_dialog_page">Page</string>
+    <string name="update_book_progress_dialog_percentage">Percentage</string>
+    <string name="update_book_progress_dialog_button">Update progress</string>
+    <string name="error_not_valid_number_in_book_progress_dialogn">The number introduced is not valid</string>
+
     <!-- Comments -->
     <string name="comments_on_percentage">Comments on</string>
     <string name="comments_on_percentage_or_page_minus_0">Comments before start</string>

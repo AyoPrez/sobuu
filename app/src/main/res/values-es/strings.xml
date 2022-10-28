@@ -58,6 +58,13 @@
     <string name="give_up_book_button">Abandonar</string>
     <string name="finish_book_button">¡Terminarlo!</string>
 
+    <!-- Update book progress -->
+    <string name="update_book_progress_dialog_title">Actualizar progreso del libro</string>
+    <string name="update_book_progress_dialog_page">Página</string>
+    <string name="update_book_progress_dialog_percentage">Porcentaje</string>
+    <string name="update_book_progress_dialog_button">Actualizar progreso</string>
+    <string name="error_not_valid_number_in_book_progress_dialogn">El número introducido no es válido</string>
+
     <!-- Comments -->
     <string name="comments_on_percentage">Comentarios en el</string>
     <string name="comments_on_percentage_or_page_minus_0">Comentarios antes de empezar</string>

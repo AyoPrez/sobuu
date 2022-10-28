@@ -2,6 +2,7 @@ package com.ayoprez.sobuu.shared.features.book.remote
 
 import com.ayoprez.sobuu.shared.models.api_models.books_api.BooksApi
 import com.ayoprez.sobuu.shared.models.api_models.currently_reading_api.CurrentlyReadingBookApi
+import com.ayoprez.sobuu.shared.models.api_models.currently_reading_api.UpdateProgressResultApi
 import com.ayoprez.sobuu.shared.models.api_models.finished_books_api.FinishedBooksApi
 import com.ayoprez.sobuu.shared.models.api_models.give_up_books_api.GiveUpBooksApi
 import com.ayoprez.sobuu.shared.models.bo_models.Book
@@ -70,18 +71,18 @@ interface BookApi {
     suspend fun updateProgressBook(
         @Field("sessionToken") sessionToken: String,
         @Field("bookId") bookId: String,
-        @Field("percentageProgress") percentage: Number?,
-        @Field("pageProgress") page: Number?,
+        @Field("percentage") percentage: Number?,
+        @Field("page") page: Number?,
         @Field("finished") finished: Boolean,
         @Field("giveUp") giveUp: Boolean,
-    ): Response<Unit>
+    ): Response<UpdateProgressResultApi>
 
     @FormUrlEncoded
     @POST("functions/getBookProgress")
     suspend fun getBookProgress(
         @Field("sessionToken") sessionToken: String,
         @Field("bookId") bookId: String,
-    ): Response<BookProgress>
+    ): Response<UpdateProgressResultApi>
 
     @FormUrlEncoded
     @POST("functions/addRating")

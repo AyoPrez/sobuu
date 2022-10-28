@@ -228,7 +228,7 @@ fun HomeContent(
                     SectionCurrentlyReading(
                         bookList = homeViewModel.currentlyReadingBooksList,
                         onClick = {
-                            nav?.navigate(CurrentlyReadingScreenDestination(it))
+                            nav?.navigate(CurrentlyReadingScreenDestination(it.id))
                         }
                     )
                 }

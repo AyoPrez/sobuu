@@ -61,7 +61,7 @@ class BookRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun getBookProgress(bookId: String): BookResult<BookProgress> = execute {
+    override suspend fun getBookProgress(bookId: String): BookResult<CurrentlyReadingBook> = execute {
         bookRemoteData.getBookProgress(
             sessionToken = it,
             bookId = bookId,
@@ -74,7 +74,7 @@ class BookRepositoryImpl @Inject constructor(
         page: Number?,
         finished: Boolean,
         giveUp: Boolean
-    ): BookResult<Unit> = execute {
+    ): BookResult<BookProgress> = execute {
         bookRemoteData.updateBookProgress(
             sessionToken = it,
             bookId = bookId,

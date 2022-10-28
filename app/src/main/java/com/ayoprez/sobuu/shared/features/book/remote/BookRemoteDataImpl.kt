@@ -4,8 +4,10 @@ import com.ayoprez.sobuu.shared.models.api_models.books_api.AllReview
 import com.ayoprez.sobuu.shared.models.api_models.books_api.BooksApi
 import com.ayoprez.sobuu.shared.models.api_models.books_api.User
 import com.ayoprez.sobuu.shared.models.api_models.books_api.UserRating
+import com.ayoprez.sobuu.shared.models.api_models.currently_reading_api.BookProgressApi
 import com.ayoprez.sobuu.shared.models.api_models.currently_reading_api.CurrentlyReadingBookApi
 import com.ayoprez.sobuu.shared.models.api_models.currently_reading_api.Extras
+import com.ayoprez.sobuu.shared.models.api_models.currently_reading_api.UpdateProgressResultApi
 import com.ayoprez.sobuu.shared.models.api_models.finished_books_api.FinishedBooksApi
 import com.ayoprez.sobuu.shared.models.api_models.give_up_books_api.GiveUpBooksApi
 import com.ayoprez.sobuu.shared.models.bo_models.*
@@ -136,14 +138,22 @@ class BookRemoteDataImpl @Inject constructor(
     override suspend fun getBookProgress(
         sessionToken: String?,
         bookId: String
-    ): BookResult<BookProgress> {
+    ): BookResult<CurrentlyReadingBook> {
         if (bookId.isBlank()) return BookResult.Error(BookError.InvalidBookIdError)
-        return execute(sessionToken) {
+
+        val result = execute(sessionToken) {
             api.getBookProgress(
                 sessionToken = it,
                 bookId = bookId,
             )
         }
+
+        return if (result.data != null) {
+            BookResult.Success(data = result.data.toCurrentlyReadingBook())
+        } else {
+            BookResult.Error(error = result.error)
+        }
+
     }
 
     override suspend fun updateBookProgress(
@@ -153,7 +163,7 @@ class BookRemoteDataImpl @Inject constructor(
         page: Number?,
         finished: Boolean,
         giveUp: Boolean
-    ): BookResult<Unit> {
+    ): BookResult<BookProgress> {
         if (bookId.isBlank()) return BookResult.Error(BookError.InvalidBookIdError)
         if (percentage == null && page == null) return BookResult.Error(BookError.InvalidPageNumberError)
         if (percentage != null && page != null) return BookResult.Error(BookError.InvalidDoubleValueError)
@@ -162,7 +172,8 @@ class BookRemoteDataImpl @Inject constructor(
             BookError.InvalidPercentageNumberError
         )
         if (finished && giveUp) return BookResult.Error(BookError.InvalidFinishedAndGiveUpBookValuesError)
-        return execute(sessionToken) {
+
+        val result = execute(sessionToken) {
             api.updateProgressBook(
                 sessionToken = it,
                 bookId = bookId,
@@ -171,6 +182,12 @@ class BookRemoteDataImpl @Inject constructor(
                 finished = finished,
                 giveUp = giveUp
             )
+        }
+
+        return if (result.data != null) {
+            BookResult.Success(data = result.data.result.extras.toBookProgress())
+        } else {
+            BookResult.Error(error = result.error)
         }
     }
 
@@ -263,6 +280,7 @@ class BookRemoteDataImpl @Inject constructor(
 
             val result = func(sessionToken)
 
+            println("-----Error: ${result.errorBody().toString()}")
             if (result.body() == null && result.errorBody() != null) return handleResponseError(
                 result.errorBody()
             )
@@ -494,6 +512,22 @@ class BookRemoteDataImpl @Inject constructor(
         }
     }
 
+    private fun UpdateProgressResultApi.toCurrentlyReadingBook(): CurrentlyReadingBook {
+        val page = this.result.extras.currentPage
+        val percentage = this.result.extras.currentPercentage
+        return CurrentlyReadingBook(
+            id = this.result.id,
+            title = this.result.title,
+            authors = this.result.authors,
+            picture = this.result.picture,
+            bookProgress = this.result.extras.toBookProgress(),
+            bookProgressComments = this.result.extras.toBookProgressComments(
+                page = page,
+                percentage = percentage?.toByte()
+            ),
+        )
+    }
+
     private fun giveUpBooksExtras.toBookProgress(): BookProgress {
         return BookProgress(
             percentage = this.currentPercentage,
@@ -535,5 +569,29 @@ class BookRemoteDataImpl @Inject constructor(
             )
         }
     }
+
+    private fun BookProgressApi.toBookProgress(): BookProgress {
+        return BookProgress(
+            id = this.id,
+            page = this.page,
+            percentage = this.percentage,
+            finished = this.finished,
+            giveUp = this.giveUp,
+            progressInPercentage = this.progressInPercentage,
+            finishedToRead = if(this.finishedToRead?.iso != null) LocalDateTime.parse(
+                this.finishedToRead.iso.substring(
+                    0,
+                    this.finishedToRead.iso.length - 1
+                )
+            ) else null,
+            startedToRead = LocalDateTime.parse(
+                this.startedToRead.iso.substring(
+                    0,
+                    this.startedToRead.iso.length - 1
+                )
+            ),
+        )
+    }
+
     // endregion
 }

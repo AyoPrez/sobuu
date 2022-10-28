@@ -18,10 +18,10 @@ interface IBookRemoteData {
 
     suspend fun setBookCurrentlyReading(sessionToken: String?, bookId: String) : BookResult<Unit>
 
-    suspend fun getBookProgress(sessionToken: String?, bookId: String) : BookResult<BookProgress>
+    suspend fun getBookProgress(sessionToken: String?, bookId: String) : BookResult<CurrentlyReadingBook>
 
     suspend fun updateBookProgress(sessionToken: String?, bookId: String, percentage: Number?,
-                                   page: Number?, finished: Boolean, giveUp: Boolean) : BookResult<Unit>
+                                   page: Number?, finished: Boolean, giveUp: Boolean) : BookResult<BookProgress>
 
     suspend fun rateBook(sessionToken: String?, bookId: String, rate: Double, reviewText: String) : BookResult<Book>
 

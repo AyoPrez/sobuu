@@ -18,10 +18,10 @@ interface IBookRepository {
 
     suspend fun setBookCurrentlyReading(bookId: String) : BookResult<Unit>
 
-    suspend fun getBookProgress(bookId: String) : BookResult<BookProgress>
+    suspend fun getBookProgress(bookId: String) : BookResult<CurrentlyReadingBook>
 
     suspend fun updateBookProgress(bookId: String, percentage: Number?,
-                                   page: Number?, finished: Boolean, giveUp: Boolean) : BookResult<Unit>
+                                   page: Number?, finished: Boolean, giveUp: Boolean) : BookResult<BookProgress>
 
     suspend fun rateBook(bookId: String, rate: Double, reviewText: String) : BookResult<Book>
 
